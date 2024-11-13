@@ -1,1 +1,5 @@
 rootProject.name = 'subscription'
+include 'core'
+include 'api'
+include 'domain'
+
