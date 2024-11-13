@@ -21,18 +21,18 @@ dependencies {
     // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    // Mysql
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.mysql:mysql-connector-j'
-
-    // Spring JPA
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    // Mysql
+//    runtimeOnly 'com.mysql:mysql-connector-j'
+//
+//    // Spring JPA
+//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // Lombok
     annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
