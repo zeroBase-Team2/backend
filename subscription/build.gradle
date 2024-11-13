@@ -4,7 +4,10 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
-allprojects {
+bootJar.enabled = false
+jar.enabled = true
+
+subprojects {
     group = 'com.service'
     version = '0.0.1-SNAPSHOT'
 
@@ -17,9 +20,7 @@ allprojects {
             languageVersion = JavaLanguageVersion.of(17)
         }
     }
-}
 
-subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
@@ -39,5 +40,11 @@ subprojects {
 
     tasks.named('test') {
         useJUnitPlatform()
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
     }
 }

@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages = "com.service")
 @EnableJpaRepositories(basePackages = "com.service.domain")
 @EntityScan(basePackages = "com.service.domain")
-public class SubscriptionApplication {
+public class ApiApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(SubscriptionApplication.class, args);
+    SpringApplication.run(ApiApplication.class, args);
   }
 
 }

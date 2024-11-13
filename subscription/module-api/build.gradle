@@ -6,6 +6,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // module
-    implementation project(":core")
-    implementation project(":domain")
+    implementation project(":module-core")
+    implementation project(":module-domain")
 }
