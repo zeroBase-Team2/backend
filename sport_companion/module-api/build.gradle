@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+bootJar.enabled = true
+
+jar.enabled = true
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // Module
+    implementation project(':module-domain')
+    implementation project(':module-core')
+
+//    // Spring Security
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+//
+//    // Jwt
+//    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+//    implementation 'io.jsonwebtoken:jjwt-impl:0.12.5'
+//    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+}
+
+

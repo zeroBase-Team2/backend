@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+bootJar.enabled = true
+
+jar.enabled = true
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // Module
+    implementation project(':module-domain')
+    implementation project(':module-core')
+
+    // Selenium
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.26.0'
+
+    // jsoup
+    implementation 'org.jsoup:jsoup:1.18.1'
+}
+
