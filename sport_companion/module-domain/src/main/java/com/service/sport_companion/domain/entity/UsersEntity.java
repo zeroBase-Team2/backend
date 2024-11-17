@@ -1,7 +1,6 @@
 package com.service.sport_companion.domain.entity;
 
 import com.service.sport_companion.domain.model.type.UserRole;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
