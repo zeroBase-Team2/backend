@@ -1,0 +1,42 @@
+version: '3.3'
+
+services:
+  mysql:
+    image: mysql:9
+    volumes:
+      - sport_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+    networks:
+      - sport-network
+
+  api-module:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_NAME: module-api
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    ports:
+      - "8080:8080"
+    networks:
+      - sport-network
+
+networks:
+  sport-network:
+    driver: bridge
+
+volumes:
+  sport_data:
