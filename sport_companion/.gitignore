@@ -27,6 +27,8 @@ out/
 !**/src/test/**/out/
 /module-api/src/main/resources/application.yml
 /module-batch/src/main/resources/application.yml
+/module-api/src/main/resources/application-*.yml
+/module-batch/src/main/resources/application-*.yml
 
 ### NetBeans ###
 /nbproject/private/
@@ -37,3 +39,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### docker ###
+.env
