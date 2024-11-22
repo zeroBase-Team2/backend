@@ -38,5 +38,3 @@ module-batch/src/main/resources/secret.yml
 ### VS Code ###
 .vscode/
 
-### docker ###
-.env
