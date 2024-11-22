@@ -22,11 +22,10 @@ public class UserHandler {
   public UsersEntity findUserByUserInfo(KakaoUserDetailsDTO userInfo) {
     return usersRepository.findByEmail(userInfo.getEmail())
         .map(user -> {
-          if (user.getProvider().equals(userInfo.getProvider())) {
-            return user;
+          if (!user.getProvider().equals(userInfo.getProvider())) {
+            throw new GlobalException(FailedResultType.EMAIL_ALREADY_USED);
           }
-
-          throw new GlobalException(FailedResultType.EMAIL_ALREADY_USED);
+          return user;
         })
         .orElse(null);
   }
