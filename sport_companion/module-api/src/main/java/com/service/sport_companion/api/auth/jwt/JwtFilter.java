@@ -64,10 +64,10 @@ public class JwtFilter extends OncePerRequestFilter {
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
 
-  // Access-Token 만료시 401 반환
+  // Access-Token 만료시 403 반환
   private void setResponse(HttpServletResponse response) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
 
