@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,12 +25,17 @@ public class UsersEntity{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long userId;
 
-  private String id;
+  @NotNull
+  private String email;
 
-  private String password;
+  private String nickname;
 
-  private String tel;
+  private String provider;
+
+  private String providerId;
 
   @Enumerated(EnumType.STRING)
   private UserRole role;
+
+  private LocalDateTime createdAt;
 }
