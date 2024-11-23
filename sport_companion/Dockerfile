@@ -1,6 +1,23 @@
-FROM openjdk:17-jdk-alpine
+FROM amazoncorretto:17 AS builder
 
-ARG MODULE_NAME
-COPY ${MODULE_NAME}/build/libs/${MODULE_NAME}-0.0.1-SNAPSHOT.jar sport_companion.jar
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
 
-ENTRYPOINT ["java", "-jar", "/sport_companion.jar"]
+COPY module-api module-api
+COPY module-domain module-domain
+COPY module-core module-core
+
+# ./gradlew 파일 권한 변경
+RUN chmod +x ./gradlew
+
+# gradle 빌드
+RUN ./gradlew :module-api:bootJar
+FROM amazoncorretto:17
+
+COPY --from=builder module-api/build/libs/*.jar app.jar
+
+
+ENTRYPOINT [ "java","-jar","/app.jar" ]
+VOLUME /tmp
