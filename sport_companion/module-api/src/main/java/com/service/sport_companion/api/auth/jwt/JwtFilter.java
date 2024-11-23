@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
     // Bearer 시작 여부 및 null 값 검증
     if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
       log.info("Token is not valid");
-      filterChain.doFilter(request, response);
+      setResponse(response);
       return;
     }
 
@@ -78,7 +78,7 @@ public class JwtFilter extends OncePerRequestFilter {
 //    response.setHeader("Access-Control-Allow-Headers", "*");
 //    response.setHeader("Access-Control-Expose-Headers", "access-token, Location");
 
-    Map<String, String> body = Map.of("message", "access-token 만료");
+    Map<String, String> body = Map.of("message", "유효하지 않은 Access Token");
     response.getWriter().write(objectMapper.writeValueAsString(body));
   }
 
