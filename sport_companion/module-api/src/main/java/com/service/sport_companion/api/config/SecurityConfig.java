@@ -47,6 +47,7 @@ public class SecurityConfig {
                 "/swagger-resources/**").permitAll()
             .requestMatchers("/",
                 "/api/v1/auth/kakao",
+                "/api/v1/auth/check-nickname/**",
                 "/favicon.ico").permitAll()
             .anyRequest().authenticated());
 
