@@ -10,6 +10,7 @@ public enum UrlType {
   RANDOM_NICKNAME_URL("https://www.rivestsoft.com/nickname/getRandomNickname.ajax"),
   SIGNUP_URL("http://localhost:3000/signUp/success"),
   LOGIN_URL("http://localhost:3000"),
+  FRONT_VERCEL_URL("https://front-end-jet-psi.vercel.app")
   ;
 
   private final String url;
