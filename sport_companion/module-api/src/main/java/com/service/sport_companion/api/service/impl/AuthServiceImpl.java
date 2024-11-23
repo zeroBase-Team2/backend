@@ -8,6 +8,7 @@ import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
 import com.service.sport_companion.domain.model.type.TokenType;
 import com.service.sport_companion.domain.model.type.UrlType;
+import com.service.sport_companion.domain.repository.UsersRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class AuthServiceImpl implements AuthService {
   private final KakaoAuthHandler kakaoAuthHandler;
   private final UserHandler userHandler;
   private final JwtUtil jwtUtil;
+  private final UsersRepository usersRepository;
 
   @Override
   public String oAuthForKakao(String code, HttpServletResponse response) {
@@ -57,5 +59,10 @@ public class AuthServiceImpl implements AuthService {
         .queryParam(TokenType.REFRESH.getValue(), refresh)
         .build()
         .toUriString();
+  }
+
+  @Override
+  public boolean checkNickname(String nickname) {
+    return !usersRepository.existsByNickname(nickname);
   }
 }
