@@ -4,7 +4,6 @@ import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.UrlType;
 import java.util.Map;
-
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
