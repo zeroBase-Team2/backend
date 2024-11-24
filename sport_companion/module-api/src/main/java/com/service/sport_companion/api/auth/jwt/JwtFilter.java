@@ -2,6 +2,7 @@ package com.service.sport_companion.api.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.service.sport_companion.domain.model.type.TokenType;
+import com.service.sport_companion.domain.model.type.UrlType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
@@ -70,12 +72,12 @@ public class JwtFilter extends OncePerRequestFilter {
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
 
-//    // CORS 헤더 추가
-//    response.setHeader("Access-Control-Allow-Origin", url);
-//    response.setHeader("Access-Control-Allow-Credentials", "true");
-//    response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,POST,DELETE,TRACE,OPTIONS,PATCH,PUT");
-//    response.setHeader("Access-Control-Allow-Headers", "*");
-//    response.setHeader("Access-Control-Expose-Headers", "access-token, Location");
+    // CORS 헤더 추가
+    response.setHeader("Access-Control-Allow-Origin", UrlType.FRONT_VERCEL_URL.getUrl());
+    response.setHeader("Access-Control-Allow-Credentials", "true");
+    response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,POST,DELETE,TRACE,OPTIONS,PATCH,PUT");
+    response.setHeader("Access-Control-Allow-Headers", "*");
+    response.setHeader("Access-Control-Expose-Headers", "access, Location");
 
     Map<String, String> body = Map.of("message", "유효하지 않은 Access Token");
     response.getWriter().write(objectMapper.writeValueAsString(body));
@@ -86,6 +88,11 @@ public class JwtFilter extends OncePerRequestFilter {
     AntPathMatcher pathMatcher = new AntPathMatcher();
     String method = request.getMethod();
     String path = request.getRequestURI();
+
+    // 1. Options 요청 검증
+    if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+      return true;
+    }
 
     log.info("method >>> {} request uri >>> {}", method, path);
     // 2. 예외 경로 검증
