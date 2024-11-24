@@ -18,7 +18,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     registry.addMapping("/**") // CORS 설정을 모든 URL에 적용
 
-        .allowedOrigins(UrlType.FRONT_VERCEL_URL.getUrl())
+        .allowedOrigins(
+            UrlType.FRONT_VERCEL_URL.getUrl(),
+            UrlType.FRONT_LOCAL_URL.getUrl()
+        )
         .allowedMethods(ALLOW_METHOD_NAMES.split(","))  // 허용할 HTTP Method 목록
         .allowedHeaders("*")        // 모든 HTTP header 허용
         .allowCredentials(true)     // 자격 증명 허용
