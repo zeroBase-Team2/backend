@@ -11,6 +11,8 @@ public enum SuccessResultType {
   // Auth
   SUCCESS_SIGNUP(HttpStatus.CREATED, "회원가입 성공!"),
   SUCCESS_LOGIN(HttpStatus.OK, "로그인 성공!"),
+  AVAILABLE_NICKNAME(HttpStatus.OK, "사용 가능한 닉네임입니다."),
+  UNAVAILABLE_NICKNAME(HttpStatus.OK, "이미 사용 중인 닉네임입니다.")
 
   ;
 

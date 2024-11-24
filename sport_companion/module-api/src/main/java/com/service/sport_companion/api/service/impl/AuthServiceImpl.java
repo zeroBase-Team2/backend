@@ -58,4 +58,9 @@ public class AuthServiceImpl implements AuthService {
         .build()
         .toUriString();
   }
+
+  @Override
+  public boolean checkNickname(String nickname) {
+    return !userHandler.existsByNickname(nickname);
+  }
 }
