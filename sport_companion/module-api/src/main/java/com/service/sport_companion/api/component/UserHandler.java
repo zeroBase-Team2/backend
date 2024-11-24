@@ -56,4 +56,11 @@ public class UserHandler {
     return usersRepository.findByUserId(userId)
         .orElseThrow(() -> new GlobalException(FailedResultType.USER_NOT_FOUND));
   }
+
+  /**
+   * nickname 존재 여부 확인 후 반환
+   */
+  public boolean existsByNickname(String nickname) {
+    return usersRepository.existsByNickname(nickname);
+  }
 }

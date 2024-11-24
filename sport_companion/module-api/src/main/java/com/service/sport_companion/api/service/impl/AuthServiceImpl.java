@@ -23,7 +23,6 @@ public class AuthServiceImpl implements AuthService {
   private final KakaoAuthHandler kakaoAuthHandler;
   private final UserHandler userHandler;
   private final JwtUtil jwtUtil;
-  private final UsersRepository usersRepository;
 
   @Override
   public String oAuthForKakao(String code, HttpServletResponse response) {
@@ -63,6 +62,6 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public boolean checkNickname(String nickname) {
-    return !usersRepository.existsByNickname(nickname);
+    return !userHandler.existsByNickname(nickname);
   }
 }
