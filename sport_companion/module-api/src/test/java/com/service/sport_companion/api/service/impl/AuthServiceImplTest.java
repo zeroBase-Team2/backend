@@ -122,7 +122,7 @@ class AuthServiceImplTest {
     String resultResponse = authServiceImpl.oAuthForKakao(CODE, response);
 
     // then
-    String response = UriComponentsBuilder.fromUriString(UrlType.LOGIN_URL.getUrl())
+    String response = UriComponentsBuilder.fromUriString(UrlType.FRONT_LOCAL_URL.getUrl())
         .queryParam(TokenType.ACCESS.getValue(), ACCESS)
         .queryParam(TokenType.REFRESH.getValue(), REFRESH)
         .build()
