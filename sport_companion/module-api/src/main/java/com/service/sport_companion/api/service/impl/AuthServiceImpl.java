@@ -8,7 +8,6 @@ import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
 import com.service.sport_companion.domain.model.type.TokenType;
 import com.service.sport_companion.domain.model.type.UrlType;
-import com.service.sport_companion.domain.repository.UsersRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
