@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
     String access = jwtUtil.createJwt("access", user.getUserId(), user.getRole());
     String refresh = jwtUtil.createJwt("refresh", user.getUserId(), user.getRole());
 
-    return UriComponentsBuilder.fromUriString(UrlType.LOGIN_URL.getUrl())
+    return UriComponentsBuilder.fromUriString(UrlType.FRONT_LOCAL_URL.getUrl())
         .queryParam(TokenType.ACCESS.getValue(), access)
         .queryParam(TokenType.REFRESH.getValue(), refresh)
         .build()
