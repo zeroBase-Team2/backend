@@ -1,8 +1,10 @@
 package com.service.sport_companion.api.service.impl;
 
+import static com.service.sport_companion.api.utils.HttpCookieUtil.addCookieToResponse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.service.sport_companion.api.auth.jwt.JwtUtil;
@@ -55,6 +57,10 @@ class AuthServiceImplTest {
   private static final String KAKAO_TOKEN = "kakao-token";
   private static final String KAKAO_PROVIDER = "kakao";
   private static final String KAKAO_PROVIDER_ID = "kakao_provider_id";
+  private static final long TEN_MINUTES = 10 * 60;
+  private static final long ONE_DAY = 24 * 60 * 60;
+  private static final String SIGNUP_DATA = "signup_data";
+
 
   private KakaoUserDetailsDTO kakaoUserDetails;
   private UsersEntity user;
@@ -83,6 +89,7 @@ class AuthServiceImplTest {
         .role(UserRole.USER)
         .createdAt(LocalDateTime.now())
         .build();
+
   }
 
   @Test
@@ -98,15 +105,10 @@ class AuthServiceImplTest {
     String resultResponse = authServiceImpl.oAuthForKakao(CODE, response);
 
     // then
-    String response = UriComponentsBuilder.fromUriString(UrlType.SIGNUP_URL.getUrl())
-        .queryParam("email", kakaoUserDetails.getEmail())
-        .queryParam("nickname", NICKNAME)
-        .queryParam("provider", kakaoUserDetails.getProvider())
-        .queryParam("providerId", kakaoUserDetails.getProviderId())
-        .build()
-        .toUriString();
-
+    String response = UrlType.SIGNUP_URL.getUrl();
     assertEquals(response, resultResponse);
+    verify(jwtUtil).createSignupData(kakaoUserDetails.getProviderId(), NICKNAME);
+    verify(userHandler).saveSingUpCacheData(kakaoUserDetails);
   }
 
   @Test
@@ -116,20 +118,15 @@ class AuthServiceImplTest {
     when(kakaoAuthHandler.getAccessToken(CODE)).thenReturn(KAKAO_TOKEN);
     when(kakaoAuthHandler.getUserDetails(KAKAO_TOKEN)).thenReturn(kakaoUserDetails);
     when(userHandler.findUserByUserInfo(kakaoUserDetails)).thenReturn(user);
-    when(jwtUtil.createJwt("access", user.getUserId(), user.getRole())).thenReturn(ACCESS);
-    when(jwtUtil.createJwt("refresh", user.getUserId(), user.getRole())).thenReturn(REFRESH);
 
     // when
     String resultResponse = authServiceImpl.oAuthForKakao(CODE, response);
 
     // then
-    String response = UriComponentsBuilder.fromUriString(UrlType.FRONT_LOCAL_URL.getUrl())
-        .queryParam(TokenType.ACCESS.getValue(), ACCESS)
-        .queryParam(TokenType.REFRESH.getValue(), REFRESH)
-        .build()
-        .toUriString();
-
+    String response = UrlType.FRONT_LOCAL_URL.getUrl();
     assertEquals(response, resultResponse);
+    verify(jwtUtil).createJwt("access", user.getUserId(), user.getRole());
+    verify(jwtUtil).createJwt("refresh", user.getUserId(), user.getRole());
   }
 
 
