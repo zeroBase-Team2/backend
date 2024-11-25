@@ -6,6 +6,8 @@ import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.api.service.AuthService;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
+import com.service.sport_companion.domain.model.dto.response.ResultResponse;
+import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.TokenType;
 import com.service.sport_companion.domain.model.type.UrlType;
 import jakarta.servlet.http.HttpServletResponse;
@@ -60,7 +62,12 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public boolean checkNickname(String nickname) {
-    return !userHandler.existsByNickname(nickname);
+  public ResultResponse checkNickname(String nickname) {
+    boolean isValidNickname = !userHandler.existsByNickname(nickname);
+
+    SuccessResultType resultType = (isValidNickname) ?
+      SuccessResultType.AVAILABLE_NICKNAME : SuccessResultType.UNAVAILABLE_NICKNAME;
+
+    return new ResultResponse(resultType, isValidNickname);
   }
 }
