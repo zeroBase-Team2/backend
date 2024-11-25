@@ -11,6 +11,7 @@ import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
+import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.TokenType;
 import com.service.sport_companion.domain.model.type.UrlType;
@@ -183,5 +184,41 @@ class AuthServiceImplTest {
 
     // when & then
     assertThrows(GlobalException.class, () -> authServiceImpl.oAuthForKakao(CODE, response));
+  }
+
+
+  @Test
+  @DisplayName("checkNickname : 사용 가능한 닉네임 확인")
+  void checkNickname_AvailableNickname() {
+    // given
+    String nickname = "validNickname";
+    boolean isValidNickname = true;
+
+    when(userHandler.existsByNickname(nickname)).thenReturn(!isValidNickname);
+
+    // when
+    ResultResponse response = authServiceImpl.checkNickname(nickname);
+
+    // then
+    assertEquals(response.getData(), isValidNickname);
+    assertEquals(response.getMessage(), "사용 가능한 닉네임입니다.");
+  }
+
+
+  @Test
+  @DisplayName("checkNickname : 사용 불가능한(중복) 닉네임 확인")
+  void checkNickname_UnavailableNickname() {
+    // given
+    String nickname = "invalidNickname";
+    boolean isValidNickname = false;
+
+    when(userHandler.existsByNickname(nickname)).thenReturn(!isValidNickname);
+
+    // when
+    ResultResponse response = authServiceImpl.checkNickname(nickname);
+
+    // then
+    assertEquals(response.getData(), isValidNickname);
+    assertEquals(response.getMessage(), "이미 사용 중인 닉네임입니다.");
   }
 }
