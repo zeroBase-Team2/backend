@@ -2,7 +2,6 @@ package com.service.sport_companion.api.controller;
 
 import com.service.sport_companion.api.service.AuthService;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
-import com.service.sport_companion.domain.model.type.SuccessResultType;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import java.net.URI;
@@ -42,11 +41,6 @@ public class AuthController {
   public ResponseEntity<ResultResponse> checkNickname(
     @NotBlank(message = "닉네임을 입력해 주세요.") @PathVariable("nickname") String nickname) {
 
-    boolean isValidNickname = authService.checkNickname(nickname);
-
-    SuccessResultType resultType = (isValidNickname) ?
-      SuccessResultType.AVAILABLE_NICKNAME : SuccessResultType.UNAVAILABLE_NICKNAME;
-
-    return ResponseEntity.ok(new ResultResponse(resultType, isValidNickname));
+    return ResponseEntity.ok(authService.checkNickname(nickname));
   }
 }

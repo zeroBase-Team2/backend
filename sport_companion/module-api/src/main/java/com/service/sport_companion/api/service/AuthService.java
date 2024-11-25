@@ -1,5 +1,6 @@
 package com.service.sport_companion.api.service;
 
+import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface AuthService {
@@ -8,5 +9,5 @@ public interface AuthService {
   String oAuthForKakao(String code, HttpServletResponse response);
 
   // 닉네임 중복 확인
-  boolean checkNickname(String nickname);
+  ResultResponse checkNickname(String nickname);
 }
