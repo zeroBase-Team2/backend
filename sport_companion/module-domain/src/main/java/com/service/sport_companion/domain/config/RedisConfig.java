@@ -1,4 +1,4 @@
-package com.service.sport_companion.api.config;
+package com.service.sport_companion.domain.config;
 
 import static java.time.Duration.ofMillis;
 
