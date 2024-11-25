@@ -48,6 +48,15 @@ services:
       - ./data/npm/letsencrypt:/etc/letsencrypt
     networks:
       - sport-network
+  
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - sport-network
+    restart: on-failure
 
 networks:
   sport-network:
