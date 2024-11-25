@@ -1,5 +1,7 @@
 package com.service.sport_companion.api.service.impl;
 
+import static com.service.sport_companion.api.utils.HttpCookieUtil.addCookieToResponse;
+
 import com.service.sport_companion.api.auth.jwt.JwtUtil;
 import com.service.sport_companion.api.auth.oauth.KakaoAuthHandler;
 import com.service.sport_companion.api.component.UserHandler;
@@ -14,7 +16,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @Service
@@ -24,6 +25,9 @@ public class AuthServiceImpl implements AuthService {
   private final KakaoAuthHandler kakaoAuthHandler;
   private final UserHandler userHandler;
   private final JwtUtil jwtUtil;
+
+  private final long TEN_MINUTES = 10 * 60;
+  private final long ONE_DAY = 24 * 60 * 60;
 
   @Override
   public String oAuthForKakao(String code, HttpServletResponse response) {
@@ -38,27 +42,36 @@ public class AuthServiceImpl implements AuthService {
 
     // 가입 이력이 없는 경우 추가 데이터 입력을 위해 리다이렉트
     if(user == null) {
-
-      String nickname = userHandler.getRandomNickname(1);
-
-      return UriComponentsBuilder.fromUriString(UrlType.SIGNUP_URL.getUrl())
-          .queryParam("email", userInfo.getEmail())
-          .queryParam("nickname", nickname)
-          .queryParam("provider", userInfo.getProvider())
-          .queryParam("providerId", userInfo.getProviderId())
-          .build()
-          .toUriString();
+      return handleSignup(userInfo, response);
     }
 
-    // 가입 이력이 있는 경우 로그인 진행
+    // 로그인 성공 페이지로 리다이렉트
+    return handleLogin(user, response);
+  }
+
+  // 회원가입 처리
+  private String handleSignup(KakaoUserDetailsDTO userInfo, HttpServletResponse response) {
+    String nickname = userHandler.getRandomNickname(1);
+
+    String signUpData = jwtUtil.createSignupData(userInfo.getProviderId(), nickname);
+
+    // 쿠키 생성 및 응답 헤더 추가
+    addCookieToResponse(response, "signUpData", signUpData, TEN_MINUTES);
+
+    userHandler.saveSingUpCacheData(userInfo);
+    return UrlType.SIGNUP_URL.getUrl();
+  }
+
+  // 로그인 처리
+  private String handleLogin(UsersEntity user, HttpServletResponse response) {
     String access = jwtUtil.createJwt("access", user.getUserId(), user.getRole());
     String refresh = jwtUtil.createJwt("refresh", user.getUserId(), user.getRole());
 
-    return UriComponentsBuilder.fromUriString(UrlType.FRONT_LOCAL_URL.getUrl())
-        .queryParam(TokenType.ACCESS.getValue(), access)
-        .queryParam(TokenType.REFRESH.getValue(), refresh)
-        .build()
-        .toUriString();
+    // 쿠키 생성 및 응답 헤더 추가
+    addCookieToResponse(response, TokenType.ACCESS.getValue(), access, TEN_MINUTES);
+    addCookieToResponse(response, TokenType.REFRESH.getValue(), refresh, ONE_DAY);
+
+    return UrlType.FRONT_LOCAL_URL.getUrl();
   }
 
   @Override
