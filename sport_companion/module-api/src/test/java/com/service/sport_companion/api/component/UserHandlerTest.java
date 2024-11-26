@@ -9,9 +9,11 @@ import static org.mockito.Mockito.when;
 
 import com.service.sport_companion.api.auth.nickname.NicknameHandler;
 import com.service.sport_companion.core.exception.GlobalException;
+import com.service.sport_companion.domain.entity.SignUpDataEntity;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
 import com.service.sport_companion.domain.model.type.UserRole;
+import com.service.sport_companion.domain.repository.SignUpDataRepository;
 import com.service.sport_companion.domain.repository.UsersRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -35,6 +37,9 @@ class UserHandlerTest {
   @Mock
   private NicknameHandler nicknameHandler;
 
+  @Mock
+  private SignUpDataRepository signUpDataRepository;
+
   @InjectMocks
   private UserHandler userHandler;
 
@@ -49,6 +54,7 @@ class UserHandlerTest {
   private KakaoUserDetailsDTO kakaoUserDetails;
   private UsersEntity user;
   private UsersEntity mockUser;
+  private SignUpDataEntity signUpDataEntity;
 
   @BeforeEach
   void setUp() {
@@ -76,6 +82,12 @@ class UserHandlerTest {
         .build();
 
     mockUser = Mockito.mock(UsersEntity.class);
+
+    signUpDataEntity = SignUpDataEntity.builder()
+        .providerId(KAKAO_PROVIDER_ID)
+        .email(EMAIL)
+        .provider(KAKAO_PROVIDER)
+        .build();
   }
 
 
@@ -170,5 +182,31 @@ class UserHandlerTest {
 
     // when & then
     assertThrows(GlobalException.class, () -> userHandler.findByUserId(USERID));
+  }
+
+  @Test
+  @DisplayName("회원가입 데이터를 Redis에 저장 성공")
+  void saveSingUpCacheDataSuccessfully() {
+    // given
+    when(signUpDataRepository.save(signUpDataEntity)).thenReturn(signUpDataEntity);
+
+    // when
+    SignUpDataEntity response = signUpDataRepository.save(signUpDataEntity);
+
+    // then
+    assertEquals(response, signUpDataEntity);
+  }
+
+  @Test
+  @DisplayName("회원 정보 저장 성공")
+  void saveUserSuccessfully() {
+    // given
+    when(usersRepository.save(user)).thenReturn(user);
+
+    // when
+    UsersEntity response = usersRepository.save(user);
+
+    // then
+    assertEquals(response, user);
   }
 }

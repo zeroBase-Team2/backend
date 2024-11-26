@@ -2,20 +2,30 @@ package com.service.sport_companion.api.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.service.sport_companion.api.auth.jwt.JwtUtil;
 import com.service.sport_companion.api.auth.oauth.KakaoAuthHandler;
+import com.service.sport_companion.api.component.ClubsHandler;
+import com.service.sport_companion.api.component.RedisHandler;
+import com.service.sport_companion.api.component.SupportedClubsHandler;
 import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.core.exception.GlobalException;
+import com.service.sport_companion.domain.entity.ClubsEntity;
+import com.service.sport_companion.domain.entity.SignUpDataEntity;
+import com.service.sport_companion.domain.entity.SupportedClubsEntity;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
+import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.type.FailedResultType;
-import com.service.sport_companion.domain.model.type.TokenType;
+import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.UrlType;
 import com.service.sport_companion.domain.model.type.UserRole;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -27,7 +37,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
@@ -42,6 +51,18 @@ class AuthServiceImplTest {
   private HttpServletResponse response;
 
   @Mock
+  private HttpServletRequest request;
+
+  @Mock
+  private RedisHandler redisHandler;
+
+  @Mock
+  private ClubsHandler clubsHandler;
+
+  @Mock
+  private SupportedClubsHandler supportedClubsHandler;
+
+  @Mock
   private KakaoAuthHandler kakaoAuthHandler;
 
   @InjectMocks
@@ -49,15 +70,17 @@ class AuthServiceImplTest {
 
   private static final String EMAIL = "test@email.com";
   private static final String NICKNAME = "nickname";
-  private static final String ACCESS = "access-token";
-  private static final String REFRESH = "refresh-token";
   private static final String CODE = "kakaoCode";
   private static final String KAKAO_TOKEN = "kakao-token";
   private static final String KAKAO_PROVIDER = "kakao";
   private static final String KAKAO_PROVIDER_ID = "kakao_provider_id";
 
+
   private KakaoUserDetailsDTO kakaoUserDetails;
   private UsersEntity user;
+  private SignUpDataEntity signUpData;
+  private SignUpDto signUpDto;
+  private ClubsEntity club;
 
   @BeforeEach
   void setUp() {
@@ -83,6 +106,21 @@ class AuthServiceImplTest {
         .role(UserRole.USER)
         .createdAt(LocalDateTime.now())
         .build();
+
+    signUpData = SignUpDataEntity.builder()
+        .providerId("providerId123")
+        .email("test@email.com")
+        .provider("kakao")
+        .build();
+
+    signUpDto = new SignUpDto("providerId123", "nickname", "KIA 타이거즈");
+
+    club = ClubsEntity.builder()
+        .clubId(1L)
+        .clubName("KIA 타이거즈")
+        .emblemImg("emblem.png")
+        .build();
+
   }
 
   @Test
@@ -95,18 +133,13 @@ class AuthServiceImplTest {
     when(userHandler.getRandomNickname(1)).thenReturn(NICKNAME);
 
     // when
-    String resultResponse = authServiceImpl.oAuthForKakao(CODE, response);
+    String resultResponse = authServiceImpl.oAuthForKakao(CODE, request, response);
 
     // then
-    String response = UriComponentsBuilder.fromUriString(UrlType.SIGNUP_URL.getUrl())
-        .queryParam("email", kakaoUserDetails.getEmail())
-        .queryParam("nickname", NICKNAME)
-        .queryParam("provider", kakaoUserDetails.getProvider())
-        .queryParam("providerId", kakaoUserDetails.getProviderId())
-        .build()
-        .toUriString();
-
+    String response = UrlType.SIGNUP_URL.getUrl();
     assertEquals(response, resultResponse);
+    verify(jwtUtil).createSignupData(kakaoUserDetails.getProviderId(), NICKNAME);
+    verify(userHandler).saveSingUpCacheData(kakaoUserDetails);
   }
 
   @Test
@@ -116,20 +149,15 @@ class AuthServiceImplTest {
     when(kakaoAuthHandler.getAccessToken(CODE)).thenReturn(KAKAO_TOKEN);
     when(kakaoAuthHandler.getUserDetails(KAKAO_TOKEN)).thenReturn(kakaoUserDetails);
     when(userHandler.findUserByUserInfo(kakaoUserDetails)).thenReturn(user);
-    when(jwtUtil.createJwt("access", user.getUserId(), user.getRole())).thenReturn(ACCESS);
-    when(jwtUtil.createJwt("refresh", user.getUserId(), user.getRole())).thenReturn(REFRESH);
 
     // when
-    String resultResponse = authServiceImpl.oAuthForKakao(CODE, response);
+    String resultResponse = authServiceImpl.oAuthForKakao(CODE, request, response);
 
     // then
-    String response = UriComponentsBuilder.fromUriString(UrlType.FRONT_LOCAL_URL.getUrl())
-        .queryParam(TokenType.ACCESS.getValue(), ACCESS)
-        .queryParam(TokenType.REFRESH.getValue(), REFRESH)
-        .build()
-        .toUriString();
-
+    String response = UrlType.FRONT_LOCAL_URL.getUrl();
     assertEquals(response, resultResponse);
+    verify(jwtUtil).createJwt("access", user.getUserId(), user.getRole());
+    verify(jwtUtil).createJwt("refresh", user.getUserId(), user.getRole());
   }
 
 
@@ -141,7 +169,7 @@ class AuthServiceImplTest {
         .thenThrow(new GlobalException(FailedResultType.ACCESS_TOKEN_RETRIEVAL));
 
     // when & then
-    assertThrows(GlobalException.class, () -> authServiceImpl.oAuthForKakao(CODE, response));
+    assertThrows(GlobalException.class, () -> authServiceImpl.oAuthForKakao(CODE, request, response));
   }
 
 
@@ -154,7 +182,7 @@ class AuthServiceImplTest {
         .thenThrow(new GlobalException(FailedResultType.USER_INFO_RETRIEVAL));
 
     // when & then
-    assertThrows(GlobalException.class, () -> authServiceImpl.oAuthForKakao(CODE, response));
+    assertThrows(GlobalException.class, () -> authServiceImpl.oAuthForKakao(CODE, request, response));
   }
 
 
@@ -168,7 +196,7 @@ class AuthServiceImplTest {
         .thenThrow(new GlobalException(FailedResultType.EMAIL_ALREADY_USED));
 
     // when & then
-    assertThrows(GlobalException.class, () -> authServiceImpl.oAuthForKakao(CODE, response));
+    assertThrows(GlobalException.class, () -> authServiceImpl.oAuthForKakao(CODE, request, response));
   }
 
 
@@ -183,7 +211,7 @@ class AuthServiceImplTest {
         .thenThrow(new GlobalException(FailedResultType.UNIQUE_NICKNAME_FAILED));
 
     // when & then
-    assertThrows(GlobalException.class, () -> authServiceImpl.oAuthForKakao(CODE, response));
+    assertThrows(GlobalException.class, () -> authServiceImpl.oAuthForKakao(CODE, request, response));
   }
 
 
@@ -220,5 +248,34 @@ class AuthServiceImplTest {
     // then
     assertEquals(response.getData(), isValidNickname);
     assertEquals(response.getMessage(), "이미 사용 중인 닉네임입니다.");
+  }
+
+  @Test
+  @DisplayName("회원가입 성공")
+  void signupSuccessfully() {
+    // given
+    when(redisHandler.getSignUpDataByProviderId(signUpDto.getProviderId())).thenReturn(signUpData);
+    when(clubsHandler.findByClubName(signUpDto.getClubName())).thenReturn(club);
+
+    // when
+    ResultResponse response = authServiceImpl.signup(signUpDto);
+
+    // then
+    assertEquals(SuccessResultType.SUCCESS_SIGNUP.getStatus(), response.getStatus());
+    verify(redisHandler).getSignUpDataByProviderId(signUpDto.getProviderId());
+    verify(userHandler).saveUser(any(UsersEntity.class));
+    verify(clubsHandler).findByClubName(signUpDto.getClubName());
+    verify(supportedClubsHandler).saveSupportedClub(any(SupportedClubsEntity.class));
+  }
+
+  @Test
+  @DisplayName("회원가입 실패 : 잘못된 ProviderId")
+  void failedGetSignUpDataByProviderId() {
+    // given
+    when(redisHandler.getSignUpDataByProviderId(signUpDto.getProviderId()))
+        .thenThrow(new GlobalException(FailedResultType.PROVIDER_ID_NOT_FOUND));
+
+    // when & then
+    assertThrows(GlobalException.class, () -> authServiceImpl.signup(signUpDto));
   }
 }

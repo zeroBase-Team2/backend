@@ -86,6 +86,14 @@ public class JwtUtil {
         .signWith(secretKey)
         .compact();
   }
+
+  public String createSignupData(String providerId, String nickname) {
+    return Jwts.builder()
+        .claim("providerId", providerId)
+        .claim("nickname", nickname)
+        .signWith(secretKey)
+        .compact();
+  }
 }
 
 

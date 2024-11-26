@@ -2,9 +2,11 @@ package com.service.sport_companion.api.component;
 
 import com.service.sport_companion.api.auth.nickname.NicknameHandler;
 import com.service.sport_companion.core.exception.GlobalException;
+import com.service.sport_companion.domain.entity.SignUpDataEntity;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
 import com.service.sport_companion.domain.model.type.FailedResultType;
+import com.service.sport_companion.domain.repository.SignUpDataRepository;
 import com.service.sport_companion.domain.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ public class UserHandler {
 
   private final UsersRepository usersRepository;
   private final NicknameHandler nicknameHandler;
+  private final SignUpDataRepository signUpDataRepository;
 
   /**
    * 회원 가입 여부 검증 및 User 객체 반환 메서드
@@ -62,5 +65,24 @@ public class UserHandler {
    */
   public boolean existsByNickname(String nickname) {
     return usersRepository.existsByNickname(nickname);
+  }
+
+
+  /**
+   * 사용자 정보 캐시에 저장
+   */
+  public void saveSingUpCacheData(KakaoUserDetailsDTO userInfo) {
+    signUpDataRepository.save(SignUpDataEntity.builder()
+        .providerId(userInfo.getProviderId())
+        .email(userInfo.getEmail())
+        .provider(userInfo.getProvider())
+        .build());
+  }
+
+  /**
+   * 사용자 정보 저장
+   */
+  public void saveUser(UsersEntity user) {
+    usersRepository.save(user);
   }
 }
