@@ -17,6 +17,9 @@ public enum FailedResultType {
   UNIQUE_NICKNAME_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "닉네임 생성 중 문제가 발생했습니다."),
   ACCESS_TOKEN_RETRIEVAL(HttpStatus.UNAUTHORIZED, "액세스 토큰을 가져오는 데 실패했습니다."),
   USER_INFO_RETRIEVAL(HttpStatus.UNAUTHORIZED, "사용자 정보를 가져오는 데 실패했습니다."),
+
+  // Crawling
+  MBC_NEWS_PARSING_FAILED(HttpStatus.BAD_GATEWAY, "MBC 뉴스 파싱에 실패했습니다.")
   ;
 
   private final HttpStatus status;
