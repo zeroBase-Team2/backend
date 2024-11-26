@@ -18,3 +18,8 @@ spring:
     url: ${DEV.DATABASE.URL}
     username: ${DEV.DATABASE.USERNAME}
     password: ${DEV.DATABASE.PASSWORD}
+
+web:
+  driver:
+    id: webdriver.chrome.driver
+    path: C:\Program Files\chromedriver-win64\chromedriver.exe
