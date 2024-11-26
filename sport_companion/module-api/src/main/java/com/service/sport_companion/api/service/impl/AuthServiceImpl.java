@@ -20,7 +20,6 @@ import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.TokenType;
 import com.service.sport_companion.domain.model.type.UrlType;
 import com.service.sport_companion.domain.model.type.UserRole;
-import com.service.sport_companion.domain.repository.SupportedClubsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
