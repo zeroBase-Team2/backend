@@ -196,4 +196,17 @@ class UserHandlerTest {
     // then
     assertEquals(response, signUpDataEntity);
   }
+
+  @Test
+  @DisplayName("회원 정보 저장 성공")
+  void saveUserSuccessfully() {
+    // given
+    when(usersRepository.save(user)).thenReturn(user);
+
+    // when
+    UsersEntity response = usersRepository.save(user);
+
+    // then
+    assertEquals(response, user);
+  }
 }
