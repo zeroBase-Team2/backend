@@ -11,6 +11,8 @@ public enum FailedResultType {
   // Auth
   EMAIL_ALREADY_USED(HttpStatus.BAD_REQUEST, "가입 이력이 있는 이메일 입니다."),
   USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않은 회원 입니다."),
+  PROVIDER_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 ProviderId로 회원을 찾을 수 없습니다."),
+
 
   // API
   UNIQUE_NICKNAME_FAILED(HttpStatus.TOO_MANY_REQUESTS, "닉네임 생성에 실패했습니다."),

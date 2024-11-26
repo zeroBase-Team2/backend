@@ -78,4 +78,11 @@ public class UserHandler {
         .provider(userInfo.getProvider())
         .build());
   }
+
+  /**
+   * 사용자 정보 저장
+   */
+  public void saveUser(UsersEntity user) {
+    usersRepository.save(user);
+  }
 }

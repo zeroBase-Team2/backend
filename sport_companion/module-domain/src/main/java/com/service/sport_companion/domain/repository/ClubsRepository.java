@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClubsRepository extends JpaRepository<ClubsEntity, Long> {
 
+  ClubsEntity findByClubName(String clubName);
 }
