@@ -4,15 +4,24 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 
+
+@Slf4j
 public class HttpCookieUtil {
 
-  public static void addCookieToResponse(HttpServletResponse response, String key, String value, long maxAge) {
+  public static void addCookieToResponse(
+      HttpServletRequest request, HttpServletResponse response,
+      String key, String value, long maxAge) {
+
+    boolean isSecure = request.isSecure();
+
+    log.info("isSecure: {}", isSecure);
     String cookie =  ResponseCookie.from(key, value)
         .httpOnly(true)         // HttpOnly 설정
-        .secure(true)           // Secure 설정 (HTTPS 환경 필수)
+        .secure(isSecure)       // Secure 설정 (HTTP or HTTPS)
         .path("/")              // 쿠키 경로 설정
         .maxAge(maxAge)         // 유효 시간 (초 단위)
         .sameSite("None")       // SameSite 설정 (Cross-Origin 허용)
