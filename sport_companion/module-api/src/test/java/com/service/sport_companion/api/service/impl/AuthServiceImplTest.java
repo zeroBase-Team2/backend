@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,8 +25,10 @@ import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
+import com.service.sport_companion.domain.model.type.TokenType;
 import com.service.sport_companion.domain.model.type.UrlType;
 import com.service.sport_companion.domain.model.type.UserRole;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -37,6 +41,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
@@ -68,12 +73,15 @@ class AuthServiceImplTest {
   @InjectMocks
   private AuthServiceImpl authServiceImpl;
 
+  private static final long USERID = 1L;
   private static final String EMAIL = "test@email.com";
   private static final String NICKNAME = "nickname";
   private static final String CODE = "kakaoCode";
   private static final String KAKAO_TOKEN = "kakao-token";
   private static final String KAKAO_PROVIDER = "kakao";
   private static final String KAKAO_PROVIDER_ID = "kakao_provider_id";
+  private static final String REFRESH_TOKEN = "refresh_token";
+  private static final String NEW_ACCESS_TOKEN = "access_token";
 
 
   private KakaoUserDetailsDTO kakaoUserDetails;
@@ -98,7 +106,7 @@ class AuthServiceImplTest {
     kakaoUserDetails = new KakaoUserDetailsDTO(attributes);
 
     user = UsersEntity.builder()
-        .userId(1L)
+        .userId(USERID)
         .email(EMAIL)
         .nickname(NICKNAME)
         .provider(KAKAO_PROVIDER)
@@ -277,5 +285,47 @@ class AuthServiceImplTest {
 
     // when & then
     assertThrows(GlobalException.class, () -> authServiceImpl.signup(signUpDto));
+  }
+
+  @Test
+  @DisplayName("Access-Token 재발급 성공")
+  void success_Reissue_RefreshToken() {
+    // given
+    Cookie mockCookie = new Cookie(TokenType.REFRESH.getValue(), REFRESH_TOKEN);
+    when(request.getCookies()).thenReturn(new Cookie[] { mockCookie });
+    when(jwtUtil.isExpired(REFRESH_TOKEN)).thenReturn(false);
+    when(jwtUtil.getUserId(REFRESH_TOKEN)).thenReturn(USERID);
+    when(userHandler.findByUserId(USERID)).thenReturn(user);
+    when(jwtUtil.createJwt("access", user.getUserId(), user.getRole())).thenReturn(NEW_ACCESS_TOKEN);
+
+    // when
+    ResultResponse resultResponse = authServiceImpl.reissueToken(request, response);
+
+    // then
+    assertEquals(SuccessResultType.SUCCESS_REISSUE_TOKEN.getStatus(), resultResponse.getStatus());
+    verify(response).addHeader(TokenType.ACCESS.getValue(), NEW_ACCESS_TOKEN);
+  }
+
+  // 실패 케이스: 쿠키 값이 null인 경우
+  @Test
+  @DisplayName("Access-Token 재발급 실패 : 쿠키값이 null인 경우")
+  void reissue_RefreshToken_CookieIsNull() {
+    // given
+    when(request.getCookies()).thenReturn(null);
+
+    // when & then
+    assertThrows(GlobalException.class, () -> authServiceImpl.reissueToken(request, response));
+  }
+
+  @Test
+  @DisplayName("Access-Token 재발급 실패 : refresh 토큰이 만료가 된경우")
+  void reissue_RefreshToken_Expired() {
+    // given
+    Cookie mockCookie = new Cookie(TokenType.REFRESH.getValue(), REFRESH_TOKEN);
+    when(request.getCookies()).thenReturn(new Cookie[] { mockCookie });
+    when(jwtUtil.isExpired(REFRESH_TOKEN)).thenReturn(true);
+
+    // when & then
+    assertThrows(GlobalException.class, () -> authServiceImpl.reissueToken(request, response));
   }
 }
