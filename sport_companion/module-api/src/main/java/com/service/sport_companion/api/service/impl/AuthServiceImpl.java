@@ -9,6 +9,7 @@ import com.service.sport_companion.api.component.RedisHandler;
 import com.service.sport_companion.api.component.SupportedClubsHandler;
 import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.api.service.AuthService;
+import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.SignUpDataEntity;
 import com.service.sport_companion.domain.entity.SupportedClubsEntity;
@@ -16,13 +17,16 @@ import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
 import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
+import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.TokenType;
 import com.service.sport_companion.domain.model.type.UrlType;
 import com.service.sport_companion.domain.model.type.UserRole;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -117,6 +121,7 @@ public class AuthServiceImpl implements AuthService {
     return ResultResponse.of(SuccessResultType.SUCCESS_SIGNUP);
   }
 
+  // 사용자 생성 및 저장
   private UsersEntity createUser(SignUpDataEntity signUpData, String nickname) {
     return UsersEntity.builder()
         .email(signUpData.getEmail())
@@ -128,6 +133,7 @@ public class AuthServiceImpl implements AuthService {
         .build();
   }
 
+  // 선호 구단 처리
   private void saveSupportedClub(UsersEntity user, String clubName) {
     ClubsEntity club = clubsHandler.findByClubName(clubName);
 
@@ -137,5 +143,38 @@ public class AuthServiceImpl implements AuthService {
         .build();
 
     supportedClubsHandler.saveSupportedClub(supportedClub);
+  }
+
+  @Override
+  public ResultResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
+    Cookie[] cookies = request.getCookies();
+
+    // 쿠키 검증
+    if (cookies == null || cookies.length == 0) {
+      log.info("cookie is empty");
+      throw new GlobalException(FailedResultType.COOKIE_IS_NULL);
+    }
+
+    log.info("cookies.length -> {}", cookies.length);
+
+    // refresh-token 추출
+    String refreshToken =  Arrays.stream(request.getCookies())
+        .filter(cookie -> TokenType.REFRESH.getValue().equals(cookie.getName()))
+        .map(Cookie::getValue)
+        .findFirst()
+        .orElse(null);
+
+    // refresh-token 검증
+    if (refreshToken == null || jwtUtil.isExpired(refreshToken)) {
+      throw new GlobalException(FailedResultType.REFRESH_TOKEN_IS_EXPIRED);
+    }
+
+    Long userId = jwtUtil.getUserId(refreshToken);
+    UsersEntity user = userHandler.findByUserId(userId);
+
+    String access = jwtUtil.createJwt("access", user.getUserId(), user.getRole());
+    addCookieToResponse(request, response, TokenType.ACCESS.getValue(), access, TEN_MINUTES);
+
+    return ResultResponse.of(SuccessResultType.SUCCESS_REISSUE_TOKEN);
   }
 }

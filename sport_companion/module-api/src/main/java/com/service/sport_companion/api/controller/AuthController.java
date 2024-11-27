@@ -56,4 +56,12 @@ public class AuthController {
     ResultResponse response = authService.signup(signUpDto);
     return new ResponseEntity<>(response, response.getStatus());
   }
+
+  @GetMapping("/reissue-token")
+  public ResponseEntity<ResultResponse> reissueToken(
+      HttpServletRequest request, HttpServletResponse response) {
+
+    ResultResponse resultResponse = authService.reissueToken(request, response);
+    return new ResponseEntity<>(resultResponse, resultResponse.getStatus());
+  }
 }

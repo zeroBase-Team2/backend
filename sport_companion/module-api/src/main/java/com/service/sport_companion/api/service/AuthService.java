@@ -15,4 +15,7 @@ public interface AuthService {
 
   // 회원가입 추가 데이터 저장
   ResultResponse signup(SignUpDto signUpDto);
+
+  // Jwt 토큰 재발급 로직
+  ResultResponse reissueToken(HttpServletRequest request, HttpServletResponse response);
 }
