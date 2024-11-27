@@ -13,6 +13,7 @@ public enum SuccessResultType {
   SUCCESS_LOGIN(HttpStatus.OK, "로그인 성공!"),
   AVAILABLE_NICKNAME(HttpStatus.OK, "사용 가능한 닉네임입니다."),
   UNAVAILABLE_NICKNAME(HttpStatus.OK, "이미 사용 중인 닉네임입니다."),
+  SUCCESS_REISSUE_TOKEN(HttpStatus.OK, "Access 토큰 재발급 성공."),
 
   //Club
   SUCCESS_GET_ALL_CLUBS_LIST(HttpStatus.OK, "모든 구단 조회 성공!"),

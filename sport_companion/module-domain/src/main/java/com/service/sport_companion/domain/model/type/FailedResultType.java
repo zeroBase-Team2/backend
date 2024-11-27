@@ -12,6 +12,8 @@ public enum FailedResultType {
   EMAIL_ALREADY_USED(HttpStatus.BAD_REQUEST, "가입 이력이 있는 이메일 입니다."),
   USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않은 회원 입니다."),
   PROVIDER_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 ProviderId로 회원을 찾을 수 없습니다."),
+  COOKIE_IS_NULL(HttpStatus.FORBIDDEN, "쿠키 값이 존재하지 않습니다."),
+  REFRESH_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "Refresh 토큰이 만료되었습니다!"),
 
 
   // API
