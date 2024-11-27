@@ -173,7 +173,7 @@ public class AuthServiceImpl implements AuthService {
     UsersEntity user = userHandler.findByUserId(userId);
 
     String access = jwtUtil.createJwt("access", user.getUserId(), user.getRole());
-    addCookieToResponse(request, response, TokenType.ACCESS.getValue(), access, TEN_MINUTES);
+    response.addHeader(TokenType.ACCESS.getValue(), access);
 
     return ResultResponse.of(SuccessResultType.SUCCESS_REISSUE_TOKEN);
   }

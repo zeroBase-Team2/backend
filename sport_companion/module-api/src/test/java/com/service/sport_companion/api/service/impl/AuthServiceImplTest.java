@@ -303,8 +303,7 @@ class AuthServiceImplTest {
 
     // then
     assertEquals(SuccessResultType.SUCCESS_REISSUE_TOKEN.getStatus(), resultResponse.getStatus());
-    verify(response).addHeader(eq(HttpHeaders.SET_COOKIE),
-        argThat(cookie -> cookie.contains(TokenType.ACCESS.getValue() + "=" + NEW_ACCESS_TOKEN)));
+    verify(response).addHeader(TokenType.ACCESS.getValue(), NEW_ACCESS_TOKEN);
   }
 
   // 실패 케이스: 쿠키 값이 null인 경우
