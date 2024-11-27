@@ -24,7 +24,7 @@ class MbcNewsCrawlingTest {
     // given
     String html = """
             <body>
-              <div class="list_area">
+              <div class="result_list">
                 <ul>
                   <li>
                     <a href="href_url">
@@ -33,6 +33,8 @@ class MbcNewsCrawlingTest {
                       </span>
                       <span class="txt_w">
                         <span class="tit">headline</span>
+                        <span class="sub"><span class="date">""" + LocalDate.now() + """
+                      </span></span>
                       </span>
                     </a>
                   </li>
