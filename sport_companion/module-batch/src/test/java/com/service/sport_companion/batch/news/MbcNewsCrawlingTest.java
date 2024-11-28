@@ -22,6 +22,7 @@ class MbcNewsCrawlingTest {
   @DisplayName("parsing : html에서 정확히 파싱하는지 테스트")
   void parsingSuccess() {
     // given
+    String baseUrl = "https://imnews.imbc.com";
     String html = """
             <body>
               <div class="result_list">
@@ -50,7 +51,7 @@ class MbcNewsCrawlingTest {
     assertEquals(result.size(), 1);
     assertEquals(result.get(0).getHeadline(), "headline");
     assertEquals(result.get(0).getThumbnail(), "img_url");
-    assertEquals(result.get(0).getNewsLink(), "href_url");
+    assertEquals(result.get(0).getNewsLink(), baseUrl + "href_url");
     assertEquals(result.get(0).getNewsDate(), LocalDate.now());
     assertEquals(result.get(0).getNewsType(), NewsType.VIDEO);
   }
