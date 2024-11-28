@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class KakaoCode {
+public class KakaoCodeDto {
 
   @JsonProperty("code")
   private String code;
 
   @JsonCreator
-  public KakaoCode(String code) {
+  public KakaoCodeDto(String code) {
     this.code = code;
   }
 }
