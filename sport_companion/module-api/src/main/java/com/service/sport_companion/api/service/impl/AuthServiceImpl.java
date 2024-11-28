@@ -96,18 +96,18 @@ public class AuthServiceImpl implements AuthService {
 
   // 닉네임 중복 검증
   @Override
-  public ResultResponse checkNickname(String nickname) {
+  public ResultResponse<Boolean> checkNickname(String nickname) {
     boolean isValidNickname = !userHandler.existsByNickname(nickname);
 
     SuccessResultType resultType = (isValidNickname) ?
       SuccessResultType.AVAILABLE_NICKNAME : SuccessResultType.UNAVAILABLE_NICKNAME;
 
-    return new ResultResponse(resultType, isValidNickname);
+    return new ResultResponse<>(resultType, isValidNickname);
   }
 
   // 회원가입
   @Override
-  public ResultResponse signup(SignUpDto signUpDto) {
+  public ResultResponse<Void> signup(SignUpDto signUpDto) {
     // 1. Redis에서 사용자 데이터 가져오기
     SignUpDataEntity signUpData = redisHandler.getSignUpDataByProviderId(signUpDto.getProviderId());
 
@@ -146,7 +146,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public ResultResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
+  public ResultResponse<Void> reissueToken(HttpServletRequest request, HttpServletResponse response) {
     Cookie[] cookies = request.getCookies();
 
     // 쿠키 검증

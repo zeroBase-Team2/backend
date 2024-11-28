@@ -11,11 +11,11 @@ public interface AuthService {
   String oAuthForKakao(String code, HttpServletRequest request, HttpServletResponse response);
 
   // 닉네임 중복 확인
-  ResultResponse checkNickname(String nickname);
+  ResultResponse<Boolean> checkNickname(String nickname);
 
   // 회원가입 추가 데이터 저장
-  ResultResponse signup(SignUpDto signUpDto);
+  ResultResponse<Void> signup(SignUpDto signUpDto);
 
   // Jwt 토큰 재발급 로직
-  ResultResponse reissueToken(HttpServletRequest request, HttpServletResponse response);
+  ResultResponse<Void> reissueToken(HttpServletRequest request, HttpServletResponse response);
 }
