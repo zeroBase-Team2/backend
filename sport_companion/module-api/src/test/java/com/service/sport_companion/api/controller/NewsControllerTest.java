@@ -1,12 +1,14 @@
 package com.service.sport_companion.api.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.service.sport_companion.api.service.NewsService;
 import com.service.sport_companion.domain.model.dto.request.news.NewsParameterDto;
+import com.service.sport_companion.domain.model.type.NewsType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +42,9 @@ class NewsControllerTest {
   @Captor
   private ArgumentCaptor<Pageable> pageableCaptor;
 
+  @Captor
+  private ArgumentCaptor<NewsType> newsTypeCaptor;
+
   @BeforeEach
   void setup() {
     MockitoAnnotations.openMocks(this);
@@ -64,13 +69,15 @@ class NewsControllerTest {
       .andExpect(status().isOk());
 
     // then
-    verify(newsService).getTodayNews(newsParameterCaptor.capture(), pageableCaptor.capture());
+    verify(newsService).getTodayNews(newsParameterCaptor.capture(), newsTypeCaptor.capture(), pageableCaptor.capture());
 
     NewsParameterDto capturedDto = newsParameterCaptor.getValue();
     Pageable capturedPageable = pageableCaptor.getValue();
+    NewsType capturedNewsType = newsTypeCaptor.getValue();
 
     assertEquals(capturedDto.getDate(), date);
     assertEquals(capturedPageable.getPageSize(), size);
+    assertEquals(capturedNewsType, NewsType.TEXT);
   }
 
   @Test
@@ -81,7 +88,7 @@ class NewsControllerTest {
     mockMvc.perform(get(baseUrl)).andExpect(status().isOk());
 
     // when
-    verify(newsService).getTodayNews(newsParameterCaptor.capture(), pageableCaptor.capture());
+    verify(newsService).getTodayNews(newsParameterCaptor.capture(), any(), pageableCaptor.capture());
 
     // then
     NewsParameterDto capturedDto = newsParameterCaptor.getValue();

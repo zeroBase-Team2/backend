@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import com.service.sport_companion.api.component.NewsHandler;
 import com.service.sport_companion.domain.model.dto.request.news.NewsParameterDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
+import com.service.sport_companion.domain.model.type.NewsType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -29,15 +30,15 @@ class NewsServiceImplTest {
   private NewsHandler newsHandler;
 
   @Test
-  @DisplayName("TEXT 뉴스 조회")
-  public void getTextNews() {
+  @DisplayName("뉴스 조회 성공")
+  public void getNewsSuccess() {
     // given
-    given(newsHandler.findTextNewsByNewsDateOrderByRecent(
-      any(NewsParameterDto.class), any(Pageable.class))
+    given(newsHandler.findNewsByNewsDateOrderByRecent(
+      any(NewsParameterDto.class), any(NewsType.class), any(Pageable.class))
     ).willReturn(List.of());
 
     // when
-    ResultResponse response = newsService.getTodayNews(new NewsParameterDto(), Pageable.ofSize(5));
+    ResultResponse response = newsService.getTodayNews(new NewsParameterDto(), NewsType.TEXT, Pageable.ofSize(5));
 
     // then
     assertInstanceOf(List.class, response.getData());
