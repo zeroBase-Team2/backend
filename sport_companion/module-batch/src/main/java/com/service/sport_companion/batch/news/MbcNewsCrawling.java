@@ -5,6 +5,7 @@ import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.NewsEntity;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.NewsType;
+import com.service.sport_companion.domain.model.type.UrlType;
 import jakarta.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -33,7 +34,7 @@ import org.springframework.stereotype.Component;
 public class MbcNewsCrawling {
 
   private final WebDriverHandler webDriverHandler;
-  private final String baseUrl = "https://imnews.imbc.com";
+  private final String baseUrl = UrlType.MBC_NEWS_URL.getUrl();
 
   // 배치로 실행시킬 MBC News 크롤링 메인 작업
   @Transactional
