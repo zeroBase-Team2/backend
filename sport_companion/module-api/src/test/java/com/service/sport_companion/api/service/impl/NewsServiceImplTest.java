@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.service.sport_companion.api.component.NewsHandler;
-import com.service.sport_companion.domain.model.dto.request.news.NewsParameterDto;
 import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.type.NewsType;
@@ -34,12 +33,11 @@ class NewsServiceImplTest {
   @DisplayName("뉴스 조회 성공")
   public void getNewsSuccess() {
     // given
-    given(newsHandler.findNewsByNewsDateOrderByRecent(
-      any(NewsParameterDto.class), any(NewsType.class), any(Pageable.class))
-    ).willReturn(Page.empty());
+    given(newsHandler.findByNewsTypeOrderByCreatedAtDesc(any(NewsType.class), any(Pageable.class)))
+      .willReturn(Page.empty());
 
     // when
-    ResultResponse response = newsService.getTodayNews(new NewsParameterDto(), NewsType.TEXT, Pageable.ofSize(5));
+    ResultResponse response = newsService.getNews(NewsType.TEXT, Pageable.ofSize(5));
 
     // then
     assertInstanceOf(PageResponse.class, response.getData());

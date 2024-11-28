@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.service.sport_companion.api.service.NewsService;
-import com.service.sport_companion.domain.model.dto.request.news.NewsParameterDto;
 import com.service.sport_companion.domain.model.type.NewsType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,9 +34,6 @@ class NewsControllerTest {
   private NewsController newsController;
 
   private final String baseUrl = "/api/v1/news";
-
-  @Captor
-  private ArgumentCaptor<NewsParameterDto> newsParameterCaptor;
 
   @Captor
   private ArgumentCaptor<Pageable> pageableCaptor;
@@ -69,13 +65,11 @@ class NewsControllerTest {
       .andExpect(status().isOk());
 
     // then
-    verify(newsService).getTodayNews(newsParameterCaptor.capture(), newsTypeCaptor.capture(), pageableCaptor.capture());
+    verify(newsService).getNews(newsTypeCaptor.capture(), pageableCaptor.capture());
 
-    NewsParameterDto capturedDto = newsParameterCaptor.getValue();
     Pageable capturedPageable = pageableCaptor.getValue();
     NewsType capturedNewsType = newsTypeCaptor.getValue();
 
-    assertEquals(capturedDto.getDate(), date);
     assertEquals(capturedPageable.getPageSize(), size);
     assertEquals(capturedNewsType, NewsType.TEXT);
   }
@@ -88,13 +82,11 @@ class NewsControllerTest {
     mockMvc.perform(get(baseUrl)).andExpect(status().isOk());
 
     // when
-    verify(newsService).getTodayNews(newsParameterCaptor.capture(), any(), pageableCaptor.capture());
+    verify(newsService).getNews(any(), pageableCaptor.capture());
 
     // then
-    NewsParameterDto capturedDto = newsParameterCaptor.getValue();
     Pageable capturedPageable = pageableCaptor.getValue();
 
-    assertEquals(capturedDto.getDate(), LocalDate.now());
     assertEquals(capturedPageable.getPageSize(), defaultSize);
   }
 }
