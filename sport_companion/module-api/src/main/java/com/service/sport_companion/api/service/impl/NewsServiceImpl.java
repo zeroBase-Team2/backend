@@ -3,7 +3,6 @@ package com.service.sport_companion.api.service.impl;
 import com.service.sport_companion.api.component.NewsHandler;
 import com.service.sport_companion.api.service.NewsService;
 import com.service.sport_companion.domain.entity.NewsEntity;
-import com.service.sport_companion.domain.model.dto.request.news.NewsParameterDto;
 import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.news.NewsResponseDto;
@@ -23,11 +22,8 @@ public class NewsServiceImpl implements NewsService {
   private final NewsHandler newsHandler;
 
   @Override
-  public ResultResponse getTodayNews(
-    NewsParameterDto newsParameter, NewsType newsType, Pageable pageable
-  ) {
-    Page<NewsEntity> newsPage = newsHandler.findNewsByNewsDateOrderByRecent(
-      newsParameter, newsType, pageable);
+  public ResultResponse getNews(NewsType newsType, Pageable pageable) {
+    Page<NewsEntity> newsPage = newsHandler.findByNewsTypeOrderByCreatedAtDesc(newsType, pageable);
 
     return new ResultResponse(SuccessResultType.SUCCESS_GET_NEWS_LIST,
       new PageResponse<>(
