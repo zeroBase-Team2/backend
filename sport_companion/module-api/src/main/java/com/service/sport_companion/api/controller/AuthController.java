@@ -1,25 +1,21 @@
 package com.service.sport_companion.api.controller;
 
 import com.service.sport_companion.api.service.AuthService;
-import com.service.sport_companion.domain.model.auth.KakaoCode;
+import com.service.sport_companion.domain.model.auth.KakaoCodeDto;
 import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -32,7 +28,7 @@ public class AuthController {
 
   @PostMapping("/kakao")
   public ResponseEntity<ResultResponse> oAuthForKakao(HttpServletResponse response,
-      @RequestBody @Valid KakaoCode kakaoCode) {
+      @RequestBody @Valid KakaoCodeDto kakaoCode) {
 
     ResultResponse resultResponse = authService.oAuthForKakao(kakaoCode.getCode(), response);
     return new ResponseEntity<>(resultResponse, resultResponse.getStatus());
