@@ -33,11 +33,12 @@ import org.springframework.stereotype.Component;
 public class MbcNewsCrawling {
 
   private final WebDriverHandler webDriverHandler;
+  private final String baseUrl = "https://imnews.imbc.com";
 
   // 배치로 실행시킬 MBC News 크롤링 메인 작업
   @Transactional
   public List<NewsEntity> crawlingMain() {
-    String url = "https://imnews.imbc.com/more/search/?mainSearch=%EC%95%BC%EA%B5%AC";
+    String url = baseUrl + "/more/search/?mainSearch=%EC%95%BC%EA%B5%AC";
     int pageSize = 5;
 
     WebDriver driver = webDriverHandler.getWebDriver(url);
@@ -110,7 +111,7 @@ public class MbcNewsCrawling {
       }
 
       newsItemList.add(NewsEntity.builder()
-        .newsLink(newsLink)
+        .newsLink(baseUrl + newsLink)
         .thumbnail(thumbnail)
         .headline(headline)
         .newsType(newsType)
