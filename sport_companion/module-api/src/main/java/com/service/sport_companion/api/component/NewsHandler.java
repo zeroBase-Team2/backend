@@ -15,10 +15,10 @@ public class NewsHandler {
 
   private final NewsRepository newsRepository;
 
-  public List<NewsEntity> findTextNewsByNewsDateOrderByRecent(
-    NewsParameterDto newsParameter, Pageable pageable
+  public List<NewsEntity> findNewsByNewsDateOrderByRecent(
+    NewsParameterDto newsParameter, NewsType newsType, Pageable pageable
   ) {
     return newsRepository.findByNewsDateAndNewsTypeOrderByCreatedAt(
-      newsParameter.getDate(), NewsType.TEXT, pageable);
+      newsParameter.getDate(), newsType, pageable);
   }
 }
