@@ -27,4 +27,11 @@ public class NewsController {
   ) {
     return ResponseEntity.ok(newsService.getTodayNews(newsParameter, NewsType.TEXT, pageable));
   }
+
+  @GetMapping("/video")
+  public ResponseEntity<ResultResponse> getTodayVideo(
+    NewsParameterDto newsParameter, @PageableDefault Pageable pageable
+  ) {
+    return ResponseEntity.ok(newsService.getTodayNews(newsParameter, NewsType.VIDEO, pageable));
+  }
 }
