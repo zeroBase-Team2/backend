@@ -52,7 +52,7 @@ public class SecurityConfig {
             .anyRequest().authenticated());
 
     http
-        .addFilterAfter(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
     http
         .sessionManagement(session -> session

@@ -1,6 +1,7 @@
 package com.service.sport_companion.api.controller;
 
 import com.service.sport_companion.api.service.AuthService;
+import com.service.sport_companion.domain.model.auth.KakaoCode;
 import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,9 +32,9 @@ public class AuthController {
 
   @PostMapping("/kakao")
   public ResponseEntity<ResultResponse> oAuthForKakao(HttpServletResponse response,
-      @RequestBody @Valid String code) {
+      @RequestBody @Valid KakaoCode kakaoCode) {
 
-    ResultResponse resultResponse = authService.oAuthForKakao(code, response);
+    ResultResponse resultResponse = authService.oAuthForKakao(kakaoCode.getCode(), response);
     return new ResponseEntity<>(resultResponse, resultResponse.getStatus());
   }
 
