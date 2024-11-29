@@ -19,7 +19,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 @Configuration
 @EnableBatchProcessing
 @RequiredArgsConstructor
-public class BatchConfig {
+public class NewsCrawlConfig {
 
   private final EntityManagerFactory entityManagerFactory;
   private final MbcNewsCrawling mbcNewsCrawling;
