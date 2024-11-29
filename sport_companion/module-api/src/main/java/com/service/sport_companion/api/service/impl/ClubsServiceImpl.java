@@ -19,10 +19,10 @@ public class ClubsServiceImpl implements ClubsService {
 
   // 모든 구단 조회
   @Override
-  public ResultResponse getAllClubList() {
+  public ResultResponse<List<Clubs>> getAllClubList() {
     // 다른 종목 추가시 수정할 예정
     List<Clubs> clubList = clubsHandler.getAllClubList();
 
-    return new ResultResponse(SuccessResultType.SUCCESS_GET_ALL_CLUBS_LIST, clubList);
+    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_ALL_CLUBS_LIST, clubList);
   }
 }

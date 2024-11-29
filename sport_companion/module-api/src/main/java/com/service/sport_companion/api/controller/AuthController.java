@@ -35,24 +35,24 @@ public class AuthController {
   }
 
   @GetMapping("/check-nickname/{nickname}")
-  public ResponseEntity<ResultResponse> checkNickname(
+  public ResponseEntity<ResultResponse<Boolean>> checkNickname(
     @NotBlank(message = "닉네임을 입력해 주세요.") @PathVariable("nickname") String nickname) {
 
     return ResponseEntity.ok(authService.checkNickname(nickname));
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<ResultResponse> signup(@RequestBody @Valid SignUpDto signUpDto) {
+  public ResponseEntity<ResultResponse<Void>> signup(@RequestBody @Valid SignUpDto signUpDto) {
 
-    ResultResponse response = authService.signup(signUpDto);
+    ResultResponse<Void> response = authService.signup(signUpDto);
     return new ResponseEntity<>(response, response.getStatus());
   }
 
   @GetMapping("/reissue-token")
-  public ResponseEntity<ResultResponse> reissueToken(
+  public ResponseEntity<ResultResponse<Void>> reissueToken(
       HttpServletRequest request, HttpServletResponse response) {
 
-    ResultResponse resultResponse = authService.reissueToken(request, response);
+    ResultResponse<Void> resultResponse = authService.reissueToken(request, response);
     return new ResponseEntity<>(resultResponse, resultResponse.getStatus());
   }
 }
