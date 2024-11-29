@@ -6,6 +6,8 @@ import com.service.sport_companion.domain.model.dto.request.topic.CreateTopicDto
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,15 @@ public class CustomTopicController {
     @RequestBody CreateTopicDto createTopicDto
   ) {
     ResultResponse<Void> response = customTopicService.createTopic(userId, createTopicDto);
+
+    return new ResponseEntity<>(response, response.getStatus());
+  }
+
+  @DeleteMapping("/{topicId}")
+  public ResponseEntity<ResultResponse<Void>> deleteTopic(@CallUser Long userId,
+    @PathVariable("topicId") Long topicId
+  ) {
+    ResultResponse<Void> response = customTopicService.deleteTopic(userId, topicId);
 
     return new ResponseEntity<>(response, response.getStatus());
   }

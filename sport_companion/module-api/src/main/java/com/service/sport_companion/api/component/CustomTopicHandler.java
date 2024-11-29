@@ -26,4 +26,8 @@ public class CustomTopicHandler {
     return customTopicRepository.findById(topicId)
       .orElseThrow(() -> new GlobalException(FailedResultType.CUSTOM_TOPIC_NOT_FOUND));
   }
+
+  public void deleteTopic(Long topicId) {
+    customTopicRepository.deleteById(topicId);
+  }
 }

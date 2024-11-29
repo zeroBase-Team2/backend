@@ -6,4 +6,6 @@ import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 public interface CustomTopicService {
 
   ResultResponse<Void> createTopic(Long userId, CreateTopicDto createTopicDto);
+
+  ResultResponse<Void> deleteTopic(Long userId, Long topicId);
 }

@@ -30,4 +30,20 @@ public class CustomTopicServiceImpl implements CustomTopicService {
 
     return ResultResponse.of(SuccessResultType.SUCCESS_CREATE_CUSTOM_TOPIC);
   }
+
+  @Override
+  public ResultResponse<Void> deleteTopic(Long userId, Long topicId) {
+    UsersEntity userEntity = userHandler.findByUserId(userId);
+    CustomTopicEntity customTopicEntity = customTopicHandler.findById(topicId);
+
+    // 작성자이거나 관리자인 경우 삭제할 수 있다.
+    if (!customTopicEntity.getUsers().equals(userEntity)
+      && !userEntity.getRole().equals(UserRole.ADMIN)) {
+      throw new GlobalException(FailedResultType.DELETE_TOPIC_FORBIDDEN);
+    }
+
+    customTopicHandler.deleteTopic(topicId);
+
+    return ResultResponse.of(SuccessResultType.SUCCESS_DELETE_CUSTOM_TOPIC);
+  }
 }
