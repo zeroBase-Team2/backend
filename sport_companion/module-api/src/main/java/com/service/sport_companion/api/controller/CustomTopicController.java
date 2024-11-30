@@ -6,6 +6,7 @@ import com.service.sport_companion.domain.model.dto.request.topic.CreateTopicDto
 import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.topic.CustomTopicResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,16 @@ public class CustomTopicController {
   ) {
     ResultResponse<PageResponse<CustomTopicResponse>> response = customTopicService
       .getTopicList(userId, pageable);
+
+    return new ResponseEntity<>(response, response.getStatus());
+  }
+
+  // 주제 top5 조회
+  @GetMapping("/top5")
+  public ResponseEntity<ResultResponse<List<CustomTopicResponse>>> getTopicTop5(
+    @CallUser Long userId
+  ) {
+    ResultResponse<List<CustomTopicResponse>> response = customTopicService.getTopicTop5(userId);
 
     return new ResponseEntity<>(response, response.getStatus());
   }

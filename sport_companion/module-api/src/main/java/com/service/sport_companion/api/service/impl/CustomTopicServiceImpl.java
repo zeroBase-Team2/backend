@@ -14,6 +14,8 @@ import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.UserRole;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,6 +75,21 @@ public class CustomTopicServiceImpl implements CustomTopicService {
             isAuthor(userId, topic.getUsers().getUserId()))
           )
           .toList()));
+  }
+
+  @Override
+  public ResultResponse<List<CustomTopicResponse>> getTopicTop5(Long userId) {
+    // 일주일 간 올라온 토픽 중 top5를 선정하기 위해 7일 전 날짜 저장
+    LocalDateTime before7Days = LocalDateTime.now().minusDays(7);
+
+    List<CustomTopicEntity> topicPage = customTopicHandler.findTop5OrderByVoteCount(before7Days);
+
+    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_CUSTOM_TOPIC, topicPage.stream()
+      .map(topic -> CustomTopicResponse.of(
+        topic,
+        isAuthor(userId, topic.getUsers().getUserId()))
+      )
+      .toList());
   }
 
   private boolean isAuthor(Long userId, Long authorId) {

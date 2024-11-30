@@ -6,6 +6,8 @@ import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.dto.request.topic.CreateTopicDto;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.repository.CustomTopicRepository;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,5 +37,9 @@ public class CustomTopicHandler {
 
   public Page<CustomTopicEntity> findTopicOrderByCreatedAt(Pageable pageable) {
     return customTopicRepository.findAllByOrderByCreatedAtDesc(pageable);
+  }
+
+  public List<CustomTopicEntity> findTop5OrderByVoteCount(LocalDateTime createdAt) {
+    return customTopicRepository.findTop5ByCreatedAtAfterOrderByVoteCountDesc(createdAt);
   }
 }

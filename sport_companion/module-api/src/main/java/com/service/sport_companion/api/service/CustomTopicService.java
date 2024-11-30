@@ -4,6 +4,7 @@ import com.service.sport_companion.domain.model.dto.request.topic.CreateTopicDto
 import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.topic.CustomTopicResponse;
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface CustomTopicService {
@@ -13,4 +14,6 @@ public interface CustomTopicService {
   ResultResponse<Void> deleteTopic(Long userId, Long topicId);
 
   ResultResponse<PageResponse<CustomTopicResponse>> getTopicList(Long userId, Pageable pageable);
+
+  ResultResponse<List<CustomTopicResponse>> getTopicTop5(Long userId);
 }
