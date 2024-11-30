@@ -25,16 +25,26 @@ public class FixturesEntity {
   private Long fixtureId;
 
   @ManyToOne
+  @JoinColumn(name = "season_id", nullable = false)
+  private SeasonsEntity seasons;
+
+  @ManyToOne
   @JoinColumn(name = "home_club_id", nullable = false)
   private ClubsEntity homeClub;
+
+  private String homeScore;
 
   @ManyToOne
   @JoinColumn(name = "away_club_id", nullable = false)
   private ClubsEntity awayClub;
 
+  private String awayScore;
+
   private LocalDate fixtureDate;
 
-  private LocalTime fixtureTime;
+  private String fixtureTime;
 
   private String stadium;
+
+  private String notes;
 }

@@ -19,6 +19,9 @@ public enum SuccessResultType {
   //Club
   SUCCESS_GET_ALL_CLUBS_LIST(HttpStatus.OK, "모든 구단 조회 성공!"),
 
+  // Fixtures
+  SUCCESS_CRAWL_FIXTURE(HttpStatus.OK, "크롤링 성공"),
+
   ;
 
   private final HttpStatus status;
