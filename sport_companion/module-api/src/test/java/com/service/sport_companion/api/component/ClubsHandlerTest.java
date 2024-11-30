@@ -27,6 +27,7 @@ class ClubsHandlerTest {
   private ClubsHandler clubsHandler;
 
   private final String CLUB_NAME = "KIA 타이거즈";
+  private final String TEAM = "KIA";
 
   private ClubsEntity club;
   private List<ClubsEntity> clubsEntities;
@@ -94,5 +95,18 @@ class ClubsHandlerTest {
 
     // then
     assertEquals(clubsList.size(), response.size());
+  }
+
+  @Test
+  @DisplayName("구단 조회 성공")
+  void shouldReturnClubsEntityByTeam() {
+    // given
+    when(clubsRepository.findByFieldContaining(TEAM)).thenReturn(club);
+
+    // when
+    ClubsEntity response = clubsHandler.findByFieldContaining(TEAM);
+
+    // then
+    assertEquals(response, club);
   }
 }
