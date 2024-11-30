@@ -3,10 +3,14 @@ package com.service.sport_companion.api.controller;
 import com.service.sport_companion.api.service.CustomTopicService;
 import com.service.sport_companion.domain.model.annotation.CallUser;
 import com.service.sport_companion.domain.model.dto.request.topic.CreateTopicDto;
+import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
+import com.service.sport_companion.domain.model.dto.response.topic.CustomTopicResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +38,18 @@ public class CustomTopicController {
     @PathVariable("topicId") Long topicId
   ) {
     ResultResponse<Void> response = customTopicService.deleteTopic(userId, topicId);
+
+    return new ResponseEntity<>(response, response.getStatus());
+  }
+
+  // 주제 최신순으로 조회
+  @GetMapping
+  public ResponseEntity<ResultResponse<PageResponse<CustomTopicResponse>>> getTopicList(
+    @CallUser Long userId,
+    Pageable pageable
+  ) {
+    ResultResponse<PageResponse<CustomTopicResponse>> response = customTopicService
+      .getTopicList(userId, pageable);
 
     return new ResponseEntity<>(response, response.getStatus());
   }

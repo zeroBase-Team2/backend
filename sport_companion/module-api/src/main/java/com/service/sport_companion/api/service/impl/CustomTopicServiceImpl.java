@@ -7,12 +7,16 @@ import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.CustomTopicEntity;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.dto.request.topic.CreateTopicDto;
+import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
+import com.service.sport_companion.domain.model.dto.response.topic.CustomTopicResponse;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -45,5 +49,33 @@ public class CustomTopicServiceImpl implements CustomTopicService {
     customTopicHandler.deleteTopic(topicId);
 
     return ResultResponse.of(SuccessResultType.SUCCESS_DELETE_CUSTOM_TOPIC);
+  }
+
+  @Override
+  public ResultResponse<PageResponse<CustomTopicResponse>> getTopicList(Long userId,
+    Pageable pageable
+  ) {
+    // 페이지 요청값이 없으면 전체를 조회
+    if (pageable == null) {
+      pageable = Pageable.unpaged();
+    }
+
+    Page<CustomTopicEntity> topicPage = customTopicHandler.findTopicOrderByCreatedAt(pageable);
+
+    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_CUSTOM_TOPIC,
+      new PageResponse<>(
+        topicPage.getNumber(),
+        topicPage.getTotalPages(),
+        topicPage.getTotalElements(),
+        topicPage.getContent().stream()
+          .map(topic -> CustomTopicResponse.of(
+            topic,
+            isAuthor(userId, topic.getUsers().getUserId()))
+          )
+          .toList()));
+  }
+
+  private boolean isAuthor(Long userId, Long authorId) {
+    return userId.equals(authorId);
   }
 }
