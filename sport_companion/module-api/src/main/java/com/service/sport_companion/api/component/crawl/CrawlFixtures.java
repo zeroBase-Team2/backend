@@ -116,7 +116,7 @@ public class CrawlFixtures {
     }
   }
 
-  private FixturesEntity parseToFixturesEntity(String year, String lastDate, Element schedule, String key) {
+  public FixturesEntity parseToFixturesEntity(String year, String lastDate, Element schedule, String key) {
     // 날짜 파싱
     LocalDate fixtureDate = (lastDate != null) ? parseToLocalDate(year, lastDate) : null;
 
