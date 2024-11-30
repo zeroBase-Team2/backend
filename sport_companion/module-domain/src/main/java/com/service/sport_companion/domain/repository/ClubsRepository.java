@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ClubsRepository extends JpaRepository<ClubsEntity, Long> {
 
   ClubsEntity findByClubName(String clubName);
+
+  ClubsEntity findByClubNameContaining(String team);
 }

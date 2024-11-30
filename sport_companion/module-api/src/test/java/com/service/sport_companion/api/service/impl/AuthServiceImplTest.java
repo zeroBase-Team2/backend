@@ -138,7 +138,7 @@ class AuthServiceImplTest {
     when(userHandler.getRandomNickname(1)).thenReturn(NICKNAME);
 
     // when
-    ResultResponse resultResponse = authServiceImpl.oAuthForKakao(CODE, response);
+    ResultResponse<?> resultResponse = authServiceImpl.oAuthForKakao(CODE, response);
 
     // then
     assertEquals(SuccessResultType.SUCCESS_SIGNUP_REQUIRED.getStatus(), resultResponse.getStatus());
@@ -157,7 +157,7 @@ class AuthServiceImplTest {
         .thenReturn(REFRESH_TOKEN);
 
     // when
-    ResultResponse resultResponse = authServiceImpl.oAuthForKakao(CODE, response);
+    ResultResponse<?> resultResponse = authServiceImpl.oAuthForKakao(CODE, response);
 
     // then
     assertEquals(SuccessResultType.SUCCESS_LOGIN.getStatus(), resultResponse.getStatus());
@@ -228,7 +228,7 @@ class AuthServiceImplTest {
     when(userHandler.existsByNickname(nickname)).thenReturn(!isValidNickname);
 
     // when
-    ResultResponse response = authServiceImpl.checkNickname(nickname);
+    ResultResponse<Boolean> response = authServiceImpl.checkNickname(nickname);
 
     // then
     assertEquals(response.getData(), isValidNickname);
@@ -246,7 +246,7 @@ class AuthServiceImplTest {
     when(userHandler.existsByNickname(nickname)).thenReturn(!isValidNickname);
 
     // when
-    ResultResponse response = authServiceImpl.checkNickname(nickname);
+    ResultResponse<Boolean> response = authServiceImpl.checkNickname(nickname);
 
     // then
     assertEquals(response.getData(), isValidNickname);
@@ -261,7 +261,7 @@ class AuthServiceImplTest {
     when(clubsHandler.findByClubName(signUpDto.getClubName())).thenReturn(club);
 
     // when
-    ResultResponse response = authServiceImpl.signup(signUpDto);
+    ResultResponse<Void> response = authServiceImpl.signup(signUpDto);
 
     // then
     assertEquals(SuccessResultType.SUCCESS_SIGNUP.getStatus(), response.getStatus());
@@ -294,7 +294,7 @@ class AuthServiceImplTest {
     when(jwtUtil.createJwt("access", user.getUserId(), user.getRole())).thenReturn(NEW_ACCESS_TOKEN);
 
     // when
-    ResultResponse resultResponse = authServiceImpl.reissueToken(request, response);
+    ResultResponse<Void> resultResponse = authServiceImpl.reissueToken(request, response);
 
     // then
     assertEquals(SuccessResultType.SUCCESS_REISSUE_TOKEN.getStatus(), resultResponse.getStatus());

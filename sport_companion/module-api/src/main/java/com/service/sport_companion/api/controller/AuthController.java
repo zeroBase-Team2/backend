@@ -27,10 +27,10 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/kakao")
-  public ResponseEntity<ResultResponse> oAuthForKakao(HttpServletResponse response,
+  public ResponseEntity<ResultResponse<?>> oAuthForKakao(HttpServletResponse response,
       @RequestBody @Valid KakaoCodeDto kakaoCode) {
 
-    ResultResponse resultResponse = authService.oAuthForKakao(kakaoCode.getCode(), response);
+    ResultResponse<?> resultResponse = authService.oAuthForKakao(kakaoCode.getCode(), response);
     return new ResponseEntity<>(resultResponse, resultResponse.getStatus());
   }
 
