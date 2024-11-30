@@ -68,7 +68,7 @@ class ClubsServiceImplTest {
     when(clubsHandler.getAllClubList()).thenReturn(clubsList);
 
     // when
-    ResultResponse resultResponse = clubsService.getAllClubList();
+    ResultResponse<List<Clubs>> resultResponse = clubsService.getAllClubList();
 
     // then
     assertEquals(SuccessResultType.SUCCESS_GET_ALL_CLUBS_LIST.getStatus(), resultResponse.getStatus());

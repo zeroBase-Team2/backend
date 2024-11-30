@@ -101,7 +101,7 @@ class ClubsHandlerTest {
   @DisplayName("구단 조회 성공")
   void shouldReturnClubsEntityByTeam() {
     // given
-    when(clubsRepository.findByFieldContaining(TEAM)).thenReturn(club);
+    when(clubsRepository.findByClubNameContaining(TEAM)).thenReturn(club);
 
     // when
     ClubsEntity response = clubsHandler.findByFieldContaining(TEAM);

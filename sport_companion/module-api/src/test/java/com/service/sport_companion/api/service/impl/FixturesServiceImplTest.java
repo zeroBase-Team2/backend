@@ -32,7 +32,7 @@ class FixturesServiceImplTest {
     doNothing().when(crawlFixtures).crawlFixtures(YEAR);
 
     // when
-    ResultResponse resultResponse = fixturesService.crawlFixtures(YEAR);
+    ResultResponse<Void> resultResponse = fixturesService.crawlFixtures(YEAR);
 
     // then
     assertEquals(SuccessResultType.SUCCESS_CRAWL_FIXTURE.getStatus(), resultResponse.getStatus());

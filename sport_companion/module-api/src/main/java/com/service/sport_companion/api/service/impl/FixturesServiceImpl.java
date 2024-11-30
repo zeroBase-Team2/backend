@@ -16,7 +16,7 @@ public class FixturesServiceImpl implements FixturesService {
   private final CrawlFixtures crawlFixtures;
 
   @Override
-  public ResultResponse crawlFixtures(String year) {
+  public ResultResponse<Void> crawlFixtures(String year) {
     crawlFixtures.crawlFixtures(year);
 
     return ResultResponse.of(SuccessResultType.SUCCESS_CRAWL_FIXTURE);

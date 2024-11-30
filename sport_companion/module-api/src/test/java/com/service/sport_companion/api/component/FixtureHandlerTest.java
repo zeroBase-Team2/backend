@@ -8,6 +8,7 @@ import com.service.sport_companion.domain.entity.FixturesEntity;
 import com.service.sport_companion.domain.entity.SeasonsEntity;
 import com.service.sport_companion.domain.repository.FixturesRepository;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,9 +43,9 @@ class FixtureHandlerTest {
         FixturesEntity.builder()
             .fixtureId(4233L)
             .fixtureDate(LocalDate.parse("2019-10-25"))
-            .fixtureTime("18:30")
-            .homeScore("5")
-            .awayScore("0")
+            .fixtureTime(LocalTime.parse("18:30"))
+            .homeScore(5)
+            .awayScore(0)
             .notes("-")
             .stadium("고척")
             .homeClub(homeClub1)
@@ -54,9 +55,9 @@ class FixtureHandlerTest {
         FixturesEntity.builder()
             .fixtureId(4234L)
             .fixtureDate(LocalDate.parse("2019-10-26"))
-            .fixtureTime("14:00")
-            .homeScore("11")
-            .awayScore("9")
+            .fixtureTime(LocalTime.parse("14:00"))
+            .homeScore(11)
+            .awayScore(0)
             .notes("-")
             .stadium("고척")
             .homeClub(homeClub2)

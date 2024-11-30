@@ -24,6 +24,6 @@ public class ClubsHandler {
   }
 
   public ClubsEntity findByFieldContaining(String clubName) {
-    return clubsRepository.findByFieldContaining(clubName);
+    return clubsRepository.findByClubNameContaining(clubName);
   }
 }
