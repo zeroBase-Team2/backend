@@ -25,6 +25,10 @@ public enum SuccessResultType {
   // Fixtures
   SUCCESS_CRAWL_FIXTURE(HttpStatus.OK, "크롤링 성공"),
 
+  // CustomTopic
+  SUCCESS_CREATE_CUSTOM_TOPIC(HttpStatus.CREATED, "주제가 작성되었습니다."),
+  SUCCESS_DELETE_CUSTOM_TOPIC(HttpStatus.OK, "주제가 삭제되었습니다"),
+
   ;
 
   private final HttpStatus status;
