@@ -18,9 +18,9 @@ public class FixturesController {
 
   // 추후 변경할 예정
   @GetMapping("/crawl")
-  private ResponseEntity<ResultResponse> crawlFixtures(@RequestParam("year") String year) {
+  private ResponseEntity<ResultResponse<Void>> crawlFixtures(@RequestParam("year") String year) {
 
-    ResultResponse response = fixturesService.crawlFixtures(year);
+    ResultResponse<Void> response = fixturesService.crawlFixtures(year);
     return new ResponseEntity<>(response, response.getStatus());
 
   }
