@@ -11,6 +11,7 @@ public enum UrlType {
   SIGNUP_URL("http://localhost:3000/signUp"),
   FRONT_LOCAL_URL("http://localhost:3000"),
   FRONT_VERCEL_URL("https://front-end-jet-psi.vercel.app"),
+  MBC_NEWS_URL("https://imnews.imbc.com"),
   ;
 
   private final String url;

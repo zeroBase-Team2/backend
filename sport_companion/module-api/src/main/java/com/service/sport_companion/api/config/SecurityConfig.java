@@ -47,6 +47,7 @@ public class SecurityConfig {
                 "/swagger-resources/**").permitAll()
             .requestMatchers("/",
                 "/api/v1/auth/**",
+                "/api/v1/news/**",
                 "/api/v1/clubs/all",
                 "/api/v1/fixture/crawl",
                 "/favicon.ico").permitAll()

@@ -19,6 +19,9 @@ public enum SuccessResultType {
   //Club
   SUCCESS_GET_ALL_CLUBS_LIST(HttpStatus.OK, "모든 구단 조회 성공!"),
 
+  // News
+  SUCCESS_GET_NEWS_LIST(HttpStatus.OK, "뉴스를 성공적으로 조회했습니다."),
+
   // Fixtures
   SUCCESS_CRAWL_FIXTURE(HttpStatus.OK, "크롤링 성공"),
 
