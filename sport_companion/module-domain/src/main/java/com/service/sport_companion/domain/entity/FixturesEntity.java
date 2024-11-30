@@ -32,17 +32,17 @@ public class FixturesEntity {
   @JoinColumn(name = "home_club_id", nullable = false)
   private ClubsEntity homeClub;
 
-  private String homeScore;
+  private int homeScore;
 
   @ManyToOne
   @JoinColumn(name = "away_club_id", nullable = false)
   private ClubsEntity awayClub;
 
-  private String awayScore;
+  private int awayScore;
 
   private LocalDate fixtureDate;
 
-  private String fixtureTime;
+  private LocalTime fixtureTime;
 
   private String stadium;
 

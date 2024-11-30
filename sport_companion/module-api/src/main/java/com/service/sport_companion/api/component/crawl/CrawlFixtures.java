@@ -8,6 +8,7 @@ import com.service.sport_companion.domain.entity.FixturesEntity;
 import com.service.sport_companion.domain.entity.SeasonsEntity;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,7 +123,7 @@ public class CrawlFixtures {
 
     // 시간 파싱
     Element fixtureTimeElement = schedule.selectFirst("td.time > b");
-    String fixtureTime = (fixtureTimeElement != null) ? fixtureTimeElement.text() : null;
+    LocalTime fixtureTime = (fixtureTimeElement != null) ? LocalTime.parse(fixtureTimeElement.text()) : null;
 
     // 팀 이름 파싱 및 DB 조회
     Element homeClubElement = schedule.selectFirst("td.play > span:nth-child(1)");
@@ -144,8 +145,8 @@ public class CrawlFixtures {
     }
 
     // 점수를 가져오거나 "-"로 설정
-    String homeScore = (homeScoreElement != null) ? homeScoreElement.text() : "-";
-    String awayScore = (awayScoreElement != null) ? awayScoreElement.text() : "-";
+    int homeScore = (homeScoreElement != null) ? Integer.parseInt(awayScoreElement.text()) : 0;
+    int awayScore = (awayScoreElement != null) ? Integer.parseInt(awayScoreElement.text()) : 0;
 
     // 경기장 및 비고
     int tdCount = schedule.select("td").size();
