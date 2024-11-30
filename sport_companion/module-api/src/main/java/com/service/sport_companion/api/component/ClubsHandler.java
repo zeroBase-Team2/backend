@@ -22,4 +22,8 @@ public class ClubsHandler {
         .map(clubsEntity -> new Clubs(clubsEntity.getClubId(), clubsEntity.getClubName()))
         .toList();
   }
+
+  public ClubsEntity findByFieldContaining(String clubName) {
+    return clubsRepository.findByFieldContaining(clubName);
+  }
 }
