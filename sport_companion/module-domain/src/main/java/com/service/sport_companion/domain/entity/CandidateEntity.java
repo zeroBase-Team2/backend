@@ -29,4 +29,6 @@ public class CandidateEntity {
   private VoteEntity voteEntity;
 
   private String example;
+
+  private int sequence;
 }

@@ -41,6 +41,14 @@ public class VoteServiceImpl implements VoteService {
       voteDto.getExample5()
     };
 
+    for (int i = 0; i < examples.length; i++) {
+      candidateHandler.createCandidate(CandidateEntity.builder()
+          .voteEntity(voteEntity)
+          .example(examples[i])
+          .sequence(i)
+          .build());
+    }
+
     for (String example : examples) {
       candidateHandler.createCandidate(CandidateEntity.builder()
         .voteEntity(voteEntity)
