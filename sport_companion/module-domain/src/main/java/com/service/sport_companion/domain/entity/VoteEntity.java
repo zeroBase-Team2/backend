@@ -1,5 +1,6 @@
 package com.service.sport_companion.domain.entity;
 
+import com.service.sport_companion.domain.model.dto.request.vote.CreateVoteDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,4 +27,9 @@ public class VoteEntity {
   private LocalDate startDate;
 
   private String topic;
+
+  public void update(CreateVoteDto voteDto) {
+    this.startDate = voteDto.getStartDate();
+    this.topic = voteDto.getTopic();
+  }
 }

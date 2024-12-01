@@ -28,6 +28,9 @@ public enum FailedResultType {
   // CustomTopic
   CUSTOM_TOPIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 주제입니다."),
   DELETE_TOPIC_FORBIDDEN(HttpStatus.FORBIDDEN, "주제 삭제 권한이 없습니다"),
+
+  // Vote
+  VOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 투표입니다.")
   ;
 
   private final HttpStatus status;

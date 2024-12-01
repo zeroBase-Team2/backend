@@ -14,6 +14,7 @@ import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.UserRole;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,32 @@ public class VoteServiceImpl implements VoteService {
     }
 
     return ResultResponse.of(SuccessResultType.SUCCESS_CREATE_VOTE);
+  }
+
+  @Override
+  public ResultResponse<Void> updateVote(Long userId, Long voteId, CreateVoteDto voteDto) {
+    checkAdminRole(userId);
+
+    // 투표 주제 업데이트
+    VoteEntity voteEntity = voteHandler.getVoteEntity(voteId);
+    voteEntity.update(voteDto);
+
+    // 저장된 투표 후보를 가져와 각각 순서에 맞게 업데이트
+    List<CandidateEntity> candidateEntityList = candidateHandler.getCandidateByVoteId(voteId);
+
+    String[] examples = {
+      voteDto.getExample1(),
+      voteDto.getExample2(),
+      voteDto.getExample3(),
+      voteDto.getExample4(),
+      voteDto.getExample5()
+    };
+
+    for (int i = 0; i < examples.length; i++) {
+      candidateEntityList.get(i).updateExample(examples[i]);
+    }
+
+    return ResultResponse.of(SuccessResultType.SUCCESS_MODIFY_VOTE);
   }
 
   private void checkAdminRole(Long userId) {

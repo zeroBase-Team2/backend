@@ -31,4 +31,8 @@ public class CandidateEntity {
   private String example;
 
   private int sequence;
+
+  public void updateExample(String example) {
+    this.example = example;
+  }
 }
