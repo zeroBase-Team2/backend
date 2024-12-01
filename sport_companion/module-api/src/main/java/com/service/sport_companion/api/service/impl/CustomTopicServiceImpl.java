@@ -12,6 +12,7 @@ import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.topic.CustomTopicResponse;
 import com.service.sport_companion.domain.model.dto.response.topic.RecommendCountResponse;
+import com.service.sport_companion.domain.model.dto.response.topic.TopicAndRecommendDto;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.UserRole;
@@ -65,7 +66,7 @@ public class CustomTopicServiceImpl implements CustomTopicService {
       pageable = Pageable.unpaged();
     }
 
-    Page<CustomTopicEntity> topicPage = customTopicHandler.findTopicOrderByCreatedAt(pageable);
+    Page<TopicAndRecommendDto> topicPage = customTopicHandler.findTopicOrderByCreatedAt(pageable);
 
     return new ResultResponse<>(SuccessResultType.SUCCESS_GET_CUSTOM_TOPIC,
       new PageResponse<>(
@@ -74,8 +75,9 @@ public class CustomTopicServiceImpl implements CustomTopicService {
         topicPage.getTotalElements(),
         topicPage.getContent().stream()
           .map(topic -> CustomTopicResponse.of(
-            topic,
-            isAuthor(userId, topic.getUsers().getUserId()))
+            topic.getCustomTopicEntity(),
+            isAuthor(userId, topic.getCustomTopicEntity().getUsers().getUserId()),
+            topic.getRecommendCount())
           )
           .toList()));
   }
@@ -85,12 +87,13 @@ public class CustomTopicServiceImpl implements CustomTopicService {
     // 일주일 간 올라온 토픽 중 top5를 선정하기 위해 7일 전 날짜 저장
     LocalDateTime before7Days = LocalDateTime.now().minusDays(7);
 
-    List<CustomTopicEntity> topicPage = customTopicHandler.findTop5OrderByVoteCount(before7Days);
+    List<TopicAndRecommendDto> topicPage = customTopicHandler.findTop5OrderByVoteCount(before7Days);
 
     return new ResultResponse<>(SuccessResultType.SUCCESS_GET_CUSTOM_TOPIC, topicPage.stream()
       .map(topic -> CustomTopicResponse.of(
-        topic,
-        isAuthor(userId, topic.getUsers().getUserId()))
+        topic.getCustomTopicEntity(),
+        isAuthor(userId, topic.getCustomTopicEntity().getUsers().getUserId()),
+        topic.getRecommendCount())
       )
       .toList());
   }
