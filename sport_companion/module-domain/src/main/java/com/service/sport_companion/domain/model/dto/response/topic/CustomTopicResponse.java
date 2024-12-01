@@ -25,11 +25,11 @@ public class CustomTopicResponse {
 
   private boolean isAuthor;
 
-  public static CustomTopicResponse of(CustomTopicEntity customTopicEntity, boolean isAuthor) {
+  public static CustomTopicResponse of(CustomTopicEntity customTopicEntity, boolean isAuthor, Long recommendCount) {
     return CustomTopicResponse.builder()
       .topicId(customTopicEntity.getCustomTopicId())
       .topic(customTopicEntity.getTopic())
-      .recommendCount(customTopicEntity.getVoteCount())
+      .recommendCount(recommendCount)
       .createdAt(customTopicEntity.getCreatedAt())
       .isAuthor(isAuthor)
       .build();
