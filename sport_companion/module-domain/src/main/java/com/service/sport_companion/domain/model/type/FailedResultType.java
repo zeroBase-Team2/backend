@@ -23,7 +23,11 @@ public enum FailedResultType {
   USER_INFO_RETRIEVAL(HttpStatus.UNAUTHORIZED, "사용자 정보를 가져오는 데 실패했습니다."),
 
   // Crawling
-  MBC_NEWS_PARSING_FAILED(HttpStatus.BAD_GATEWAY, "MBC 뉴스 파싱에 실패했습니다.")
+  MBC_NEWS_PARSING_FAILED(HttpStatus.BAD_GATEWAY, "MBC 뉴스 파싱에 실패했습니다."),
+
+  // CustomTopic
+  CUSTOM_TOPIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 주제입니다."),
+  DELETE_TOPIC_FORBIDDEN(HttpStatus.FORBIDDEN, "주제 삭제 권한이 없습니다"),
   ;
 
   private final HttpStatus status;
