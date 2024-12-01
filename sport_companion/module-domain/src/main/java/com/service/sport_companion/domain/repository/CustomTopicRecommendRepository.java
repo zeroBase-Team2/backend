@@ -17,4 +17,6 @@ public interface CustomTopicRecommendRepository extends JpaRepository<CustomTopi
     + "INTO custom_topic_recommend(users_id, custom_topic_id) "
     + "VALUES(:userId, :topicId)", nativeQuery = true)
   void saveByUserIdAndTopicId(@Param("userId") Long userId, @Param("topicId") Long topicId);
+
+  Long countByCustomTopic_CustomTopicId(Long topicId);
 }
