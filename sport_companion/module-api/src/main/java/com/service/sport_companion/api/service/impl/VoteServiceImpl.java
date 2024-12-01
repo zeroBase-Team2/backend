@@ -5,6 +5,7 @@ import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.api.component.VoteHandler;
 import com.service.sport_companion.api.service.VoteService;
 import com.service.sport_companion.core.exception.GlobalException;
+import com.service.sport_companion.domain.entity.CandidateEntity;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.entity.VoteEntity;
 import com.service.sport_companion.domain.model.dto.request.vote.CreateVoteDto;
@@ -35,7 +36,20 @@ public class VoteServiceImpl implements VoteService {
     VoteEntity voteEntity = voteHandler.createVote(voteDto);
 
     // 투표 후보 5개 저장
-    candidateHandler.createCandidate(voteEntity, voteDto);
+    String[] examples = {
+      voteDto.getExample1(),
+      voteDto.getExample2(),
+      voteDto.getExample3(),
+      voteDto.getExample4(),
+      voteDto.getExample5()
+    };
+
+    for (String example : examples) {
+      candidateHandler.createCandidate(CandidateEntity.builder()
+        .voteEntity(voteEntity)
+        .example(example)
+        .build());
+    }
 
     return ResultResponse.of(SuccessResultType.SUCCESS_CREATE_VOTE);
   }
