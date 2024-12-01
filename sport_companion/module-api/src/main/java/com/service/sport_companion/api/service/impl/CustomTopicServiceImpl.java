@@ -1,6 +1,7 @@
 package com.service.sport_companion.api.service.impl;
 
 import com.service.sport_companion.api.component.CustomTopicHandler;
+import com.service.sport_companion.api.component.CustomTopicRecommendHandler;
 import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.api.service.CustomTopicService;
 import com.service.sport_companion.core.exception.GlobalException;
@@ -10,6 +11,7 @@ import com.service.sport_companion.domain.model.dto.request.topic.CreateTopicDto
 import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.topic.CustomTopicResponse;
+import com.service.sport_companion.domain.model.dto.response.topic.RecommendCountResponse;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.UserRole;
@@ -28,6 +30,7 @@ public class CustomTopicServiceImpl implements CustomTopicService {
 
   private final CustomTopicHandler customTopicHandler;
   private final UserHandler userHandler;
+  private final CustomTopicRecommendHandler customTopicRecommendHandler;
 
   @Override
   public ResultResponse<Void> createTopic(Long userId, CreateTopicDto createTopicDto) {
@@ -90,6 +93,20 @@ public class CustomTopicServiceImpl implements CustomTopicService {
         isAuthor(userId, topic.getUsers().getUserId()))
       )
       .toList());
+  }
+
+  @Override
+  public ResultResponse<RecommendCountResponse> updateTopicRecommend(Long userId, Long topicId) {
+    // 이미 추천한적 있다면 추천할 수 없음
+    if (customTopicRecommendHandler.existsTopicRecommend(userId, topicId)) {
+      throw new GlobalException(FailedResultType.ALREADY_RECOMMEND_TOPIC);
+    }
+    // 사용자 추천 내역을 DB에 추가
+    customTopicRecommendHandler.saveByUserIdAndTopicId(userId, topicId);
+
+    // 추천값을 +1 하고 업데이트된 값 반환
+    return new ResultResponse<>(SuccessResultType.SUCCESS_RECOMMEND_TOPIC,
+      new RecommendCountResponse(customTopicRecommendHandler.updateTopicRecommendAdd1(topicId)));
   }
 
   private boolean isAuthor(Long userId, Long authorId) {
