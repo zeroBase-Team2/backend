@@ -15,7 +15,6 @@ public enum FailedResultType {
   COOKIE_IS_NULL(HttpStatus.FORBIDDEN, "쿠키 값이 존재하지 않습니다."),
   REFRESH_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "Refresh 토큰이 만료되었습니다!"),
 
-
   // API
   UNIQUE_NICKNAME_FAILED(HttpStatus.TOO_MANY_REQUESTS, "닉네임 생성에 실패했습니다."),
   UNIQUE_NICKNAME_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "닉네임 생성 중 문제가 발생했습니다."),
@@ -32,6 +31,13 @@ public enum FailedResultType {
 
   // Fixture
   FIXTURE_NOT_FOUND(HttpStatus.BAD_REQUEST, "데이터가 없습니다."),
+
+  // Sport
+  SPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 종목입니다."),
+
+  // ReservationSite
+  RESERVATION_SITE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 예매 사이트 입니다."),
+
   ;
 
   private final HttpStatus status;
