@@ -1,7 +1,9 @@
 package com.service.sport_companion.api.controller;
 
 import com.service.sport_companion.api.service.NewsService;
+import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
+import com.service.sport_companion.domain.model.dto.response.news.NewsResponseDto;
 import com.service.sport_companion.domain.model.type.NewsType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +23,16 @@ public class NewsController {
   private final NewsService newsService;
 
   @GetMapping
-  public ResponseEntity<ResultResponse> getNews(@PageableDefault Pageable pageable) {
+  public ResponseEntity<ResultResponse<PageResponse<NewsResponseDto>>> getNews(
+    @PageableDefault Pageable pageable
+  ) {
     return ResponseEntity.ok(newsService.getNews(NewsType.TEXT, pageable));
   }
 
   @GetMapping("/video")
-  public ResponseEntity<ResultResponse> getVideo(@PageableDefault Pageable pageable) {
+  public ResponseEntity<ResultResponse<PageResponse<NewsResponseDto>>> getVideo(
+    @PageableDefault Pageable pageable
+  ) {
     return ResponseEntity.ok(newsService.getNews(NewsType.VIDEO, pageable));
   }
 }

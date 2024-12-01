@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import com.service.sport_companion.api.component.NewsHandler;
 import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
+import com.service.sport_companion.domain.model.dto.response.news.NewsResponseDto;
 import com.service.sport_companion.domain.model.type.NewsType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +38,7 @@ class NewsServiceImplTest {
       .willReturn(Page.empty());
 
     // when
-    ResultResponse response = newsService.getNews(NewsType.TEXT, Pageable.ofSize(5));
+    ResultResponse<PageResponse<NewsResponseDto>> response = newsService.getNews(NewsType.TEXT, Pageable.ofSize(5));
 
     // then
     assertInstanceOf(PageResponse.class, response.getData());

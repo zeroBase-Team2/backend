@@ -22,10 +22,10 @@ public class NewsServiceImpl implements NewsService {
   private final NewsHandler newsHandler;
 
   @Override
-  public ResultResponse getNews(NewsType newsType, Pageable pageable) {
+  public ResultResponse<PageResponse<NewsResponseDto>> getNews(NewsType newsType, Pageable pageable) {
     Page<NewsEntity> newsPage = newsHandler.findByNewsTypeOrderByCreatedAtDesc(newsType, pageable);
 
-    return new ResultResponse(SuccessResultType.SUCCESS_GET_NEWS_LIST,
+    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_NEWS_LIST,
       new PageResponse<>(
         newsPage.getNumber(),
         newsPage.getTotalPages(),
