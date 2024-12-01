@@ -8,4 +8,6 @@ public interface VoteService {
   ResultResponse<Void> createVote(Long userId, CreateVoteDto voteDto);
 
   ResultResponse<Void> updateVote(Long userId, Long voteId, CreateVoteDto voteDto);
+
+  ResultResponse<Void> deleteVote(Long userId, Long voteId);
 }

@@ -19,4 +19,8 @@ public class CandidateHandler {
   public List<CandidateEntity> getCandidateByVoteId(Long voteId) {
     return candidateRepository.findByVoteEntity_VoteIdOrderBySequence(voteId);
   }
+
+  public void deleteVoteByVoteId(Long voteId) {
+    candidateRepository.deleteByVoteEntity_VoteId(voteId);
+  }
 }

@@ -79,6 +79,16 @@ public class VoteServiceImpl implements VoteService {
     return ResultResponse.of(SuccessResultType.SUCCESS_MODIFY_VOTE);
   }
 
+  @Override
+  public ResultResponse<Void> deleteVote(Long userId, Long voteId) {
+    checkAdminRole(userId);
+
+    candidateHandler.deleteVoteByVoteId(voteId);
+    voteHandler.deleteVoteById(voteId);
+
+    return ResultResponse.of(SuccessResultType.SUCCESS_DELETE_VOTE);
+  }
+
   private void checkAdminRole(Long userId) {
     UsersEntity usersEntity = userHandler.findByUserId(userId);
     if (!usersEntity.getRole().equals(UserRole.ADMIN)) {

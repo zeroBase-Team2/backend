@@ -6,6 +6,7 @@ import com.service.sport_companion.domain.model.dto.request.vote.CreateVoteDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,6 +35,15 @@ public class VoteController {
     @PathVariable("voteId") Long voteId, @RequestBody CreateVoteDto voteDto
   ) {
     ResultResponse<Void> response = voteService.updateVote(userId, voteId, voteDto);
+
+    return new ResponseEntity<>(response, response.getStatus());
+  }
+
+  @DeleteMapping("/{voteId}")
+  public ResponseEntity<ResultResponse<Void>> deleteVote(@CallUser Long userId,
+    @PathVariable("voteId") Long voteId
+  ) {
+    ResultResponse<Void> response = voteService.deleteVote(userId, voteId);
 
     return new ResponseEntity<>(response, response.getStatus());
   }

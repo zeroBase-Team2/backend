@@ -25,4 +25,8 @@ public class VoteHandler {
     return voteRepository.findById(voteId)
       .orElseThrow(() -> new GlobalException(FailedResultType.VOTE_NOT_FOUND));
   }
+
+  public void deleteVoteById(Long voteId) {
+    voteRepository.deleteById(voteId);
+  }
 }
