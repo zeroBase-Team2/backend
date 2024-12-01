@@ -49,13 +49,6 @@ public class VoteServiceImpl implements VoteService {
           .build());
     }
 
-    for (String example : examples) {
-      candidateHandler.createCandidate(CandidateEntity.builder()
-        .voteEntity(voteEntity)
-        .example(example)
-        .build());
-    }
-
     return ResultResponse.of(SuccessResultType.SUCCESS_CREATE_VOTE);
   }
 
