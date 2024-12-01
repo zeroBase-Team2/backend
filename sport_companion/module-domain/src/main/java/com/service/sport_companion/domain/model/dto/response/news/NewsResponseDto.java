@@ -17,7 +17,7 @@ public class NewsResponseDto {
   private String headline;
   private String newsLink;
   private String thumbnail;
-  @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
+  @JsonFormat(pattern = "yyyy-MM-dd hh:mm", timezone = "Asia/seoul")
   private LocalDateTime newsDateTime;
 
   public static NewsResponseDto from(NewsEntity newsEntity) {
