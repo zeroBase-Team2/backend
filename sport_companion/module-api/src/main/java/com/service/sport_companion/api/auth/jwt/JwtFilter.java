@@ -95,9 +95,24 @@ public class JwtFilter extends OncePerRequestFilter {
       return true;
     }
 
-    log.info("method >>> {} request uri >>> {}", method, path);
+    log.info("request uri >>> {}", path);
     // 2. 예외 경로 검증
-    return isExcludedPath(pathMatcher, path);
+    if (isExcludedPath(pathMatcher, path)) {
+      return true;
+    }
+
+    // 3. 요청 메서드 검증
+    if ("GET".equalsIgnoreCase(method)) {
+
+      // 4. 토큰 검증
+      if (request.getHeader(TokenType.ACCESS.getValue()) == null) {
+
+        // 5. 비 로그인 사용자 요청 경로 검증
+        return isMatchingGetRequest(pathMatcher, path);
+      }
+    }
+
+    return false;
   }
 
   // Jwt 검증 제외 경로
@@ -105,12 +120,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
     return pathMatcher.match("/", requestURI)
         || pathMatcher.match("/api/v1/auth/**", requestURI)
-        || pathMatcher.match("/api/v1/clubs/all", requestURI)
+        || pathMatcher.match("/api/v1/clubs/**", requestURI)
         || pathMatcher.match("/api/v1/news/**", requestURI)
         || pathMatcher.match("/api/v1/fixture/crawl", requestURI)
         || pathMatcher.match("/v3/api-docs/**", requestURI)
         || pathMatcher.match("/swagger-ui/**", requestURI)
         || pathMatcher.match("/swagger-ui.html", requestURI)
         || pathMatcher.match("/swagger-resources/**", requestURI);
+  }
+
+  public boolean isMatchingGetRequest(AntPathMatcher pathMatcher, String requestURI) {
+
+    return pathMatcher.match("/api/v1/fixture", requestURI);
   }
 }

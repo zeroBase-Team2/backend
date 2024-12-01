@@ -1,5 +1,6 @@
 package com.service.sport_companion.api.component;
 
+import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.SupportedClubsEntity;
 import com.service.sport_companion.domain.repository.SupportedClubsRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,5 +14,11 @@ public class SupportedClubsHandler {
 
   public void saveSupportedClub(SupportedClubsEntity supportedClub) {
     supportedClubsRepository.save(supportedClub);
+  }
+
+  public ClubsEntity findSupportClubsByUserId(Long userId) {
+    return supportedClubsRepository.findByUserUserId(userId)
+        .map(SupportedClubsEntity::getClub)
+        .orElse(new ClubsEntity());
   }
 }

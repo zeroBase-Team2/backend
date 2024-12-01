@@ -19,11 +19,15 @@ public class ClubsHandler {
 
   public List<Clubs> getAllClubList() {
     return clubsRepository.findAll().stream()
-        .map(clubsEntity -> new Clubs(clubsEntity.getClubId(), clubsEntity.getClubName()))
+        .map(clubsEntity -> new Clubs(clubsEntity.getClubName(), clubsEntity.getEmblemImg()))
         .toList();
   }
 
   public ClubsEntity findByFieldContaining(String clubName) {
     return clubsRepository.findByClubNameContaining(clubName);
+  }
+
+  public void saveClub(ClubsEntity clubs) {
+    clubsRepository.save(clubs);
   }
 }

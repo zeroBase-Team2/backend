@@ -28,10 +28,21 @@ public enum FailedResultType {
   // CustomTopic
   CUSTOM_TOPIC_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 주제입니다."),
   DELETE_TOPIC_FORBIDDEN(HttpStatus.FORBIDDEN, "주제 삭제 권한이 없습니다"),
+  ALREADY_RECOMMEND_TOPIC(HttpStatus.BAD_REQUEST, "이미 추천한 주제입니다."),
+
+  // Fixture
+  FIXTURE_NOT_FOUND(HttpStatus.BAD_REQUEST, "데이터가 없습니다."),
+
+  // Sport
+  SPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 종목입니다."),
+
+  // ReservationSite
+  RESERVATION_SITE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 예매 사이트 입니다."),
 
   // Vote
   VOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 투표입니다."),
   ALREADY_EXISTS_VOTE_DATE(HttpStatus.BAD_REQUEST, "이미 해당 날짜에 투표가 존재합니다."),
+
   ;
 
   private final HttpStatus status;

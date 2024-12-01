@@ -4,6 +4,7 @@ import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.CustomTopicEntity;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.dto.request.topic.CreateTopicDto;
+import com.service.sport_companion.domain.model.dto.response.topic.TopicAndRecommendDto;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.repository.CustomTopicRepository;
 import java.time.LocalDateTime;
@@ -35,11 +36,11 @@ public class CustomTopicHandler {
     customTopicRepository.deleteById(topicId);
   }
 
-  public Page<CustomTopicEntity> findTopicOrderByCreatedAt(Pageable pageable) {
+  public Page<TopicAndRecommendDto> findTopicOrderByCreatedAt(Pageable pageable) {
     return customTopicRepository.findAllByOrderByCreatedAtDesc(pageable);
   }
 
-  public List<CustomTopicEntity> findTop5OrderByVoteCount(LocalDateTime createdAt) {
+  public List<TopicAndRecommendDto> findTop5OrderByVoteCount(LocalDateTime createdAt) {
     return customTopicRepository.findTop5ByCreatedAtAfterOrderByVoteCountDesc(createdAt);
   }
 }
