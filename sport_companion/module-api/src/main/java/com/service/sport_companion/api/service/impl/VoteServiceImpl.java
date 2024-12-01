@@ -28,10 +28,7 @@ public class VoteServiceImpl implements VoteService {
 
   @Override
   public ResultResponse<Void> createVote(Long userId, CreateVoteDto voteDto) {
-    UsersEntity usersEntity = userHandler.findByUserId(userId);
-    if (!usersEntity.getRole().equals(UserRole.ADMIN)) {
-      throw new GlobalException(FailedResultType.REQUIRED_ADMIN_ROLE);
-    }
+    checkAdminRole(userId);
     // 투표 주제 저장
     VoteEntity voteEntity = voteHandler.createVote(voteDto);
 
@@ -52,5 +49,12 @@ public class VoteServiceImpl implements VoteService {
     }
 
     return ResultResponse.of(SuccessResultType.SUCCESS_CREATE_VOTE);
+  }
+
+  private void checkAdminRole(Long userId) {
+    UsersEntity usersEntity = userHandler.findByUserId(userId);
+    if (!usersEntity.getRole().equals(UserRole.ADMIN)) {
+      throw new GlobalException(FailedResultType.REQUIRED_ADMIN_ROLE);
+    }
   }
 }
