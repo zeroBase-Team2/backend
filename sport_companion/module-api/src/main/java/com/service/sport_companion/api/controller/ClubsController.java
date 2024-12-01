@@ -1,14 +1,21 @@
 package com.service.sport_companion.api.controller;
 
 import com.service.sport_companion.api.service.ClubsService;
+import com.service.sport_companion.domain.model.dto.request.club.ClubDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.clubs.Clubs;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +28,20 @@ public class ClubsController {
   public ResponseEntity<ResultResponse<List<Clubs>>> getAllClubs() {
 
     ResultResponse<List<Clubs>> response = clubsService.getAllClubList();
+    return new ResponseEntity<>(response, response.getStatus());
+  }
+
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<ResultResponse<Void>> addClub(
+      @RequestParam("sportsName") String sportsName,
+      @RequestParam("clubName") String clubName,
+      @RequestParam("clubStadium") String clubStadium,
+      @RequestParam("siteName") String siteName,
+      @RequestPart("file") MultipartFile file) throws IOException{
+
+    ClubDto clubDto = new ClubDto(sportsName, clubName, clubStadium, siteName, file);
+
+    ResultResponse<Void> response = clubsService.addClub(clubDto);
     return new ResponseEntity<>(response, response.getStatus());
   }
 

@@ -49,7 +49,7 @@ public class SecurityConfig {
             .requestMatchers("/",
                 "/api/v1/auth/**",
                 "/api/v1/news/**",
-                "/api/v1/clubs/all",
+                "/api/v1/clubs/**",
                 "/api/v1/fixture/crawl",
                 "/favicon.ico").permitAll()
             .requestMatchers(HttpMethod.GET,

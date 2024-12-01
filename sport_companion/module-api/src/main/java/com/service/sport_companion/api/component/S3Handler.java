@@ -23,7 +23,7 @@ public class S3Handler {
   // Config에서 s3Client라는 이름으로 등록된 bean을 사용한다.
   private final AmazonS3 s3Client;
 
-  @Value("${DEV.S3.BUDGET}")
+  @Value("${cloud.S3.bucket}")
   private String bucket;
 
   public String upload(MultipartFile multipartFile) throws IOException {

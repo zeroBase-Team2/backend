@@ -1,6 +1,11 @@
 spring:
   config:
     import: classpath:secret.yml
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
 
   data:
     redis:
@@ -49,14 +54,14 @@ spring:
               - ${DEV.AUTH.OAUTH.REGISTRATION.KAKAO.scope[0]}
               - ${DEV.AUTH.OAUTH.REGISTRATION.KAKAO.scope[1]}
 
-  cloud:
-    aws:
-      credentials:
-        access-key: ${DEV.S3.ACCESS}
-        secret-key: ${DEV.S3.SECRET}
-      S3:
-        bucket: ${DEV.S3.BUDGET} # bucket 이름을 설정한다.
-      region:
-        static: ${DEV.S3.REGION} # bucket이 위치한 AWS 리전을 설정한다.
-      stack:
-        auto: false
+cloud:
+  aws:
+    credentials:
+      access-key: ${DEV.S3.ACCESS}
+      secret-key: ${DEV.S3.SECRET}
+  S3:
+    bucket: ${DEV.S3.BUDGET} # bucket 이름을 설정한다.
+  region:
+    static: ${DEV.S3.REGION} # bucket이 위치한 AWS 리전을 설정한다.
+  stack:
+    auto: false

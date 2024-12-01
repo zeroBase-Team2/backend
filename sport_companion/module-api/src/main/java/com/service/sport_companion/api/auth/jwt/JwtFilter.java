@@ -120,7 +120,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     return pathMatcher.match("/", requestURI)
         || pathMatcher.match("/api/v1/auth/**", requestURI)
-        || pathMatcher.match("/api/v1/clubs/all", requestURI)
+        || pathMatcher.match("/api/v1/clubs/**", requestURI)
         || pathMatcher.match("/api/v1/news/**", requestURI)
         || pathMatcher.match("/api/v1/fixture/crawl", requestURI)
         || pathMatcher.match("/v3/api-docs/**", requestURI)
