@@ -30,7 +30,8 @@ public enum FailedResultType {
   DELETE_TOPIC_FORBIDDEN(HttpStatus.FORBIDDEN, "주제 삭제 권한이 없습니다"),
 
   // Vote
-  VOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 투표입니다.")
+  VOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 투표입니다."),
+  ALREADY_EXISTS_VOTE_DATE(HttpStatus.BAD_REQUEST, "이미 해당 날짜에 투표가 존재합니다."),
   ;
 
   private final HttpStatus status;

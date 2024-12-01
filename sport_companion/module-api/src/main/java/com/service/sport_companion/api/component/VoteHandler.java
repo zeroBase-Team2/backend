@@ -5,6 +5,7 @@ import com.service.sport_companion.domain.entity.VoteEntity;
 import com.service.sport_companion.domain.model.dto.request.vote.CreateVoteDto;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.repository.VoteRepository;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -28,5 +29,9 @@ public class VoteHandler {
 
   public void deleteVoteById(Long voteId) {
     voteRepository.deleteById(voteId);
+  }
+
+  public boolean existByStartDate(LocalDate startDate) {
+    return voteRepository.existsByStartDate(startDate);
   }
 }

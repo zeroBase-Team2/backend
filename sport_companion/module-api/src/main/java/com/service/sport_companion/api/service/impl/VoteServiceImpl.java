@@ -30,6 +30,12 @@ public class VoteServiceImpl implements VoteService {
   @Override
   public ResultResponse<Void> createVote(Long userId, CreateVoteDto voteDto) {
     checkAdminRole(userId);
+
+    // 동일한 날짜에 이미 등록돼있으면 추가로 등록할 수 없음
+    if (voteHandler.existByStartDate(voteDto.getStartDate())) {
+      throw new GlobalException(FailedResultType.ALREADY_EXISTS_VOTE_DATE);
+    }
+
     // 투표 주제 저장
     VoteEntity voteEntity = voteHandler.createVote(voteDto);
 
