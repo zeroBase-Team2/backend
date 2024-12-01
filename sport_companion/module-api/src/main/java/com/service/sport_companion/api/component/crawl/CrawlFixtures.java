@@ -145,7 +145,7 @@ public class CrawlFixtures {
     }
 
     // 점수를 가져오거나 "-"로 설정
-    int homeScore = (homeScoreElement != null) ? Integer.parseInt(awayScoreElement.text()) : 0;
+    int homeScore = (homeScoreElement != null) ? Integer.parseInt(homeScoreElement.text()) : 0;
     int awayScore = (awayScoreElement != null) ? Integer.parseInt(awayScoreElement.text()) : 0;
 
     // 경기장 및 비고
