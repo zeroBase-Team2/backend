@@ -6,6 +6,7 @@ import com.service.sport_companion.domain.model.dto.request.topic.CreateTopicDto
 import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.topic.CustomTopicResponse;
+import com.service.sport_companion.domain.model.dto.response.topic.RecommendCountResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +62,18 @@ public class CustomTopicController {
     @CallUser Long userId
   ) {
     ResultResponse<List<CustomTopicResponse>> response = customTopicService.getTopicTop5(userId);
+
+    return new ResponseEntity<>(response, response.getStatus());
+  }
+
+  // 주체 추천
+  @PostMapping("/{topicId}/recommend")
+  public ResponseEntity<ResultResponse<RecommendCountResponse>> recommendTopic(
+    @CallUser Long userId,
+    @PathVariable("topicId") Long topicId
+  ) {
+    ResultResponse<RecommendCountResponse> response =
+      customTopicService.updateTopicRecommend(userId, topicId);
 
     return new ResponseEntity<>(response, response.getStatus());
   }
