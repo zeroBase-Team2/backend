@@ -107,9 +107,9 @@ public class CustomTopicServiceImpl implements CustomTopicService {
     // 사용자 추천 내역을 DB에 추가
     customTopicRecommendHandler.saveByUserIdAndTopicId(userId, topicId);
 
-    // 추천값을 +1 하고 업데이트된 값 반환
+    // 현재 추천수 반환
     return new ResultResponse<>(SuccessResultType.SUCCESS_RECOMMEND_TOPIC,
-      new RecommendCountResponse(customTopicRecommendHandler.updateTopicRecommendAdd1(topicId)));
+      new RecommendCountResponse(customTopicRecommendHandler.getRecommendCount(topicId)));
   }
 
   private boolean isAuthor(Long userId, Long authorId) {
