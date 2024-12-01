@@ -3,7 +3,9 @@ package com.service.sport_companion.api.service.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 import com.service.sport_companion.api.component.CustomTopicHandler;
 import com.service.sport_companion.api.component.UserHandler;
@@ -17,9 +19,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +39,9 @@ class CustomTopicServiceImplTest {
 
   @Mock
   private UserHandler userHandler;
+
+  @Captor
+  private ArgumentCaptor<Pageable> pageableCaptor;
 
   private final long AUTHOR_ID = 1L;
   private final long TOPIC_ID = 2L;
@@ -104,5 +113,39 @@ class CustomTopicServiceImplTest {
 
     // when & then
     assertThrows(GlobalException.class, () -> customTopicService.deleteTopic(otherUserId, TOPIC_ID));
+  }
+
+  @Test
+  @DisplayName("페이지 정보와 함께 토픽 조회_성공")
+  public void getTopicWithPageable() {
+    // given
+    Pageable pageable = Pageable.ofSize(1);
+    given(customTopicHandler.findTopicOrderByCreatedAt(pageable)).willReturn(Page.empty());
+
+    // when
+    customTopicService.getTopicList(AUTHOR_ID, pageable);
+
+    verify(customTopicHandler).findTopicOrderByCreatedAt(pageableCaptor.capture());
+    Pageable capturedPageable = pageableCaptor.getValue();
+
+    // then
+    assertTrue(capturedPageable.isPaged());
+  }
+
+  @Test
+  @DisplayName("페이지 정보 없이 토픽 조회_성공")
+  public void getTopicWithoutPageable() {
+    // given
+    Pageable pageable = Pageable.unpaged();
+    given(customTopicHandler.findTopicOrderByCreatedAt(pageable)).willReturn(Page.empty());
+
+    // when
+    customTopicService.getTopicList(AUTHOR_ID, null);
+
+    verify(customTopicHandler).findTopicOrderByCreatedAt(pageableCaptor.capture());
+    Pageable capturedPageable = pageableCaptor.getValue();
+
+    // then
+    assertTrue(capturedPageable.isUnpaged());
   }
 }
