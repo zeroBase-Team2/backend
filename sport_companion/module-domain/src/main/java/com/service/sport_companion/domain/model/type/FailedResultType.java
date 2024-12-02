@@ -14,6 +14,7 @@ public enum FailedResultType {
   PROVIDER_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 ProviderId로 회원을 찾을 수 없습니다."),
   COOKIE_IS_NULL(HttpStatus.FORBIDDEN, "쿠키 값이 존재하지 않습니다."),
   REFRESH_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "Refresh 토큰이 만료되었습니다!"),
+  REQUIRED_ADMIN_ROLE(HttpStatus.FORBIDDEN, "관리자 권한이 필요합니다."),
 
   // API
   UNIQUE_NICKNAME_FAILED(HttpStatus.TOO_MANY_REQUESTS, "닉네임 생성에 실패했습니다."),
@@ -37,6 +38,10 @@ public enum FailedResultType {
 
   // ReservationSite
   RESERVATION_SITE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 예매 사이트 입니다."),
+
+  // Vote
+  VOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 투표입니다."),
+  ALREADY_EXISTS_VOTE_DATE(HttpStatus.BAD_REQUEST, "이미 해당 날짜에 투표가 존재합니다."),
 
   // Club
   SUPPORT_CLUB_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "선호 구단은 1개만 등록 할 수 있습니다"),
