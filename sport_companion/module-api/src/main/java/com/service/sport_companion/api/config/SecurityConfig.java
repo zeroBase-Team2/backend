@@ -58,6 +58,7 @@ public class SecurityConfig {
             .requestMatchers(
                 "api/v1/vote/**").hasRole(UserRole.ADMIN.name())
             .requestMatchers(HttpMethod.GET,
+                "/api/v1/topic/top5",
                 "/api/v1/fixture").permitAll()
             .anyRequest().authenticated());
 
