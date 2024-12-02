@@ -43,6 +43,10 @@ public enum FailedResultType {
   VOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 투표입니다."),
   ALREADY_EXISTS_VOTE_DATE(HttpStatus.BAD_REQUEST, "이미 해당 날짜에 투표가 존재합니다."),
 
+  // Club
+  SUPPORT_CLUB_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "선호 구단은 1개만 등록 할 수 있습니다"),
+  SUPPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, "선호 구단을 등록 하지 않았습니다."),
+
   ;
 
   private final HttpStatus status;
