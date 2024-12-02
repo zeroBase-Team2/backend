@@ -15,6 +15,8 @@ public enum SuccessResultType {
   AVAILABLE_NICKNAME(HttpStatus.OK, "사용 가능한 닉네임입니다."),
   UNAVAILABLE_NICKNAME(HttpStatus.OK, "이미 사용 중인 닉네임입니다."),
   SUCCESS_REISSUE_TOKEN(HttpStatus.OK, "Access 토큰 재발급 성공."),
+  SUCCESS_GET_USERINFO(HttpStatus.OK, "회원 정보 조회 성공"),
+  SUCCESS_UPDATE_USERINFO(HttpStatus.OK, "회원 정보 수정 성공"),
 
   //Club
   SUCCESS_GET_ALL_CLUBS_LIST(HttpStatus.OK, "모든 구단 조회 성공!"),
