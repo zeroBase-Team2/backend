@@ -38,6 +38,10 @@ public enum FailedResultType {
   // ReservationSite
   RESERVATION_SITE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 예매 사이트 입니다."),
 
+  // Club
+  SUPPORT_CLUB_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "선호 구단은 1개만 등록 할 수 있습니다"),
+  SUPPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, "선호 구단을 등록 하지 않았습니다."),
+
   ;
 
   private final HttpStatus status;
