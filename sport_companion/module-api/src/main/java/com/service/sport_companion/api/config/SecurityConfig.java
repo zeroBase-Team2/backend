@@ -2,6 +2,7 @@ package com.service.sport_companion.api.config;
 
 import com.service.sport_companion.api.auth.jwt.JwtFilter;
 import com.service.sport_companion.api.auth.jwt.JwtUtil;
+import com.service.sport_companion.domain.model.type.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -52,6 +53,10 @@ public class SecurityConfig {
                 "/api/v1/clubs/**",
                 "/api/v1/fixture/crawl",
                 "/favicon.ico").permitAll()
+            .requestMatchers(HttpMethod.GET,
+                "api/v1/vote/**").authenticated()
+            .requestMatchers(
+                "api/v1/vote/**").hasRole(UserRole.ADMIN.name())
             .requestMatchers(HttpMethod.GET,
                 "/api/v1/fixture").permitAll()
             .anyRequest().authenticated());
