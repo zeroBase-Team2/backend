@@ -2,6 +2,7 @@ package com.service.sport_companion.api.component;
 
 import com.service.sport_companion.domain.repository.UserVoteRepository;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,5 +18,11 @@ public class UserVoteHandler {
 
   public void vote(Long userId, Long candidateId) {
     userVoteRepository.vote(userId, candidateId);
+  }
+
+  public Long findUserVotedCandidate(Long userId, List<Long> candidateList) {
+    return userVoteRepository.findMyRecentVoted(userId, candidateList)
+      .map(voteEntity -> voteEntity.getCandidateEntity().getCandidateId())
+      .orElse(null);
   }
 }

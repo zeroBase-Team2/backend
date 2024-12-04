@@ -120,9 +120,17 @@ public class VoteServiceImpl implements VoteService {
     List<CandidateAndCountDto> candidateEntity =
       candidateHandler.getCandidateByVoteId(voteEntity.getVoteId());
 
+    Long votedCandidateId = userVoteHandler.findUserVotedCandidate(
+      userId,
+      candidateEntity.stream()
+        .mapToLong(x -> x.getCandidateEntity().getCandidateId())
+        .boxed()
+        .toList()
+    );
+
     return new ResultResponse<>(
       SuccessResultType.SUCCESS_GET_VOTE,
-      VoteResponse.fromExampleAndVoteCount(voteEntity, candidateEntity)
+      VoteResponse.fromExampleAndVoteCount(voteEntity, candidateEntity, votedCandidateId)
     );
   }
 
@@ -157,7 +165,8 @@ public class VoteServiceImpl implements VoteService {
 
     return new ResultResponse<>(
       SuccessResultType.SUCCESS_VOTING,
-      VoteResponse.fromExampleAndVoteCount(voteEntity, candidateHandler.getCandidateByVoteId(voteId))
+      VoteResponse.fromExampleAndVoteCount(
+        voteEntity, candidateHandler.getCandidateByVoteId(voteId), candidateId)
     );
   }
 
