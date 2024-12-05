@@ -67,7 +67,7 @@ class ClubsHandlerTest {
     );
 
     clubsList = clubsEntities.stream()
-        .map(clubsEntity -> new Clubs(clubsEntity.getClubId(), clubsEntity.getClubName()))
+        .map(clubsEntity -> new Clubs(clubsEntity.getClubName(), clubsEntity.getEmblemImg()))
         .toList();
   }
 
@@ -98,13 +98,26 @@ class ClubsHandlerTest {
   }
 
   @Test
-  @DisplayName("구단 조회 성공")
+  @DisplayName("findByFieldContaining : 구단 조회 성공")
   void shouldReturnClubsEntityByTeam() {
     // given
     when(clubsRepository.findByClubNameContaining(TEAM)).thenReturn(club);
 
     // when
     ClubsEntity response = clubsHandler.findByFieldContaining(TEAM);
+
+    // then
+    assertEquals(response, club);
+  }
+
+  @Test
+  @DisplayName("saveClub : 구단 저장 성공")
+  void successSaveClubEntity() {
+    // given
+    when(clubsRepository.save(club)).thenReturn(club);
+
+    // when
+    ClubsEntity response = clubsRepository.save(club);
 
     // then
     assertEquals(response, club);
