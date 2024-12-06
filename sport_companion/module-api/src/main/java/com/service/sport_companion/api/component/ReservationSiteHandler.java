@@ -15,7 +15,7 @@ public class ReservationSiteHandler {
 
   public ReservationSiteEntity findBySiteName(String siteName) {
     return reservationSiteRepository.findBySiteName(siteName)
-        .orElseThrow(() -> new GlobalException(FailedResultType.PROVIDER_ID_NOT_FOUND));
+        .orElseThrow(() -> new GlobalException(FailedResultType.RESERVATION_SITE_NOT_FOUND));
   }
 
 }
