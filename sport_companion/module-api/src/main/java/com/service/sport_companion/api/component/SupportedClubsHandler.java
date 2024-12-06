@@ -22,7 +22,7 @@ public class SupportedClubsHandler {
   public ClubsEntity findSupportClubsByUserId(Long userId) {
     return supportedClubsRepository.findByUserUserId(userId)
         .map(SupportedClubsEntity::getClub)
-        .orElse(new ClubsEntity());
+        .orElseThrow(() -> new GlobalException(FailedResultType.SUPPORT_NOT_FOUND));
   }
 
   public void validateSupportClub(UsersEntity user) {
