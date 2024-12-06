@@ -8,11 +8,13 @@ import com.service.sport_companion.api.component.FixtureHandler;
 import com.service.sport_companion.api.component.SeasonHandler;
 import com.service.sport_companion.api.component.SupportedClubsHandler;
 import com.service.sport_companion.api.component.crawl.CrawlFixtures;
+import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
 import com.service.sport_companion.domain.entity.SeasonsEntity;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.fixtures.Fixtures;
+import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -127,6 +129,20 @@ class FixturesServiceImplTest {
     assertEquals(SuccessResultType.SUCCESS_GET_ALL_FIXTURES.getStatus(), resultResponse.getStatus());
     assertEquals(fixtures.size(), resultResponse.getData().size());
     assertEquals(fixtures.getFirst().getHomeClubName(), resultResponse.getData().getFirst().getHomeClubName());
+  }
+
+  @Test
+  @DisplayName("선호구단 경기 일정 조회 실패")
+  void getSupportClubFixturesFailed() {
+    // given
+    when(seasonHandler.findBySeasonName(SEASON_NAME)).thenReturn(seasons);
+    when(supportedClubsHandler.findSupportClubsByUserId(USERID))
+        .thenThrow(new GlobalException(FailedResultType.SUPPORT_NOT_FOUND));
+
+    // when & then
+    assertThrows(GlobalException.class,
+        () -> fixturesService.getFixtureList(USERID, YEAR, MONTH, DAY, SEASON_NAME));
+
   }
 
   @Test

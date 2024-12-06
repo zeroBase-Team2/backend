@@ -102,6 +102,18 @@ class SupportedClubsHandlerTest {
   }
 
   @Test
+  @DisplayName("findSupportClubsByUserId : 선호 구단 조회 실패")
+  void findSupportClubsByUserIdFailed() {
+
+    // given
+    when(supportedClubsRepository.findByUserUserId(USER_ID))
+        .thenReturn(Optional.empty());
+
+    // when & then
+    assertThrows(GlobalException.class, () -> supportedClubsHandler.findSupportClubsByUserId(USER_ID));
+  }
+
+  @Test
   @DisplayName("validateSupportClub : 이미 등록한 구단일 경우")
   void validateSupportClubFailed() {
 
