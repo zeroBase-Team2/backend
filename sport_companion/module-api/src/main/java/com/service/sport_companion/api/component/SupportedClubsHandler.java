@@ -27,13 +27,13 @@ public class SupportedClubsHandler {
 
   public void validateSupportClub(UsersEntity user) {
     if (supportedClubsRepository.existsByUser(user)) {
-      throw new GlobalException(FailedResultType.PROVIDER_ID_NOT_FOUND);
+      throw new GlobalException(FailedResultType.SUPPORT_CLUB_ALREADY_REGISTERED);
     }
   }
 
   public SupportedClubsEntity findSupportClubsByUserIdAndClubName(Long userId, String clubName) {
     return supportedClubsRepository.findByUserUserIdAndClubClubName(userId, clubName)
-        .orElseThrow(() -> new GlobalException(FailedResultType.PROVIDER_ID_NOT_FOUND));
+        .orElseThrow(() -> new GlobalException(FailedResultType.SUPPORT_NOT_FOUND));
   }
 
   public void deleteSupportClubs(SupportedClubsEntity supportClubs) {
