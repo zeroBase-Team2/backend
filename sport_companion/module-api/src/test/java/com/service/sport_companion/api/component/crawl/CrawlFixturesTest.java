@@ -11,6 +11,7 @@ import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
 import com.service.sport_companion.domain.entity.SeasonsEntity;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -113,11 +114,11 @@ class CrawlFixturesTest {
     // Then
     assertNotNull(fixtures, "Parsed fixtures is null.");
     assertEquals(LocalDate.of(2024, 10, 2), fixtures.getFixtureDate());
-    assertEquals("18:30", fixtures.getFixtureTime());
+    assertEquals(LocalTime.parse("18:30"), fixtures.getFixtureTime());
     assertEquals(mockedHomeClub, fixtures.getHomeClub());
     assertEquals(mockedAwayClub, fixtures.getAwayClub());
-    assertEquals("4", fixtures.getHomeScore());
-    assertEquals("0", fixtures.getAwayScore());
+    assertEquals(Integer.parseInt("4"), fixtures.getHomeScore());
+    assertEquals(Integer.parseInt("0"), fixtures.getAwayScore());
     assertEquals("잠실", fixtures.getStadium());
     assertEquals("-", fixtures.getNotes());
   }
