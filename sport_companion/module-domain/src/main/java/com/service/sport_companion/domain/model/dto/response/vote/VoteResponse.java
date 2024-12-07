@@ -25,6 +25,8 @@ public class VoteResponse {
 
   private List<Vote> vote;
 
+  private Long myVote;
+
 
   @Getter
   @Builder
@@ -32,6 +34,7 @@ public class VoteResponse {
   @NoArgsConstructor
   static class Vote {
 
+    private Long candidateId;
     private String example;
     private Long voteCount;
   }
@@ -42,6 +45,7 @@ public class VoteResponse {
   ) {
     List<Vote> voteList = candidateList.stream().map(
       candidate -> Vote.builder()
+        .candidateId(candidate.getCandidateId())
         .example(candidate.getExample())
         .build()
     ).toList();
@@ -56,10 +60,11 @@ public class VoteResponse {
 
   // 투표 결과를 함께 리턴하는 생성자
   public static VoteResponse fromExampleAndVoteCount(VoteEntity voteEntity,
-    List<CandidateAndCountDto> candidateList
+    List<CandidateAndCountDto> candidateList, Long myVote
   ) {
     List<Vote> voteList = candidateList.stream().map(
       candidate -> Vote.builder()
+        .candidateId(candidate.getCandidateEntity().getCandidateId())
         .example(candidate.getCandidateEntity().getExample())
         .voteCount(candidate.getVoteCount())
         .build()
@@ -70,6 +75,7 @@ public class VoteResponse {
       .startDate(voteEntity.getStartDate())
       .topic(voteEntity.getTopic())
       .vote(voteList)
+      .myVote(myVote)
       .build();
   }
 }
