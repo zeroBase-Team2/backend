@@ -196,6 +196,7 @@ public class VoteServiceImpl implements VoteService {
       .with(TemporalAdjusters.previousOrSame(dayOfWeek));
   }
 
+  // 사용자가 후보 List 중에서 투표한 곳을 조회
   private Long getUserVotedCandidateId(Long userId, List<CandidateAndCountDto> candidateList) {
     if (userId == null) {
       return null;
@@ -210,6 +211,7 @@ public class VoteServiceImpl implements VoteService {
     );
   }
 
+  // 지난 투표를 원하는 정렬 조건에 맞는 순서로 pageable 크기만큼 조회
   private Page<VoteEntity> getPrevVoteListBySortType(SortType sortType, Pageable pageable) {
     if (sortType.equals(SortType.PARTICIPANT)) {
       return voteHandler.findPrevVoteOrderByParticipant(getVoteStartDate(DayOfWeek.MONDAY), pageable);
