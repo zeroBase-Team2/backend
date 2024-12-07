@@ -57,7 +57,7 @@ class ClubsServiceImplTest {
 
     // 가짜 Clubs 리스트 생성
     clubsList = clubsEntities.stream()
-        .map(clubsEntity -> new Clubs(clubsEntity.getClubId(), clubsEntity.getClubName()))
+        .map(clubsEntity -> new Clubs(clubsEntity.getClubName(), clubsEntity.getEmblemImg()))
         .toList();
   }
 
