@@ -1,4 +1,4 @@
-package com.service.sport_companion.api.component;
+package com.service.sport_companion.api.component.club;
 
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.ClubsEntity;

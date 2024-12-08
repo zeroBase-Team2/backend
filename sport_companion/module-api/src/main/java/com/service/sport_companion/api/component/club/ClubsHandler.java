@@ -1,4 +1,4 @@
-package com.service.sport_companion.api.component;
+package com.service.sport_companion.api.component.club;
 
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.model.dto.response.clubs.Clubs;

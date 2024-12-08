@@ -1,14 +1,11 @@
-package com.service.sport_companion.api.component;
+package com.service.sport_companion.api.component.club;
 
-import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
 import com.service.sport_companion.domain.entity.SeasonsEntity;
 import com.service.sport_companion.domain.model.dto.response.fixtures.Fixtures;
-import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.repository.FixturesRepository;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
