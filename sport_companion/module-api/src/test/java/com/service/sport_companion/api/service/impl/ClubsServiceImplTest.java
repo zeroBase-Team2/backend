@@ -3,14 +3,13 @@ package com.service.sport_companion.api.service.impl;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import com.service.sport_companion.api.component.ClubsHandler;
+import com.service.sport_companion.api.component.club.ClubsHandler;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.ReservationSiteEntity;
 import com.service.sport_companion.domain.entity.SportsEntity;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.clubs.Clubs;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
-import com.service.sport_companion.domain.repository.ClubsRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

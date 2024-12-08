@@ -1,7 +1,7 @@
 package com.service.sport_companion.api.service.impl;
 
-import com.service.sport_companion.api.component.ClubsHandler;
-import com.service.sport_companion.api.component.SupportedClubsHandler;
+import com.service.sport_companion.api.component.club.ClubsHandler;
+import com.service.sport_companion.api.component.club.SupportedClubsHandler;
 import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.api.service.SupportClubService;
 import com.service.sport_companion.domain.entity.ClubsEntity;

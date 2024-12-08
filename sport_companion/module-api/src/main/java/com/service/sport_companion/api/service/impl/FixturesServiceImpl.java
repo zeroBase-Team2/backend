@@ -1,19 +1,17 @@
 package com.service.sport_companion.api.service.impl;
 
-import com.service.sport_companion.api.component.FixtureHandler;
-import com.service.sport_companion.api.component.SeasonHandler;
-import com.service.sport_companion.api.component.SupportedClubsHandler;
+import com.service.sport_companion.api.component.club.FixtureHandler;
+import com.service.sport_companion.api.component.club.SeasonHandler;
+import com.service.sport_companion.api.component.club.SupportedClubsHandler;
 import com.service.sport_companion.api.component.crawl.CrawlFixtures;
 import com.service.sport_companion.api.service.FixturesService;
 import com.service.sport_companion.domain.entity.ClubsEntity;
-import com.service.sport_companion.domain.entity.FixturesEntity;
 import com.service.sport_companion.domain.entity.SeasonsEntity;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.fixtures.Fixtures;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

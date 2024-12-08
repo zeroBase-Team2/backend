@@ -1,9 +1,9 @@
 package com.service.sport_companion.api.service.impl;
 
-import com.service.sport_companion.api.component.ClubsHandler;
-import com.service.sport_companion.api.component.ReservationSiteHandler;
+import com.service.sport_companion.api.component.club.ClubsHandler;
+import com.service.sport_companion.api.component.club.ReservationSiteHandler;
 import com.service.sport_companion.api.component.S3Handler;
-import com.service.sport_companion.api.component.SportHandler;
+import com.service.sport_companion.api.component.club.SportHandler;
 import com.service.sport_companion.api.service.ClubsService;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.ReservationSiteEntity;
@@ -17,7 +17,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service

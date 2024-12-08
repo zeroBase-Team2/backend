@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import com.service.sport_companion.api.component.FixtureHandler;
-import com.service.sport_companion.api.component.SeasonHandler;
-import com.service.sport_companion.api.component.SupportedClubsHandler;
+import com.service.sport_companion.api.component.club.FixtureHandler;
+import com.service.sport_companion.api.component.club.SeasonHandler;
+import com.service.sport_companion.api.component.club.SupportedClubsHandler;
 import com.service.sport_companion.api.component.crawl.CrawlFixtures;
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.ClubsEntity;

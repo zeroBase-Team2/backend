@@ -2,9 +2,9 @@ package com.service.sport_companion.api.service.impl;
 
 import com.service.sport_companion.api.auth.jwt.JwtUtil;
 import com.service.sport_companion.api.auth.oauth.KakaoAuthHandler;
-import com.service.sport_companion.api.component.ClubsHandler;
+import com.service.sport_companion.api.component.club.ClubsHandler;
 import com.service.sport_companion.api.component.RedisHandler;
-import com.service.sport_companion.api.component.SupportedClubsHandler;
+import com.service.sport_companion.api.component.club.SupportedClubsHandler;
 import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.api.service.AuthService;
 import com.service.sport_companion.core.exception.GlobalException;
