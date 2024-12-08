@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ClubsService {
 
+  // 모든 구단 정보 조회
   ResultResponse<List<Clubs>> getAllClubList();
 
+  // 구단 등록
   ResultResponse<Void> addClub(ClubDto clubDto) throws IOException;
 }

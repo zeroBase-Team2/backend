@@ -24,6 +24,7 @@ public class ClubsController {
 
   private final ClubsService clubsService;
 
+  // 모든 구단 정보 조회
   @GetMapping("/all")
   public ResponseEntity<ResultResponse<List<Clubs>>> getAllClubs() {
 
@@ -31,6 +32,7 @@ public class ClubsController {
     return new ResponseEntity<>(response, response.getStatus());
   }
 
+  // 구단 등록
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<ResultResponse<Void>> addClub(
       @RequestParam("sportsName") String sportsName,

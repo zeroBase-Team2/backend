@@ -21,6 +21,7 @@ public class SupportClubServiceImpl implements SupportClubService {
   private final UserHandler userHandler;
   private final ClubsHandler clubsHandler;
 
+  // 선호 구단 조회
   @Override
   public ResultResponse<SupportClub> getSupportClub(Long userId) {
     ClubsEntity club = supportedClubsHandler.findSupportClubsByUserId(userId);
@@ -29,6 +30,7 @@ public class SupportClubServiceImpl implements SupportClubService {
     return new ResultResponse<>(SuccessResultType.SUCCESS_GET_SUPPORT_CLUB, supportClub);
   }
 
+  // 선호 구단 등록
   @Override
   public ResultResponse<Void> addSupportClub(Long userId, String clubName) {
     UsersEntity user = userHandler.findByUserId(userId);
@@ -44,6 +46,7 @@ public class SupportClubServiceImpl implements SupportClubService {
     return ResultResponse.of(SuccessResultType.SUCCESS_ADD_SUPPORT_CLUB);
   }
 
+  // 선호 구단 삭제
   @Override
   public ResultResponse<Void> deleteSupportClub(Long userId, String clubName) {
     SupportedClubsEntity supportClubs = supportedClubsHandler

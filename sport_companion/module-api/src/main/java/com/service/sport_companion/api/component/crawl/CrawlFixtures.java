@@ -2,7 +2,6 @@ package com.service.sport_companion.api.component.crawl;
 
 import com.service.sport_companion.api.component.club.ClubsHandler;
 import com.service.sport_companion.api.component.club.FixtureHandler;
-import com.service.sport_companion.api.component.club.SeasonHandler;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
 import com.service.sport_companion.domain.entity.SeasonsEntity;

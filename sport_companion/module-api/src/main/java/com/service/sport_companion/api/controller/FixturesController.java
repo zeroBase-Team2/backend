@@ -28,6 +28,7 @@ public class FixturesController {
 
   }
 
+  // 경기 일정 조회
   @GetMapping
   public ResponseEntity<ResultResponse<List<Fixtures>>> getFixtureList(
       @CallUser Long userId,

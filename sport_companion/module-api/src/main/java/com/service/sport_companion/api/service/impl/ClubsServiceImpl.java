@@ -38,6 +38,7 @@ public class ClubsServiceImpl implements ClubsService {
     return new ResultResponse<>(SuccessResultType.SUCCESS_GET_ALL_CLUBS_LIST, clubList);
   }
 
+  // 구단 등록
   @Override
   public ResultResponse<Void> addClub(ClubDto clubDto) throws IOException {
     String emblemImg = s3Handler.upload(clubDto.getFile());
