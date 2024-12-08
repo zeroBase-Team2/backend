@@ -205,7 +205,7 @@ public class VoteServiceImpl implements VoteService {
     return userVoteHandler.findUserVotedCandidate(
       userId,
       candidateList.stream()
-        .mapToLong(x -> x.getCandidateEntity().getCandidateId())
+        .mapToLong(candidate -> candidate.getCandidateEntity().getCandidateId())
         .boxed()
         .toList()
     );
