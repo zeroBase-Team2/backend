@@ -1,6 +1,5 @@
 package com.service.sport_companion.batch.news;
 
-import com.service.sport_companion.core.component.WebDriverHandler;
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.NewsEntity;
 import com.service.sport_companion.domain.model.type.FailedResultType;
@@ -34,7 +33,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class MbcNewsCrawling {
 
-  private final WebDriverHandler webDriverHandler;
   private final String baseUrl = UrlType.MBC_NEWS_URL.getUrl();
   private final WebDriver driver;
 
