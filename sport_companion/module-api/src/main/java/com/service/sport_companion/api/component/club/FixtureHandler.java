@@ -42,6 +42,7 @@ public class FixtureHandler {
   private List<Fixtures> mapToFixturesList(List<FixturesEntity> fixturesEntities) {
     return fixturesEntities.stream()
         .map(fixture -> new Fixtures(
+            fixture.getSeason(),
             fixture.getFixtureDate(),
             fixture.getFixtureTime(),
             fixture.getHomeClub().getClubName(),

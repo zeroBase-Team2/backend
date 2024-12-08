@@ -68,6 +68,7 @@ class FixtureHandlerTest {
 
     fixtures = fixturesList.stream()
         .map(fixture -> new Fixtures(
+            fixture.getSeason(),
             fixture.getFixtureDate(),
             fixture.getFixtureTime(),
             fixture.getHomeClub().getClubName(),
