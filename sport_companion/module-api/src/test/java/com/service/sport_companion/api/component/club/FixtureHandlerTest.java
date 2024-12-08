@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
-import com.service.sport_companion.domain.entity.SeasonsEntity;
 import com.service.sport_companion.domain.model.dto.response.fixtures.Fixtures;
 import com.service.sport_companion.domain.repository.FixturesRepository;
 import java.time.LocalDate;
@@ -33,7 +32,6 @@ class FixtureHandlerTest {
 
   private List<FixturesEntity> fixturesList;
   private List<Fixtures> fixtures;
-  private SeasonsEntity seasons;
 
   @BeforeEach
   void setUp() {
@@ -43,8 +41,6 @@ class FixtureHandlerTest {
     ClubsEntity homeClub2 = ClubsEntity.builder().clubId(4L).clubName("Mock Home Club 2").build();
     ClubsEntity awayClub2 = ClubsEntity.builder().clubId(10L).clubName("Mock Away Club 2").build();
 
-    seasons = SeasonsEntity.builder().seasonId(3L).seasonName("Mock Season").build();
-
     fixturesList = List.of(
         FixturesEntity.builder()
             .fixtureId(4233L)
@@ -53,10 +49,9 @@ class FixtureHandlerTest {
             .homeScore(5)
             .awayScore(0)
             .notes("-")
-            .stadium("고척")
             .homeClub(homeClub1)
             .awayClub(awayClub1)
-            .seasons(seasons)
+            .season("정규 시즌")
             .build(),
         FixturesEntity.builder()
             .fixtureId(4234L)
@@ -65,10 +60,9 @@ class FixtureHandlerTest {
             .homeScore(11)
             .awayScore(0)
             .notes("-")
-            .stadium("고척")
             .homeClub(homeClub2)
             .awayClub(awayClub2)
-            .seasons(seasons)
+            .season("정규 시즌")
             .build()
     );
 
@@ -80,7 +74,7 @@ class FixtureHandlerTest {
             fixture.getHomeScore(),
             fixture.getAwayClub().getClubName(),
             fixture.getAwayScore(),
-            fixture.getStadium(),
+            fixture.getHomeClub().getClubStadium(),
             fixture.getNotes()
         ))
         .toList();
@@ -103,10 +97,10 @@ class FixtureHandlerTest {
   @DisplayName("모든 구단 경기 정보 조회 성공")
   void shouldReturnFixtureListByDateAndSeason() {
     // given
-    when(fixturesRepository.findAllByFixtureDateAndSeasons(FIXTURE_DATE, seasons)).thenReturn(fixturesList);
+    when(fixturesRepository.findAllByFixtureDate(FIXTURE_DATE)).thenReturn(fixturesList);
 
     // when
-    List<Fixtures> response = fixtureHandler.getAllFixturesList(FIXTURE_DATE, seasons);
+    List<Fixtures> response = fixtureHandler.getAllFixturesList(FIXTURE_DATE);
 
     // then
     assertEquals(response.size(), fixtures.size());
@@ -120,10 +114,10 @@ class FixtureHandlerTest {
     // given
     ClubsEntity homeClub1 = ClubsEntity.builder().clubId(4L).clubName("Mock Home Club 1").build();
     ClubsEntity awayClub1 = ClubsEntity.builder().clubId(10L).clubName("Mock Away Club 1").build();
-    when(fixturesRepository.findSupportFixtures(FIXTURE_DATE, seasons, homeClub1)).thenReturn(fixturesList);
+    when(fixturesRepository.findSupportFixtures(FIXTURE_DATE, homeClub1)).thenReturn(fixturesList);
 
     // when
-    List<Fixtures> response = fixtureHandler.getSupportClubFixturesList(FIXTURE_DATE, seasons, homeClub1);
+    List<Fixtures> response = fixtureHandler.getSupportClubFixturesList(FIXTURE_DATE, homeClub1);
 
     // then
     assertEquals(response.size(), fixtures.size());

@@ -34,12 +34,9 @@ public class FixturesController {
       @CallUser Long userId,
       @RequestParam("year") String year,
       @RequestParam("month") String month,
-      @RequestParam("day") String day,
-      @RequestParam("season") String season) {
+      @RequestParam("day") String day) {
 
-    ResultResponse<List<Fixtures>> response = fixturesService
-        .getFixtureList(userId, year, month, day, season);
-
+    ResultResponse<List<Fixtures>> response = fixturesService.getFixtureList(userId, year, month, day);
     return new ResponseEntity<>(response, response.getStatus());
   }
 

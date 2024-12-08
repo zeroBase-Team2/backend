@@ -4,7 +4,6 @@ import com.service.sport_companion.api.component.club.ClubsHandler;
 import com.service.sport_companion.api.component.club.FixtureHandler;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
-import com.service.sport_companion.domain.entity.SeasonsEntity;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,7 +33,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CrawlFixtures {
 
-  private final SeasonHandler seasonHandler;
   private final ClubsHandler clubsHandler;
   private final FixtureHandler fixtureHandler;
 
@@ -101,7 +99,6 @@ public class CrawlFixtures {
               log.info("시간: {}", fixtures.getFixtureTime());
               log.info("홈팀: {} ({})", fixtures.getHomeClub().getClubName(), fixtures.getHomeScore());
               log.info("원정팀: {} ({})", fixtures.getAwayClub().getClubName(), fixtures.getAwayScore());
-              log.info("장소: {}", fixtures.getStadium());
               log.info("비고: {}", fixtures.getNotes());
               log.info("----------------------------");
             }
@@ -116,7 +113,7 @@ public class CrawlFixtures {
     }
   }
 
-  public FixturesEntity parseToFixturesEntity(String year, String lastDate, Element schedule, String key) {
+  public FixturesEntity parseToFixturesEntity(String year, String lastDate, Element schedule, String season) {
     // 날짜 파싱
     LocalDate fixtureDate = (lastDate != null) ? parseToLocalDate(year, lastDate) : null;
 
@@ -125,10 +122,10 @@ public class CrawlFixtures {
     LocalTime fixtureTime = (fixtureTimeElement != null) ? LocalTime.parse(fixtureTimeElement.text()) : null;
 
     // 팀 이름 파싱 및 DB 조회
-    Element homeClubElement = schedule.selectFirst("td.play > span:nth-child(1)");
+    Element homeClubElement = schedule.selectFirst("td.play > span:nth-child(3)");
     ClubsEntity homeClub = (homeClubElement != null) ? clubsHandler.findByFieldContaining(homeClubElement.text()) : null;
 
-    Element awayClubElement = schedule.selectFirst("td.play > span:nth-child(3)");
+    Element awayClubElement = schedule.selectFirst("td.play > span:nth-child(1)");
     ClubsEntity awayClub = (awayClubElement != null) ? clubsHandler.findByFieldContaining(awayClubElement.text()) : null;
 
     // 점수 파싱
@@ -139,8 +136,8 @@ public class CrawlFixtures {
     Elements scoreSpans = schedule.select("td.play em > span");
     if (scoreSpans.size() >= 3) {
       // span 태그가 3개 이상인 경우 점수 파싱
-      homeScoreElement = scoreSpans.get(0); // 첫 번째 span
-      awayScoreElement = scoreSpans.get(2); // 세 번째 span
+      homeScoreElement = scoreSpans.get(2); // 세 번째 span
+      awayScoreElement = scoreSpans.get(0); // 첫 번째 span
     }
 
     // 점수를 가져오거나 "-"로 설정
@@ -153,7 +150,6 @@ public class CrawlFixtures {
     int notesIndex = locationIndex + 1;
 
     // 경기장 및 비고
-    String stadium = (tdCount > locationIndex) ? schedule.select("td").get(locationIndex).text() : "-";
     String notes = (tdCount > notesIndex) ? schedule.select("td").get(notesIndex).text() : "-";
 
 
@@ -164,18 +160,15 @@ public class CrawlFixtures {
       return null;
     }
 
-    SeasonsEntity seasons = seasonHandler.findBySeasonName(key);
-
     // FixturesEntity 생성
     return FixturesEntity.builder()
-        .seasons(seasons)
+        .season(season)
         .fixtureDate(fixtureDate)
         .fixtureTime(fixtureTime)
         .homeClub(homeClub)
         .homeScore(homeScore)
         .awayClub(awayClub)
         .awayScore(awayScore)
-        .stadium(stadium)
         .notes(notes)
         .build();
   }

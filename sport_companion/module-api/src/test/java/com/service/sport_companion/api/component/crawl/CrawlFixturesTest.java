@@ -6,10 +6,8 @@ import static org.mockito.Mockito.when;
 
 import com.service.sport_companion.api.component.club.ClubsHandler;
 import com.service.sport_companion.api.component.club.FixtureHandler;
-import com.service.sport_companion.api.component.club.SeasonHandler;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
-import com.service.sport_companion.domain.entity.SeasonsEntity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.jsoup.Jsoup;
@@ -24,40 +22,28 @@ import org.mockito.MockitoAnnotations;
 class CrawlFixturesTest {
 
   @Mock
-  private SeasonHandler seasonHandler;
-
-  @Mock
   private ClubsHandler clubsHandler;
-
-  @Mock
-  private FixtureHandler fixtureHandler;
 
   @InjectMocks
   private CrawlFixtures crawlFixtures;
 
-  private SeasonsEntity mockedSeason;
   private ClubsEntity mockedHomeClub;
   private ClubsEntity mockedAwayClub;
-  private FixturesEntity fixtures;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
 
-    // Mocked data setup
-    mockedSeason = SeasonsEntity.builder()
-        .seasonId(1L)
-        .seasonName("KBO 정규시즌 일정")
+    mockedAwayClub = ClubsEntity.builder()
+        .clubId(1L)
+        .clubName("KT")
+        .clubStadium("수원")
         .build();
 
     mockedHomeClub = ClubsEntity.builder()
-        .clubId(1L)
-        .clubName("KT")
-        .build();
-
-    mockedAwayClub = ClubsEntity.builder()
         .clubId(2L)
         .clubName("두산")
+        .clubStadium("잠실")
         .build();
   }
 
@@ -79,7 +65,7 @@ class CrawlFixturesTest {
                 <em>
                   <span class="win">4</span>
                   <span>vs</span>
-                  <span class="lose">0</span>
+                  <span class="lose">1</span>
                 </em>
                 <span>두산</span>
               </td>
@@ -104,22 +90,22 @@ class CrawlFixturesTest {
     assertNotNull(schedule, "Parsed schedule is null. Check the provided HTML structure.");
 
     // Mock dependencies
-    when(seasonHandler.findBySeasonName(seriesKey)).thenReturn(mockedSeason);
-    when(clubsHandler.findByFieldContaining("KT")).thenReturn(mockedHomeClub);
-    when(clubsHandler.findByFieldContaining("두산")).thenReturn(mockedAwayClub);
+    when(clubsHandler.findByFieldContaining("KT")).thenReturn(mockedAwayClub);
+    when(clubsHandler.findByFieldContaining("두산")).thenReturn(mockedHomeClub);
 
     // When
     FixturesEntity fixtures = crawlFixtures.parseToFixturesEntity(year, lastDate, schedule, seriesKey);
 
     // Then
     assertNotNull(fixtures, "Parsed fixtures is null.");
+    assertEquals("KBO 정규시즌 일정", fixtures.getSeason());
     assertEquals(LocalDate.of(2024, 10, 2), fixtures.getFixtureDate());
     assertEquals(LocalTime.parse("18:30"), fixtures.getFixtureTime());
-    assertEquals(mockedHomeClub, fixtures.getHomeClub());
     assertEquals(mockedAwayClub, fixtures.getAwayClub());
-    assertEquals(Integer.parseInt("4"), fixtures.getHomeScore());
-    assertEquals(Integer.parseInt("0"), fixtures.getAwayScore());
-    assertEquals("잠실", fixtures.getStadium());
+    assertEquals(mockedHomeClub, fixtures.getHomeClub());
+    assertEquals(Integer.parseInt("1"), fixtures.getHomeScore());
+    assertEquals(Integer.parseInt("4"), fixtures.getAwayScore());
+    assertEquals("잠실", fixtures.getHomeClub().getClubStadium());
     assertEquals("-", fixtures.getNotes());
   }
 }

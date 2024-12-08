@@ -2,7 +2,6 @@ package com.service.sport_companion.api.component.club;
 
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
-import com.service.sport_companion.domain.entity.SeasonsEntity;
 import com.service.sport_companion.domain.model.dto.response.fixtures.Fixtures;
 import com.service.sport_companion.domain.repository.FixturesRepository;
 import java.time.LocalDate;
@@ -26,15 +25,15 @@ public class FixtureHandler {
   /**
    * 전달 받은 날짜와 일치하는 모든 경기 일정 조회
    */
-  public List<Fixtures> getAllFixturesList(LocalDate fixtureDate, SeasonsEntity seasons) {
-    return mapToFixturesList(fixturesRepository.findAllByFixtureDateAndSeasons(fixtureDate, seasons));
+  public List<Fixtures> getAllFixturesList(LocalDate fixtureDate) {
+    return mapToFixturesList(fixturesRepository.findAllByFixtureDate(fixtureDate));
   }
 
   /**
    * 전달 받은 날짜, 선호구단과 일치하는 경기 일정 조회
    */
-  public List<Fixtures> getSupportClubFixturesList(LocalDate fixtureDate, SeasonsEntity seasons, ClubsEntity clubs) {
-    return mapToFixturesList(fixturesRepository.findSupportFixtures(fixtureDate, seasons, clubs));
+  public List<Fixtures> getSupportClubFixturesList(LocalDate fixtureDate, ClubsEntity clubs) {
+    return mapToFixturesList(fixturesRepository.findSupportFixtures(fixtureDate, clubs));
   }
 
   /**
@@ -49,7 +48,7 @@ public class FixtureHandler {
             fixture.getHomeScore(),
             fixture.getAwayClub().getClubName(),
             fixture.getAwayScore(),
-            fixture.getStadium(),
+            fixture.getHomeClub().getClubStadium(),
             fixture.getNotes()
         ))
         .toList();

@@ -10,6 +10,5 @@ public interface FixturesService {
   ResultResponse<Void> crawlFixtures(String year);
 
   // 경기 일정 조회
-  ResultResponse<List<Fixtures>> getFixtureList(Long userId, String year, String month, String day,
-      String season);
+  ResultResponse<List<Fixtures>> getFixtureList(Long userId, String year, String month, String day);
 }
