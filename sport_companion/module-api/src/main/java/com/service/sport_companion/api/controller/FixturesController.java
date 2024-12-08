@@ -28,17 +28,15 @@ public class FixturesController {
 
   }
 
+  // 경기 일정 조회
   @GetMapping
   public ResponseEntity<ResultResponse<List<Fixtures>>> getFixtureList(
       @CallUser Long userId,
       @RequestParam("year") String year,
       @RequestParam("month") String month,
-      @RequestParam("day") String day,
-      @RequestParam("season") String season) {
+      @RequestParam("day") String day) {
 
-    ResultResponse<List<Fixtures>> response = fixturesService
-        .getFixtureList(userId, year, month, day, season);
-
+    ResultResponse<List<Fixtures>> response = fixturesService.getFixtureList(userId, year, month, day);
     return new ResponseEntity<>(response, response.getStatus());
   }
 

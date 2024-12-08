@@ -26,6 +26,7 @@ public class AuthController {
 
   private final AuthService authService;
 
+  // 카카오 로그인 or 회원 가입 여부 확인
   @PostMapping("/kakao")
   public ResponseEntity<ResultResponse<?>> oAuthForKakao(HttpServletResponse response,
       @RequestBody @Valid KakaoCodeDto kakaoCode) {
@@ -34,6 +35,7 @@ public class AuthController {
     return new ResponseEntity<>(resultResponse, resultResponse.getStatus());
   }
 
+  // 닉네임 중복 검증
   @GetMapping("/check-nickname/{nickname}")
   public ResponseEntity<ResultResponse<Boolean>> checkNickname(
     @NotBlank(message = "닉네임을 입력해 주세요.") @PathVariable("nickname") String nickname) {
@@ -41,6 +43,7 @@ public class AuthController {
     return ResponseEntity.ok(authService.checkNickname(nickname));
   }
 
+  // 회원 가입
   @PostMapping("/signup")
   public ResponseEntity<ResultResponse<Void>> signup(@RequestBody @Valid SignUpDto signUpDto) {
 
@@ -48,6 +51,7 @@ public class AuthController {
     return new ResponseEntity<>(response, response.getStatus());
   }
 
+  // Access Token 재발급
   @GetMapping("/reissue-token")
   public ResponseEntity<ResultResponse<Void>> reissueToken(
       HttpServletRequest request, HttpServletResponse response) {

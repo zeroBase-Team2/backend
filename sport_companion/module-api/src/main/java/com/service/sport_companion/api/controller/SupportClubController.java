@@ -20,6 +20,7 @@ public class SupportClubController {
 
   private final SupportClubService supportClubService;
 
+  // 선호 구단 조회
   @GetMapping
   public ResponseEntity<ResultResponse<SupportClub>> getSupportClub(@CallUser Long userId) {
 
@@ -27,6 +28,7 @@ public class SupportClubController {
     return new ResponseEntity<>(response, response.getStatus());
   }
 
+  // 선호구단 등록
   @PostMapping("/{clubName}")
   public ResponseEntity<ResultResponse<Void>> addSupportClub(@CallUser Long userId,
       @PathVariable("clubName") String clubName) {
@@ -35,6 +37,7 @@ public class SupportClubController {
     return new ResponseEntity<>(response, response.getStatus());
   }
 
+  // 선호구단 삭제
   @DeleteMapping("/{clubName}")
   public ResponseEntity<ResultResponse<Void>> deleteSupportClub(@CallUser Long userId,
       @PathVariable("clubName") String clubName) {

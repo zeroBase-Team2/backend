@@ -6,8 +6,9 @@ import java.util.List;
 
 public interface FixturesService {
 
+  // 경기 일정 크롤링
   ResultResponse<Void> crawlFixtures(String year);
 
-  ResultResponse<List<Fixtures>> getFixtureList(Long userId, String year, String month, String day,
-      String season);
+  // 경기 일정 조회
+  ResultResponse<List<Fixtures>> getFixtureList(Long userId, String year, String month, String day);
 }

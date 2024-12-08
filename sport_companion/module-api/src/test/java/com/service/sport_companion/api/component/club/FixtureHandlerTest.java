@@ -1,11 +1,11 @@
-package com.service.sport_companion.api.component;
+package com.service.sport_companion.api.component.club;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
-import com.service.sport_companion.domain.entity.SeasonsEntity;
+import com.service.sport_companion.domain.model.dto.response.fixtures.Fixtures;
 import com.service.sport_companion.domain.repository.FixturesRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -27,7 +27,11 @@ class FixtureHandlerTest {
   @InjectMocks
   private FixtureHandler fixtureHandler;
 
+  private final LocalDate FIXTURE_DATE = LocalDate.now();
+
+
   private List<FixturesEntity> fixturesList;
+  private List<Fixtures> fixtures;
 
   @BeforeEach
   void setUp() {
@@ -37,8 +41,6 @@ class FixtureHandlerTest {
     ClubsEntity homeClub2 = ClubsEntity.builder().clubId(4L).clubName("Mock Home Club 2").build();
     ClubsEntity awayClub2 = ClubsEntity.builder().clubId(10L).clubName("Mock Away Club 2").build();
 
-    SeasonsEntity season = SeasonsEntity.builder().seasonId(3L).seasonName("Mock Season").build();
-
     fixturesList = List.of(
         FixturesEntity.builder()
             .fixtureId(4233L)
@@ -47,10 +49,9 @@ class FixtureHandlerTest {
             .homeScore(5)
             .awayScore(0)
             .notes("-")
-            .stadium("고척")
             .homeClub(homeClub1)
             .awayClub(awayClub1)
-            .seasons(season)
+            .season("정규 시즌")
             .build(),
         FixturesEntity.builder()
             .fixtureId(4234L)
@@ -59,12 +60,25 @@ class FixtureHandlerTest {
             .homeScore(11)
             .awayScore(0)
             .notes("-")
-            .stadium("고척")
             .homeClub(homeClub2)
             .awayClub(awayClub2)
-            .seasons(season)
+            .season("정규 시즌")
             .build()
     );
+
+    fixtures = fixturesList.stream()
+        .map(fixture -> new Fixtures(
+            fixture.getSeason(),
+            fixture.getFixtureDate(),
+            fixture.getFixtureTime(),
+            fixture.getHomeClub().getClubName(),
+            fixture.getHomeScore(),
+            fixture.getAwayClub().getClubName(),
+            fixture.getAwayScore(),
+            fixture.getHomeClub().getClubStadium(),
+            fixture.getNotes()
+        ))
+        .toList();
   }
 
   @Test
@@ -78,5 +92,37 @@ class FixtureHandlerTest {
 
     // then
     assertEquals(response, fixturesList);
+  }
+
+  @Test
+  @DisplayName("모든 구단 경기 정보 조회 성공")
+  void shouldReturnFixtureListByDateAndSeason() {
+    // given
+    when(fixturesRepository.findAllByFixtureDate(FIXTURE_DATE)).thenReturn(fixturesList);
+
+    // when
+    List<Fixtures> response = fixtureHandler.getAllFixturesList(FIXTURE_DATE);
+
+    // then
+    assertEquals(response.size(), fixtures.size());
+    assertEquals(response.getFirst().getHomeClubName(), fixtures.getFirst().getHomeClubName());
+    assertEquals(response.getFirst().getAwayClubName(), fixtures.getFirst().getAwayClubName());
+  }
+
+  @Test
+  @DisplayName("선호 구단 경기 정보 조회 성공")
+  void shouldReturnSupportClubFixtures() {
+    // given
+    ClubsEntity homeClub1 = ClubsEntity.builder().clubId(4L).clubName("Mock Home Club 1").build();
+    ClubsEntity awayClub1 = ClubsEntity.builder().clubId(10L).clubName("Mock Away Club 1").build();
+    when(fixturesRepository.findSupportFixtures(FIXTURE_DATE, homeClub1)).thenReturn(fixturesList);
+
+    // when
+    List<Fixtures> response = fixtureHandler.getSupportClubFixturesList(FIXTURE_DATE, homeClub1);
+
+    // then
+    assertEquals(response.size(), fixtures.size());
+    assertEquals(response.getFirst().getHomeClubName(), fixtures.getFirst().getHomeClubName());
+    assertEquals(response.getFirst().getAwayClubName(), fixtures.getFirst().getAwayClubName());
   }
 }
