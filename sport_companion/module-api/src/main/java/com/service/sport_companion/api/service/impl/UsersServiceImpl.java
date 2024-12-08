@@ -15,6 +15,16 @@ public class UsersServiceImpl implements UsersService {
 
   private final UserHandler userHandler;
 
+  // 사용자 정보 조회
+  @Override
+  public ResultResponse<UserInfo> getUserInfo(Long userId) {
+    UsersEntity user = userHandler.findByUserId(userId);
+
+    UserInfo userInfo = new UserInfo(user.getEmail(), user.getNickname());
+    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_USERINFO, userInfo);
+  }
+
+  // 사용자 정보 수정
   @Override
   public ResultResponse<Void> updateUserInfo(Long userId, String nickname) {
     UsersEntity user = userHandler.findByUserId(userId);
@@ -31,13 +41,5 @@ public class UsersServiceImpl implements UsersService {
     );
 
     return ResultResponse.of(SuccessResultType.SUCCESS_UPDATE_USERINFO);
-  }
-
-  @Override
-  public ResultResponse<UserInfo> getUserInfo(Long userId) {
-    UsersEntity user = userHandler.findByUserId(userId);
-
-    UserInfo userInfo = new UserInfo(user.getEmail(), user.getNickname());
-    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_USERINFO, userInfo);
   }
 }

@@ -2,9 +2,9 @@ package com.service.sport_companion.api.service.impl;
 
 import com.service.sport_companion.api.auth.jwt.JwtUtil;
 import com.service.sport_companion.api.auth.oauth.KakaoAuthHandler;
-import com.service.sport_companion.api.component.ClubsHandler;
+import com.service.sport_companion.api.component.club.ClubsHandler;
 import com.service.sport_companion.api.component.RedisHandler;
-import com.service.sport_companion.api.component.SupportedClubsHandler;
+import com.service.sport_companion.api.component.club.SupportedClubsHandler;
 import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.api.service.AuthService;
 import com.service.sport_companion.core.exception.GlobalException;
@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
 
 
   @Override
-  public ResultResponse oAuthForKakao(String code, HttpServletResponse response) {
+  public ResultResponse<?> oAuthForKakao(String code, HttpServletResponse response) {
     // "인가 코드"로 "액세스 토큰" 요청
     String accessToken = kakaoAuthHandler.getAccessToken(code);
 
@@ -60,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
       userHandler.saveSingUpCacheData(userInfo);
 
-      return new ResultResponse(SuccessResultType.SUCCESS_SIGNUP_REQUIRED, signUpData);
+      return new ResultResponse<>(SuccessResultType.SUCCESS_SIGNUP_REQUIRED, signUpData);
     }
 
     // 로그인 성공 : Access, Refresh 토큰 헤더로 전달

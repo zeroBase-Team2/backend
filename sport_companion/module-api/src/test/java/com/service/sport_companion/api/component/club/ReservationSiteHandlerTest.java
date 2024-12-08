@@ -1,11 +1,10 @@
-package com.service.sport_companion.api.component;
+package com.service.sport_companion.api.component.club;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.ReservationSiteEntity;
-import com.service.sport_companion.domain.entity.SeasonsEntity;
 import com.service.sport_companion.domain.repository.ReservationSiteRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

@@ -4,14 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import com.service.sport_companion.api.component.FixtureHandler;
-import com.service.sport_companion.api.component.SeasonHandler;
-import com.service.sport_companion.api.component.SupportedClubsHandler;
+import com.service.sport_companion.api.component.club.FixtureHandler;
+import com.service.sport_companion.api.component.club.SupportedClubsHandler;
 import com.service.sport_companion.api.component.crawl.CrawlFixtures;
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
-import com.service.sport_companion.domain.entity.SeasonsEntity;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.fixtures.Fixtures;
 import com.service.sport_companion.domain.model.type.FailedResultType;
@@ -35,9 +33,6 @@ class FixturesServiceImplTest {
   private CrawlFixtures crawlFixtures;
 
   @Mock
-  private SeasonHandler seasonHandler;
-
-  @Mock
   private SupportedClubsHandler supportedClubsHandler;
 
   @Mock
@@ -54,7 +49,6 @@ class FixturesServiceImplTest {
 
   private LocalDate localDate = null;
   private List<Fixtures> fixtures;
-  private SeasonsEntity seasons;
   private ClubsEntity homeClub;
   private ClubsEntity awayClub;
 
@@ -69,9 +63,6 @@ class FixturesServiceImplTest {
     homeClub = ClubsEntity.builder().clubId(4L).clubName("Mock Home Club 1").build();
     awayClub = ClubsEntity.builder().clubId(10L).clubName("Mock Away Club 1").build();
 
-
-    seasons = SeasonsEntity.builder().seasonId(3L).seasonName("Mock Season").build();
-
     List<FixturesEntity> fixturesList = List.of(
         FixturesEntity.builder()
             .fixtureId(4233L)
@@ -80,22 +71,22 @@ class FixturesServiceImplTest {
             .homeScore(5)
             .awayScore(0)
             .notes("-")
-            .stadium("고척")
             .homeClub(homeClub)
             .awayClub(awayClub)
-            .seasons(seasons)
+            .season("정규 시즌")
             .build()
     );
 
     fixtures = fixturesList.stream()
         .map(fixture -> new Fixtures(
+            fixture.getSeason(),
             fixture.getFixtureDate(),
             fixture.getFixtureTime(),
             fixture.getHomeClub().getClubName(),
             fixture.getHomeScore(),
             fixture.getAwayClub().getClubName(),
             fixture.getAwayScore(),
-            fixture.getStadium(),
+            fixture.getHomeClub().getClubStadium(),
             fixture.getNotes()
         ))
         .toList();
@@ -118,12 +109,11 @@ class FixturesServiceImplTest {
   @DisplayName("선호구단 경기 일정 조회 성공")
   void getSupportClubFixturesSuccessfully() {
     // given
-    when(seasonHandler.findBySeasonName(SEASON_NAME)).thenReturn(seasons);
     when(supportedClubsHandler.findSupportClubsByUserId(USERID)).thenReturn(homeClub);
-    when(fixtureHandler.getSupportClubFixturesList(localDate, seasons, homeClub)).thenReturn(fixtures);
+    when(fixtureHandler.getSupportClubFixturesList(localDate, homeClub)).thenReturn(fixtures);
 
     // when
-    ResultResponse<List<Fixtures>> resultResponse = fixturesService.getFixtureList(USERID, YEAR, MONTH, DAY, SEASON_NAME);
+    ResultResponse<List<Fixtures>> resultResponse = fixturesService.getFixtureList(USERID, YEAR, MONTH, DAY);
 
     // then
     assertEquals(SuccessResultType.SUCCESS_GET_ALL_FIXTURES.getStatus(), resultResponse.getStatus());
@@ -135,13 +125,12 @@ class FixturesServiceImplTest {
   @DisplayName("선호구단 경기 일정 조회 실패")
   void getSupportClubFixturesFailed() {
     // given
-    when(seasonHandler.findBySeasonName(SEASON_NAME)).thenReturn(seasons);
     when(supportedClubsHandler.findSupportClubsByUserId(USERID))
         .thenThrow(new GlobalException(FailedResultType.SUPPORT_NOT_FOUND));
 
     // when & then
     assertThrows(GlobalException.class,
-        () -> fixturesService.getFixtureList(USERID, YEAR, MONTH, DAY, SEASON_NAME));
+        () -> fixturesService.getFixtureList(USERID, YEAR, MONTH, DAY));
 
   }
 
@@ -149,11 +138,10 @@ class FixturesServiceImplTest {
   @DisplayName("모든 구단 경기 일정 조회 성공")
   void getAllClubFixturesSuccessfully() {
     // given
-    when(seasonHandler.findBySeasonName(SEASON_NAME)).thenReturn(seasons);
-    when(fixtureHandler.getAllFixturesList(localDate, seasons)).thenReturn(fixtures);
+    when(fixtureHandler.getAllFixturesList(localDate)).thenReturn(fixtures);
 
     // when
-    ResultResponse<List<Fixtures>> resultResponse = fixturesService.getFixtureList(USERID, YEAR, MONTH, DAY, SEASON_NAME);
+    ResultResponse<List<Fixtures>> resultResponse = fixturesService.getFixtureList(USERID, YEAR, MONTH, DAY);
 
     // then
     assertEquals(SuccessResultType.SUCCESS_GET_ALL_FIXTURES.getStatus(), resultResponse.getStatus());

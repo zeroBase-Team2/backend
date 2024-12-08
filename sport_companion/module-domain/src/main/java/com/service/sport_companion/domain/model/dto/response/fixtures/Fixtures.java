@@ -9,6 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Fixtures {
 
+  private String season;
+
   private LocalDate fixtureDate;
 
   private LocalTime fixtureTime;

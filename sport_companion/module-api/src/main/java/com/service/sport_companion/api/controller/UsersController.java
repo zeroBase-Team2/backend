@@ -19,6 +19,7 @@ public class UsersController {
 
   private final UsersService usersService;
 
+  // 사용자 정보 조회
   @GetMapping
   public ResponseEntity<ResultResponse<UserInfo>> getUserInfo(@CallUser Long userId) {
 
@@ -26,6 +27,7 @@ public class UsersController {
     return new ResponseEntity<>(response, response.getStatus());
   }
 
+  // 사용자 정보 (닉네임 수정)
   @PutMapping("/{nickname}")
   public ResponseEntity<ResultResponse<Void>> updateUserInfo(
       @CallUser Long userId,

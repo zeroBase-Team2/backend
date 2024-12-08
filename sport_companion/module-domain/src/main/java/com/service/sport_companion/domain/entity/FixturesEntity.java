@@ -24,27 +24,23 @@ public class FixturesEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long fixtureId;
 
-  @ManyToOne
-  @JoinColumn(name = "season_id", nullable = false)
-  private SeasonsEntity seasons;
+  private String season;
 
   @ManyToOne
   @JoinColumn(name = "home_club_id", nullable = false)
   private ClubsEntity homeClub;
 
-  private int homeScore;
-
   @ManyToOne
   @JoinColumn(name = "away_club_id", nullable = false)
   private ClubsEntity awayClub;
+
+  private int homeScore;
 
   private int awayScore;
 
   private LocalDate fixtureDate;
 
   private LocalTime fixtureTime;
-
-  private String stadium;
 
   private String notes;
 }
