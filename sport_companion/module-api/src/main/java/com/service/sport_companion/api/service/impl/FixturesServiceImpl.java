@@ -7,6 +7,7 @@ import com.service.sport_companion.api.component.club.TipsHandler;
 import com.service.sport_companion.api.component.crawl.CrawlFixtures;
 import com.service.sport_companion.api.service.FixturesService;
 import com.service.sport_companion.domain.entity.ClubsEntity;
+import com.service.sport_companion.domain.entity.FixturesEntity;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.fixtures.FixtureDetails;
 import com.service.sport_companion.domain.model.dto.response.fixtures.Fixtures;
@@ -55,15 +56,17 @@ public class FixturesServiceImpl implements FixturesService {
 
   @Override
   public ResultResponse<FixtureDetails> getFixtureDetails(Long fixtureId) {
-    ClubsEntity club = fixtureHandler.findClubByFixtureId(fixtureId);
+    FixturesEntity fixtures = fixtureHandler.findClubByFixtureId(fixtureId);
 
-    List<Restaurant> restaurants = restaurantHandler.findClubRestaurant(club);
+    List<Restaurant> restaurants = restaurantHandler.findClubRestaurant(fixtures.getHomeClub());
 
-    List<Tips> tips = tipsHandler.findClubTips(club);
+    List<Tips> tips = tipsHandler.findClubTips(fixtures.getHomeClub());
 
-    FixtureDetails fixtureDetails = new FixtureDetails(
-        restaurants, tips, club.getReservationSite().getSiteUrl()
-    );
+    String siteUrl = fixtures.getFixtureDate().isBefore(LocalDate.now())
+        ? fixtures.getHomeClub().getReservationSite().getSiteUrl()
+        : null;
+
+    FixtureDetails fixtureDetails = new FixtureDetails(restaurants, tips, siteUrl);
 
     return new ResultResponse<>(SuccessResultType.SUCCESS_GET_FIXTURES_DETAILS, fixtureDetails);
   }

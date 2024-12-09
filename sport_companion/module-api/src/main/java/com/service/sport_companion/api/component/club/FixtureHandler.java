@@ -62,9 +62,8 @@ public class FixtureHandler {
   /**
    * fixtureId와 일치하는 경기 일정 조회
    */
-  public ClubsEntity findClubByFixtureId(Long fixtureId) {
+  public FixturesEntity findClubByFixtureId(Long fixtureId) {
     return fixturesRepository.findById(fixtureId)
-        .map(FixturesEntity::getHomeClub)
         .orElseThrow(() -> new GlobalException(FailedResultType.FIXTURE_NOT_FOUND));
   }
 }
