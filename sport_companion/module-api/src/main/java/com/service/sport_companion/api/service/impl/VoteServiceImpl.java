@@ -103,12 +103,10 @@ public class VoteServiceImpl implements VoteService {
     LocalDate voteStartDate = getVoteStartDate(DayOfWeek.MONDAY);
 
     VoteEntity voteEntity = voteHandler.findByDate(voteStartDate);
-    List<CandidateEntity> candidateEntity =
-      candidateHandler.findByVoteIdOrderBySequence(voteEntity.getVoteId());
 
     return new ResultResponse<>(
       SuccessResultType.SUCCESS_GET_VOTE,
-      VoteResponse.fromExample(voteEntity, candidateEntity)
+      VoteResponse.fromExample(voteEntity)
     );
   }
 

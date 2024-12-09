@@ -1,7 +1,6 @@
 package com.service.sport_companion.domain.model.dto.response.vote;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.service.sport_companion.domain.entity.CandidateEntity;
 import com.service.sport_companion.domain.entity.VoteEntity;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,10 +39,8 @@ public class VoteResponse {
   }
 
   // 투표 결과는 리턴하지 않는 생성자
-  public static VoteResponse fromExample(VoteEntity voteEntity,
-    List<CandidateEntity> candidateList
-  ) {
-    List<Vote> voteList = candidateList.stream().map(
+  public static VoteResponse fromExample(VoteEntity voteEntity) {
+    List<Vote> voteList = voteEntity.getCandidateEntity().stream().map(
       candidate -> Vote.builder()
         .candidateId(candidate.getCandidateId())
         .example(candidate.getExample())
