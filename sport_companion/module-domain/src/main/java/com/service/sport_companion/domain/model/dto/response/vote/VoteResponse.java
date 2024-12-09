@@ -39,7 +39,7 @@ public class VoteResponse {
   }
 
   // 투표 결과는 리턴하지 않는 생성자
-  public static VoteResponse fromExample(VoteEntity voteEntity) {
+  public static VoteResponse fromEntity(VoteEntity voteEntity) {
     List<Vote> voteList = voteEntity.getCandidateEntity().stream().map(
       candidate -> Vote.builder()
         .candidateId(candidate.getCandidateId())
@@ -56,8 +56,9 @@ public class VoteResponse {
   }
 
   // 투표 결과를 함께 리턴하는 생성자
-  public static VoteResponse fromExampleAndVoteCount(VoteEntity voteEntity,
-    List<CandidateAndCountDto> candidateList, Long myVote
+  public static VoteResponse fromEntityWithResult(VoteEntity voteEntity,
+    List<CandidateAndCountDto> candidateList,
+    Long myVote
   ) {
     List<Vote> voteList = candidateList.stream().map(
       candidate -> Vote.builder()
