@@ -36,6 +36,8 @@ public class ClubsEntity {
 
   private String clubStadium;
 
+  private String stadiumAddress;
+
   private String emblemImg;
 
 }
