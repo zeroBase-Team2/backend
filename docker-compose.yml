@@ -4,6 +4,9 @@ services:
     container_name: mysql
     env_file:
       - ./data/mysql/env.mysql
+    volumes:
+      - sport_data:/var/lib/mysql
+      - ./data/mysql/schema-mysql.sql:/docker-entrypoint-initdb.d/schema-mysql.sql
     ports:
       - "3306:3306"
     restart: always
