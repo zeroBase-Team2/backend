@@ -87,4 +87,15 @@ public class CustomTopicController {
 
     return new ResponseEntity<>(response, response.getStatus());
   }
+
+  // 로그인한 사용자가 작성한 주제 조회
+  @GetMapping("/my")
+  public ResponseEntity<ResultResponse<PageResponse<CustomTopicResponse>>> getMyTopicList(
+    @CallUser Long userId, Pageable pageable
+  ) {
+    ResultResponse<PageResponse<CustomTopicResponse>> response =
+      customTopicService.getMyTopicList(userId, pageable);
+
+    return new ResponseEntity<>(response, response.getStatus());
+  }
 }

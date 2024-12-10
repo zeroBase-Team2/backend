@@ -21,4 +21,6 @@ public interface CustomTopicService {
   ResultResponse<List<CustomTopicResponse>> getTopicTop5(Long userId);
 
   ResultResponse<RecommendCountResponse> updateTopicRecommend(Long userId, Long topicId);
+
+  ResultResponse<PageResponse<CustomTopicResponse>> getMyTopicList(Long userId, Pageable pageable);
 }
