@@ -56,7 +56,7 @@ public class FixturesServiceImpl implements FixturesService {
 
   @Override
   public ResultResponse<FixtureDetails> getFixtureDetails(Long fixtureId) {
-    FixturesEntity fixtures = fixtureHandler.findClubByFixtureId(fixtureId);
+    FixturesEntity fixtures = fixtureHandler.findFixturesFixtureId(fixtureId);
 
     List<Restaurant> restaurants = restaurantHandler.findClubRestaurant(fixtures.getHomeClub());
 
