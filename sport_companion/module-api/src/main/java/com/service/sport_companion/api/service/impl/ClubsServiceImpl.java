@@ -1,13 +1,9 @@
 package com.service.sport_companion.api.service.impl;
 
 import com.service.sport_companion.api.component.club.ClubsHandler;
-import com.service.sport_companion.api.component.club.ReservationSiteHandler;
 import com.service.sport_companion.api.component.S3Handler;
-import com.service.sport_companion.api.component.club.SportHandler;
 import com.service.sport_companion.api.service.ClubsService;
 import com.service.sport_companion.domain.entity.ClubsEntity;
-import com.service.sport_companion.domain.entity.ReservationSiteEntity;
-import com.service.sport_companion.domain.entity.SportsEntity;
 import com.service.sport_companion.domain.model.dto.request.club.ClubDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.clubs.Clubs;
@@ -17,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -25,8 +22,6 @@ public class ClubsServiceImpl implements ClubsService {
 
   private final ClubsHandler clubsHandler;
   private final S3Handler s3Handler;
-  private final SportHandler sportHandler;
-  private final ReservationSiteHandler reservationSiteHandler;
 
 
   // 모든 구단 조회
@@ -43,14 +38,11 @@ public class ClubsServiceImpl implements ClubsService {
   public ResultResponse<Void> addClub(ClubDto clubDto) throws IOException {
     String emblemImg = s3Handler.upload(clubDto.getFile());
 
-    SportsEntity sport = sportHandler.findBySportName(clubDto.getSportsName());
-    ReservationSiteEntity site = reservationSiteHandler.findBySiteName(clubDto.getSiteName());
-
     clubsHandler.saveClub(ClubsEntity.builder()
-        .sports(sport)
-        .clubName(clubDto.getClubName())
-        .clubStadium(clubDto.getClubStadium())
-        .reservationSite(site)
+        .clubName(clubDto.getName())
+        .clubStadium(clubDto.getStadium())
+        .stadiumAddress(clubDto.getStadiumAddress())
+        .reservationSite(clubDto.getReservationSite())
         .emblemImg(emblemImg)
         .build());
 

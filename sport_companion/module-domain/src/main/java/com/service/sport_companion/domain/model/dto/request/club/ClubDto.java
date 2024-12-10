@@ -10,14 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClubDto {
+  private String name;
 
-  private String sportsName;
+  private String stadium;
 
-  private String clubName;
+  private String stadiumAddress;
 
-  private String clubStadium;
-
-  private String siteName;
+  private String reservationSite;
 
   private MultipartFile file;
 }
