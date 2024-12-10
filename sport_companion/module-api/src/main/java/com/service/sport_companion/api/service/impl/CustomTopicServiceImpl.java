@@ -42,6 +42,19 @@ public class CustomTopicServiceImpl implements CustomTopicService {
   }
 
   @Override
+  public ResultResponse<Void> updateTopic(Long userId, Long topicId, CreateTopicDto updateTopicDto) {
+    CustomTopicEntity customTopicEntity = customTopicHandler.findById(topicId);
+
+    if (!customTopicEntity.getUsers().getUserId().equals(userId)) {
+      throw new GlobalException(FailedResultType.UPDATE_TOPIC_FORBIDDEN);
+    }
+
+    customTopicEntity.updateTopic(updateTopicDto.getTopic());
+
+    return ResultResponse.of(SuccessResultType.SUCCESS_UPDATE_CUSTOM_TOPIC);
+  }
+
+  @Override
   public ResultResponse<Void> deleteTopic(Long userId, Long topicId) {
     UsersEntity userEntity = userHandler.findByUserId(userId);
     CustomTopicEntity customTopicEntity = customTopicHandler.findById(topicId);

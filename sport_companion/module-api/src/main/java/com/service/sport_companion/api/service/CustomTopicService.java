@@ -12,6 +12,8 @@ public interface CustomTopicService {
 
   ResultResponse<Void> createTopic(Long userId, CreateTopicDto createTopicDto);
 
+  ResultResponse<Void> updateTopic(Long userId, Long topicId, CreateTopicDto updateTopicDto);
+
   ResultResponse<Void> deleteTopic(Long userId, Long topicId);
 
   ResultResponse<PageResponse<CustomTopicResponse>> getTopicList(Long userId, Pageable pageable);
