@@ -54,6 +54,7 @@ public class FixturesServiceImpl implements FixturesService {
     return new ResultResponse<>(SuccessResultType.SUCCESS_GET_ALL_FIXTURES, fixturesList);
   }
 
+  // 경기 상세 정보 조회
   @Override
   public ResultResponse<FixtureDetails> getFixtureDetails(Long fixtureId) {
     FixturesEntity fixtures = fixtureHandler.findFixturesFixtureId(fixtureId);
@@ -63,7 +64,7 @@ public class FixturesServiceImpl implements FixturesService {
     List<Tips> tips = tipsHandler.findClubTips(fixtures.getHomeClub());
 
     String siteUrl = fixtures.getFixtureDate().isBefore(LocalDate.now())
-        ? fixtures.getHomeClub().getReservationSite().getSiteUrl()
+        ? fixtures.getHomeClub().getReservationSite()
         : null;
 
     FixtureDetails fixtureDetails = new FixtureDetails(restaurants, tips, siteUrl);
