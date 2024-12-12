@@ -1,7 +1,7 @@
 package com.service.sport_companion.api.service.impl;
 
-import com.service.sport_companion.api.component.CustomTopicHandler;
-import com.service.sport_companion.api.component.CustomTopicRecommendHandler;
+import com.service.sport_companion.api.component.topic.CustomTopicHandler;
+import com.service.sport_companion.api.component.topic.CustomTopicRecommendHandler;
 import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.api.service.CustomTopicService;
 import com.service.sport_companion.core.exception.GlobalException;
@@ -20,6 +20,7 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,20 +28,29 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CustomTopicServiceImpl implements CustomTopicService {
 
   private final CustomTopicHandler customTopicHandler;
-  private final UserHandler userHandler;
   private final CustomTopicRecommendHandler customTopicRecommendHandler;
+  private final UserHandler userHandler;
 
+  /**
+   * 사용자 토픽 생성
+   */
   @Override
   public ResultResponse<Void> createTopic(Long userId, CreateTopicDto createTopicDto) {
     UsersEntity userEntity = userHandler.findByUserId(userId);
+
     customTopicHandler.saveTopic(userEntity, createTopicDto);
+    log.info("[user:{}] 토픽 생성 완료 : [{}]", userId, createTopicDto.getTopic());
 
     return ResultResponse.of(SuccessResultType.SUCCESS_CREATE_CUSTOM_TOPIC);
   }
 
+  /**
+   * 사용자 토픽 생성
+   */
   @Override
   public ResultResponse<Void> deleteTopic(Long userId, Long topicId) {
     UsersEntity userEntity = userHandler.findByUserId(userId);
@@ -48,18 +58,21 @@ public class CustomTopicServiceImpl implements CustomTopicService {
 
     // 작성자이거나 관리자인 경우 삭제할 수 있다.
     if (!customTopicEntity.getUsers().equals(userEntity)
-      && !userEntity.getRole().equals(UserRole.ADMIN)) {
+      && !userEntity.getRole().equals(UserRole.ADMIN)
+    ) {
+      log.error("[user:{}] 허가되지 않은 토픽 삭제 요청 : [topic:{}]", userId, topicId);
       throw new GlobalException(FailedResultType.DELETE_TOPIC_FORBIDDEN);
     }
 
     customTopicHandler.deleteTopic(topicId);
+    log.info("[user:{}] 토픽 삭제 완료 : [topic:{}]", userId, topicId);
 
     return ResultResponse.of(SuccessResultType.SUCCESS_DELETE_CUSTOM_TOPIC);
   }
 
   @Override
   public ResultResponse<PageResponse<CustomTopicResponse>> getTopicList(Long userId,
-    Pageable pageable
+      Pageable pageable
   ) {
     // 페이지 요청값이 없으면 전체를 조회
     if (pageable == null) {
@@ -102,14 +115,18 @@ public class CustomTopicServiceImpl implements CustomTopicService {
   public ResultResponse<RecommendCountResponse> updateTopicRecommend(Long userId, Long topicId) {
     // 이미 추천한적 있다면 추천할 수 없음
     if (customTopicRecommendHandler.existsTopicRecommend(userId, topicId)) {
+      log.error("[user:{}] 두 번 이상 추천 불가 : [topic:{}]", userId, topicId);
       throw new GlobalException(FailedResultType.ALREADY_RECOMMEND_TOPIC);
     }
     // 사용자 추천 내역을 DB에 추가
     customTopicRecommendHandler.saveByUserIdAndTopicId(userId, topicId);
 
+    Long recommendCount = customTopicRecommendHandler.getRecommendCount(topicId);
+    log.info("[user:{}] 토픽 추천 : [topic:{}] [추천수:{}]", userId, topicId, recommendCount);
+
     // 현재 추천수 반환
     return new ResultResponse<>(SuccessResultType.SUCCESS_RECOMMEND_TOPIC,
-      new RecommendCountResponse(customTopicRecommendHandler.getRecommendCount(topicId)));
+        new RecommendCountResponse(recommendCount));
   }
 
   private boolean isAuthor(Long userId, Long authorId) {
