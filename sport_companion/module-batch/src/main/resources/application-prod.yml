@@ -19,6 +19,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         default_batch_fetch_size: 1000
     open-in-view: false
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${PROD.DATABASE.URL}
@@ -27,4 +28,4 @@ spring:
 
 selenium:
   server:
-    url: http://selenium:4444
+    url: ${PROD.SELENIUM.URL}

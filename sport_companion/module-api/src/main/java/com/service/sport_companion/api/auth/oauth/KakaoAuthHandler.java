@@ -34,7 +34,7 @@ public class KakaoAuthHandler {
   @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
   private String redirectUri;
 
-  @Value("${spring.security.oauth2.client.registration.kakao.admin-key}")
+  @Value("${spring.security.oauth2.kakao.admin-key}")
   private String adminKey;
 
   public String getAccessToken(String code) {
