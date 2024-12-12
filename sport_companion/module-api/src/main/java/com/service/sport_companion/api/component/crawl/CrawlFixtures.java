@@ -1,6 +1,7 @@
 package com.service.sport_companion.api.component.crawl;
 
 import com.service.sport_companion.api.component.club.ClubsFacade;
+import com.service.sport_companion.core.component.WebDriverHandler;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
 import java.time.Duration;
@@ -32,9 +33,10 @@ import org.springframework.stereotype.Component;
 public class CrawlFixtures {
 
   private final ClubsFacade clubsFacade;
-  private final WebDriver driver;
+  private final WebDriverHandler webDriverHandler;
 
   public void crawlFixtures(String year) {
+    WebDriver driver = webDriverHandler.getDriver();
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
     Map<String, String> seriesMap = new HashMap<>();
