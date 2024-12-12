@@ -11,27 +11,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "Players")
+@Entity(name = "Tips")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-public class PlayersEntity {
+public class TipsEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long playerId;
+  private Long tipId;
 
   @ManyToOne
   @JoinColumn(name = "club_id", nullable = false)
-  private ClubsEntity club;
+  private ClubsEntity clubs;
 
-  private String playerName;
+  private String SeatName;
 
-  private String playerNumber;
+  private String theme;
 
-  private String playerPosition;
-
-  private String playerPhysical;
+  private String SeatNum;
 
 }

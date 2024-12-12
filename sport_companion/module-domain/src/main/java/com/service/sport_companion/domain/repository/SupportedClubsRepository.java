@@ -14,4 +14,6 @@ public interface SupportedClubsRepository extends JpaRepository<SupportedClubsEn
   boolean existsByUser(UsersEntity usersEntity);
 
   Optional<SupportedClubsEntity> findByUserUserIdAndClubClubName(Long userId, String clubName);
+
+  void deleteAllByUser(UsersEntity user);
 }

@@ -18,4 +18,6 @@ public interface AuthService {
 
   // Jwt 토큰 재발급 로직
   ResultResponse<Void> reissueToken(HttpServletRequest request, HttpServletResponse response);
+
+  ResultResponse<Void> deleteUser(Long userId);
 }

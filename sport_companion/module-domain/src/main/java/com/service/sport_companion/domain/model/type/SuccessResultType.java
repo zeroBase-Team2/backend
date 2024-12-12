@@ -17,6 +17,7 @@ public enum SuccessResultType {
   SUCCESS_REISSUE_TOKEN(HttpStatus.OK, "Access 토큰 재발급 성공."),
   SUCCESS_GET_USERINFO(HttpStatus.OK, "회원 정보 조회 성공"),
   SUCCESS_UPDATE_USERINFO(HttpStatus.OK, "회원 정보 수정 성공"),
+  SUCCESS_DELETE_USERINFO(HttpStatus.OK, "회원 탈퇴 성공"),
 
   //Club
   SUCCESS_GET_ALL_CLUBS_LIST(HttpStatus.OK, "모든 구단 조회 성공!"),
@@ -31,9 +32,11 @@ public enum SuccessResultType {
   // Fixtures
   SUCCESS_CRAWL_FIXTURE(HttpStatus.OK, "크롤링 성공"),
   SUCCESS_GET_ALL_FIXTURES(HttpStatus.OK, "모든 경기 일정 조회 성공"),
+  SUCCESS_GET_FIXTURES_DETAILS(HttpStatus.OK, "경기상세 정보 조회 성공"),
 
   // CustomTopic
   SUCCESS_CREATE_CUSTOM_TOPIC(HttpStatus.CREATED, "주제가 작성되었습니다."),
+  SUCCESS_UPDATE_CUSTOM_TOPIC(HttpStatus.CREATED, "주제가 수정되었습니다."),
   SUCCESS_DELETE_CUSTOM_TOPIC(HttpStatus.OK, "주제가 삭제되었습니다"),
   SUCCESS_GET_CUSTOM_TOPIC(HttpStatus.OK, "주제를 성공적으로 조회했습니다."),
   SUCCESS_RECOMMEND_TOPIC(HttpStatus.OK, "주제를 추천했습니다."),

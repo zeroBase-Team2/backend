@@ -1,4 +1,4 @@
-package com.service.sport_companion.api.component;
+package com.service.sport_companion.api.component.topic;
 
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.CustomTopicEntity;
@@ -42,5 +42,9 @@ public class CustomTopicHandler {
 
   public List<TopicAndRecommendDto> findTop5OrderByVoteCount(LocalDateTime createdAt) {
     return customTopicRepository.findTop5ByCreatedAtAfterOrderByVoteCountDesc(createdAt);
+  }
+
+  public Page<TopicAndRecommendDto> findTopicByUserId(Long userId, Pageable pageable) {
+    return customTopicRepository.findTopicByUserId(userId, pageable);
   }
 }

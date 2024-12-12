@@ -1,7 +1,6 @@
 package com.service.sport_companion.domain.model.dto.response.vote;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.service.sport_companion.domain.entity.CandidateEntity;
 import com.service.sport_companion.domain.entity.VoteEntity;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,11 +20,16 @@ public class VoteResponse {
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/seoul")
   private LocalDate startDate;
 
+  @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/seoul")
+  private LocalDate endDate;
+
   private String topic;
 
   private List<Vote> vote;
 
   private Long myVote;
+
+  private Long totalVote;
 
 
   @Getter
@@ -40,10 +44,8 @@ public class VoteResponse {
   }
 
   // 투표 결과는 리턴하지 않는 생성자
-  public static VoteResponse fromExample(VoteEntity voteEntity,
-    List<CandidateEntity> candidateList
-  ) {
-    List<Vote> voteList = candidateList.stream().map(
+  public static VoteResponse fromEntity(VoteEntity voteEntity) {
+    List<Vote> voteList = voteEntity.getCandidateEntity().stream().map(
       candidate -> Vote.builder()
         .candidateId(candidate.getCandidateId())
         .example(candidate.getExample())
@@ -53,29 +55,39 @@ public class VoteResponse {
     return VoteResponse.builder()
       .voteId(voteEntity.getVoteId())
       .startDate(voteEntity.getStartDate())
+      .endDate(voteEntity.getEndDate())
       .topic(voteEntity.getTopic())
       .vote(voteList)
       .build();
   }
 
   // 투표 결과를 함께 리턴하는 생성자
-  public static VoteResponse fromExampleAndVoteCount(VoteEntity voteEntity,
-    List<CandidateAndCountDto> candidateList, Long myVote
+  public static VoteResponse fromEntityWithResult(VoteEntity voteEntity,
+    List<CandidateAndCountDto> candidateList,
+    Long myVote
   ) {
-    List<Vote> voteList = candidateList.stream().map(
-      candidate -> Vote.builder()
-        .candidateId(candidate.getCandidateEntity().getCandidateId())
-        .example(candidate.getCandidateEntity().getExample())
-        .voteCount(candidate.getVoteCount())
-        .build()
-    ).toList();
-
-    return VoteResponse.builder()
+    VoteResponse voteResponse = VoteResponse.builder()
       .voteId(voteEntity.getVoteId())
       .startDate(voteEntity.getStartDate())
+      .endDate(voteEntity.getEndDate())
       .topic(voteEntity.getTopic())
-      .vote(voteList)
       .myVote(myVote)
+      .totalVote(0L)
       .build();
+
+    voteResponse.vote = candidateList.stream().map(
+      candidate -> {
+        // 전체 투표수의 합을 저장하기 위해 각 후보의 투표수를 더함
+        voteResponse.totalVote += candidate.getVoteCount();
+
+        return Vote.builder()
+          .candidateId(candidate.getCandidateEntity().getCandidateId())
+          .example(candidate.getCandidateEntity().getExample())
+          .voteCount(candidate.getVoteCount())
+          .build();
+      }
+    ).toList();
+
+    return voteResponse;
   }
 }

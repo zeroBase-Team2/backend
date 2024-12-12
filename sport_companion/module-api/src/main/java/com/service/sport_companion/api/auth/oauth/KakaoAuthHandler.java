@@ -25,14 +25,17 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class KakaoAuthHandler {
 
-  @Value("${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.client-id}")
+  @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
   private String clientId;
 
-  @Value("${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.client-secret}")
+  @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
   private String clientSecretId;
 
-  @Value("${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.redirect-uri}")
+  @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
   private String redirectUri;
+
+  @Value("${spring.security.oauth2.client.registration.kakao.admin-key}")
+  private String adminKey;
 
   public String getAccessToken(String code) {
     log.info("KakaoAuthHandler.getAccessToken code={}", code);
@@ -100,6 +103,41 @@ public class KakaoAuthHandler {
 
     log.info("KakaoAuthHandler.getUserDetails failed");
     throw new GlobalException(FailedResultType.USER_INFO_RETRIEVAL);
+  }
+
+  // 카카오 사용자 Unlink
+  public void unlinkUser(String userId) {
+    // HTTP 헤더 설정
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "KakaoAK " + adminKey);
+    headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+
+    // 요청 바디 설정
+    MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+    body.add("target_id_type", "user_id");
+    body.add("target_id", userId);
+
+    // HTTP 요청 객체 생성
+    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+
+    // RestTemplate 초기화
+    RestTemplate restTemplate = new RestTemplate();
+
+    // 요청 전송
+    ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+        UrlType.KAKAO_UNLINK_URL.getUrl(),
+        HttpMethod.POST,
+        request,
+        new ParameterizedTypeReference<>() {}
+    );
+
+    // 응답 처리
+    if (response.getStatusCode() == HttpStatus.OK) {
+      log.info("회원 탈퇴 성공: {}", userId);
+    } else {
+      log.error("회원 탈퇴 실패: {}", response.getStatusCode());
+      throw new GlobalException(FailedResultType.UNLINK_FAILED);
+    }
   }
 
 }

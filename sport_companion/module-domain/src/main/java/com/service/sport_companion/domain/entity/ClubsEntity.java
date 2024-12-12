@@ -22,20 +22,13 @@ public class ClubsEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long clubId;
 
-  @ManyToOne
-  @JoinColumn(name = "sport_id", nullable = false)
-  private SportsEntity sports;
-
-  @ManyToOne
-  @JoinColumn(name = "reservation_site_id", nullable = false)
-  private ReservationSiteEntity reservationSite;
-
   private String clubName;
-
-  private String introduction;
 
   private String clubStadium;
 
+  private String stadiumAddress;
+
   private String emblemImg;
 
+  private String reservationSite;
 }

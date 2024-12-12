@@ -1,4 +1,4 @@
-package com.service.sport_companion.api.component;
+package com.service.sport_companion.api.component.vote;
 
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.VoteEntity;
@@ -21,6 +21,7 @@ public class VoteHandler {
     return voteRepository.save(VoteEntity.builder()
       .topic(voteDto.getTopic())
       .startDate(voteDto.getStartDate())
+      .endDate(voteDto.getStartDate().plusDays(7)) // 투표 마감: 시작일로부터 일주일 뒤
       .build());
   }
 
