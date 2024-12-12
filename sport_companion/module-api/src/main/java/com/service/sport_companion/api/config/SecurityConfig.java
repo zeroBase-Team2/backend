@@ -55,11 +55,12 @@ public class SecurityConfig {
                 "/favicon.ico").permitAll()
             .requestMatchers(HttpMethod.GET,
                 "/api/v1/topic/top5",
-                "api/v1/vote/**").authenticated()
-            .requestMatchers(
-                "api/v1/vote/**").hasRole(UserRole.ADMIN.name())
-            .requestMatchers(HttpMethod.GET,
+                "/api/v1/topic",
+                "/api/v1/vote/result/prev",
+                "/api/v1/vote",
                 "/api/v1/fixture").permitAll()
+            .requestMatchers(
+              "api/v1/vote/**").hasRole(UserRole.ADMIN.name())
             .anyRequest().authenticated());
 
     http

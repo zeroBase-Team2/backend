@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-import com.service.sport_companion.api.component.club.ClubsHandler;
-import com.service.sport_companion.api.component.club.FixtureHandler;
+import com.service.sport_companion.api.component.club.ClubsFacade;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
 import java.time.LocalDate;
@@ -22,7 +21,7 @@ import org.mockito.MockitoAnnotations;
 class CrawlFixturesTest {
 
   @Mock
-  private ClubsHandler clubsHandler;
+  private ClubsFacade clubsFacade;
 
   @InjectMocks
   private CrawlFixtures crawlFixtures;
@@ -90,8 +89,8 @@ class CrawlFixturesTest {
     assertNotNull(schedule, "Parsed schedule is null. Check the provided HTML structure.");
 
     // Mock dependencies
-    when(clubsHandler.findByFieldContaining("KT")).thenReturn(mockedAwayClub);
-    when(clubsHandler.findByFieldContaining("두산")).thenReturn(mockedHomeClub);
+    when(clubsFacade.findByFieldContaining("KT")).thenReturn(mockedAwayClub);
+    when(clubsFacade.findByFieldContaining("두산")).thenReturn(mockedHomeClub);
 
     // When
     FixturesEntity fixtures = crawlFixtures.parseToFixturesEntity(year, lastDate, schedule, seriesKey);

@@ -29,6 +29,8 @@ public class VoteEntity {
 
   private LocalDate startDate;
 
+  private LocalDate endDate;
+
   private String topic;
 
   @OneToMany(mappedBy = "voteEntity", orphanRemoval = true, cascade = CascadeType.REMOVE)

@@ -25,13 +25,13 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class KakaoAuthHandler {
 
-  @Value("${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.client-id}")
+  @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
   private String clientId;
 
-  @Value("${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.client-secret}")
+  @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
   private String clientSecretId;
 
-  @Value("${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.redirect-uri}")
+  @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
   private String redirectUri;
 
   public String getAccessToken(String code) {

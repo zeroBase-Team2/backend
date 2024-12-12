@@ -42,14 +42,6 @@ public class JwtUtil {
         .get("userId", Long.class);
   }
 
-  // role 추출
-  public String getRole(String token) {
-    return Jwts.parser().verifyWith(secretKey).build()
-        .parseSignedClaims(token)
-        .getPayload()
-        .get("role", String.class);
-  }
-
   // UserDetails 조회 및 Authentication 객체 생성
   public Authentication getAuthentication(String userId) {
     UserDetails userDetails = userDetailService.loadUserByUsername(userId);
@@ -83,14 +75,6 @@ public class JwtUtil {
         .claim("role", role.name())
         .notBefore(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + expirationTime))
-        .signWith(secretKey)
-        .compact();
-  }
-
-  public String createSignupData(String providerId, String nickname) {
-    return Jwts.builder()
-        .claim("providerId", providerId)
-        .claim("nickname", nickname)
         .signWith(secretKey)
         .compact();
   }
