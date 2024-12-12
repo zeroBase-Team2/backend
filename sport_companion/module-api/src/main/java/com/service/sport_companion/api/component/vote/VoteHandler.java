@@ -1,4 +1,4 @@
-package com.service.sport_companion.api.component;
+package com.service.sport_companion.api.component.vote;
 
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.VoteEntity;

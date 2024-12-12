@@ -12,4 +12,5 @@ public class PageResponse<T> {
   private int totalPage;
   private Long totalData;
   private List<T> dataList;
+
 }

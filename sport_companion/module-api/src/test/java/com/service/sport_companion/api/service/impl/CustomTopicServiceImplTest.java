@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import com.service.sport_companion.api.component.CustomTopicHandler;
+import com.service.sport_companion.api.component.topic.CustomTopicHandler;
 import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.CustomTopicEntity;

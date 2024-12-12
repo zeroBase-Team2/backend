@@ -1,7 +1,6 @@
 package com.service.sport_companion.api.component.crawl;
 
-import com.service.sport_companion.api.component.club.ClubsHandler;
-import com.service.sport_companion.api.component.club.FixtureHandler;
+import com.service.sport_companion.api.component.club.ClubsFacade;
 import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.FixturesEntity;
 import java.time.Duration;
@@ -33,8 +32,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CrawlFixtures {
 
-  private final ClubsHandler clubsHandler;
-  private final FixtureHandler fixtureHandler;
+  private final ClubsFacade clubsFacade;
 
   public void crawlFixtures(String year) {
     WebDriver driver = new SafariDriver();
@@ -103,7 +101,7 @@ public class CrawlFixtures {
               log.info("----------------------------");
             }
           }
-          fixtureHandler.saveFixtureList(fixturesList);
+          clubsFacade.saveFixtureList(fixturesList);
         } // month for end
       } // season for end
     } catch (Exception e) {
@@ -123,10 +121,10 @@ public class CrawlFixtures {
 
     // 팀 이름 파싱 및 DB 조회
     Element homeClubElement = schedule.selectFirst("td.play > span:nth-child(3)");
-    ClubsEntity homeClub = (homeClubElement != null) ? clubsHandler.findByFieldContaining(homeClubElement.text()) : null;
+    ClubsEntity homeClub = (homeClubElement != null) ? clubsFacade.findByFieldContaining(homeClubElement.text()) : null;
 
     Element awayClubElement = schedule.selectFirst("td.play > span:nth-child(1)");
-    ClubsEntity awayClub = (awayClubElement != null) ? clubsHandler.findByFieldContaining(awayClubElement.text()) : null;
+    ClubsEntity awayClub = (awayClubElement != null) ? clubsFacade.findByFieldContaining(awayClubElement.text()) : null;
 
     // 점수 파싱
     Element homeScoreElement = null;

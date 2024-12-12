@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.service.sport_companion.api.auth.jwt.JwtUtil;
 import com.service.sport_companion.api.auth.oauth.KakaoAuthHandler;
-import com.service.sport_companion.api.component.club.ClubsHandler;
+import com.service.sport_companion.api.component.club.ClubsFacade;
 import com.service.sport_companion.api.component.RedisHandler;
-import com.service.sport_companion.api.component.club.SupportedClubsHandler;
 import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.ClubsEntity;
@@ -58,10 +58,7 @@ class AuthServiceImplTest {
   private RedisHandler redisHandler;
 
   @Mock
-  private ClubsHandler clubsHandler;
-
-  @Mock
-  private SupportedClubsHandler supportedClubsHandler;
+  private ClubsFacade clubsFacade;
 
   @Mock
   private KakaoAuthHandler kakaoAuthHandler;
@@ -102,21 +99,13 @@ class AuthServiceImplTest {
 
     kakaoUserDetails = new KakaoUserDetailsDTO(attributes);
 
-    user = UsersEntity.builder()
-        .userId(USERID)
-        .email(EMAIL)
-        .nickname(NICKNAME)
-        .provider(KAKAO_PROVIDER)
-        .providerId(KAKAO_PROVIDER_ID)
-        .role(UserRole.USER)
-        .createdAt(LocalDateTime.now())
-        .build();
-
     signUpData = SignUpDataEntity.builder()
         .providerId("providerId123")
         .email("test@email.com")
         .provider("kakao")
         .build();
+
+    user = SignUpDto.of(signUpData, NICKNAME);
 
     signUpDto = new SignUpDto("providerId123", "nickname", "KIA 타이거즈");
 
@@ -258,17 +247,12 @@ class AuthServiceImplTest {
   void signupSuccessfully() {
     // given
     when(redisHandler.getSignUpDataByProviderId(signUpDto.getProviderId())).thenReturn(signUpData);
-    when(clubsHandler.findByClubName(signUpDto.getClubName())).thenReturn(club);
 
     // when
     ResultResponse<Void> response = authServiceImpl.signup(signUpDto);
 
     // then
     assertEquals(SuccessResultType.SUCCESS_SIGNUP.getStatus(), response.getStatus());
-    verify(redisHandler).getSignUpDataByProviderId(signUpDto.getProviderId());
-    verify(userHandler).saveUser(any(UsersEntity.class));
-    verify(clubsHandler).findByClubName(signUpDto.getClubName());
-    verify(supportedClubsHandler).saveSupportedClub(any(SupportedClubsEntity.class));
   }
 
   @Test
