@@ -39,4 +39,12 @@ public class CustomTopicResponse {
       .isRecommended(isRecommended)
       .build();
   }
+
+  public boolean getIsAuthor() {
+    return isAuthor;
+  }
+
+  public boolean getIsRecommended() {
+    return isRecommended;
+  }
 }
