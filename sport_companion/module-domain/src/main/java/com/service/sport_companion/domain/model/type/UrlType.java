@@ -12,6 +12,7 @@ public enum UrlType {
   FRONT_LOCAL_URL("http://localhost:3000"),
   FRONT_VERCEL_URL("https://front-end-jet-psi.vercel.app"),
   MBC_NEWS_URL("https://imnews.imbc.com"),
+  KAKAO_UNLINK_URL("https://kapi.kakao.com/v1/user/unlink"),
   ;
 
   private final String url;
