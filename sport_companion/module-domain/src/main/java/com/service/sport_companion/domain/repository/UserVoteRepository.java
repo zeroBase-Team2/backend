@@ -1,6 +1,7 @@
 package com.service.sport_companion.domain.repository;
 
 import com.service.sport_companion.domain.entity.UserVoteEntity;
+import com.service.sport_companion.domain.entity.UsersEntity;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -34,4 +35,7 @@ public interface UserVoteRepository extends JpaRepository<UserVoteEntity, Long> 
     + "ORDER BY u.voteDateTime DESC "
     + "LIMIT 1")
   Optional<UserVoteEntity> findMyRecentVoted(Long userId, List<Long> candidateId);
+
+
+  void deleteAllByUsersEntity(UsersEntity user);
 }

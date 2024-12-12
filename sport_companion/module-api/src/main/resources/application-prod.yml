@@ -38,6 +38,7 @@ spring:
             user-name-attribute: ${PROD.AUTH.OAUTH.PROVIDER.KAKAO.user-name-attribute}
         registration:
           kakao:
+            admin-key: ${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.admin-key}
             client-id: ${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.client-id}
             client-secret: ${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.client-secret}
             client-authentication-method: ${PROD.AUTH.OAUTH.REGISTRATION.KAKAO.client-authentication-method}
