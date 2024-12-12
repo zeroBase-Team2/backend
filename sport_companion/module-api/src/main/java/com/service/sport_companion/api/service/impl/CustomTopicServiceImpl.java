@@ -164,6 +164,7 @@ public class CustomTopicServiceImpl implements CustomTopicService {
           .map(topic -> CustomTopicResponse.of(
             topic.getCustomTopicEntity(),
             isAuthor(userId, topic.getCustomTopicEntity().getUsers().getUserId()),
+            isRecommended(userId, topic.getCustomTopicEntity().getCustomTopicId()),
             topic.getRecommendCount())
           )
           .toList()));
