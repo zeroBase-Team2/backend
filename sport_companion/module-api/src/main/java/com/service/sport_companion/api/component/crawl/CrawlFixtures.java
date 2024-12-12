@@ -21,7 +21,6 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -33,9 +32,9 @@ import org.springframework.stereotype.Component;
 public class CrawlFixtures {
 
   private final ClubsFacade clubsFacade;
+  private final WebDriver driver;
 
   public void crawlFixtures(String year) {
-    WebDriver driver = new SafariDriver();
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
     Map<String, String> seriesMap = new HashMap<>();
