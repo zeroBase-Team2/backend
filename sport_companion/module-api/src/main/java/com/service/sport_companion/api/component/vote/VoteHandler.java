@@ -21,6 +21,7 @@ public class VoteHandler {
     return voteRepository.save(VoteEntity.builder()
       .topic(voteDto.getTopic())
       .startDate(voteDto.getStartDate())
+      .endDate(voteDto.getStartDate().plusDays(7)) // 투표 마감: 시작일로부터 일주일 뒤
       .build());
   }
 

@@ -20,11 +20,16 @@ public class VoteResponse {
   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/seoul")
   private LocalDate startDate;
 
+  @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/seoul")
+  private LocalDate endDate;
+
   private String topic;
 
   private List<Vote> vote;
 
   private Long myVote;
+
+  private Long totalVote;
 
 
   @Getter
@@ -50,6 +55,7 @@ public class VoteResponse {
     return VoteResponse.builder()
       .voteId(voteEntity.getVoteId())
       .startDate(voteEntity.getStartDate())
+      .endDate(voteEntity.getEndDate())
       .topic(voteEntity.getTopic())
       .vote(voteList)
       .build();
@@ -60,20 +66,28 @@ public class VoteResponse {
     List<CandidateAndCountDto> candidateList,
     Long myVote
   ) {
-    List<Vote> voteList = candidateList.stream().map(
-      candidate -> Vote.builder()
-        .candidateId(candidate.getCandidateEntity().getCandidateId())
-        .example(candidate.getCandidateEntity().getExample())
-        .voteCount(candidate.getVoteCount())
-        .build()
-    ).toList();
-
-    return VoteResponse.builder()
+    VoteResponse voteResponse = VoteResponse.builder()
       .voteId(voteEntity.getVoteId())
       .startDate(voteEntity.getStartDate())
+      .endDate(voteEntity.getEndDate())
       .topic(voteEntity.getTopic())
-      .vote(voteList)
       .myVote(myVote)
+      .totalVote(0L)
       .build();
+
+    voteResponse.vote = candidateList.stream().map(
+      candidate -> {
+        // 전체 투표수의 합을 저장하기 위해 각 후보의 투표수를 더함
+        voteResponse.totalVote += candidate.getVoteCount();
+
+        return Vote.builder()
+          .candidateId(candidate.getCandidateEntity().getCandidateId())
+          .example(candidate.getCandidateEntity().getExample())
+          .voteCount(candidate.getVoteCount())
+          .build();
+      }
+    ).toList();
+
+    return voteResponse;
   }
 }
