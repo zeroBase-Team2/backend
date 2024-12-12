@@ -1,6 +1,7 @@
 package com.service.sport_companion.domain.repository;
 
 import com.service.sport_companion.domain.entity.CustomTopicEntity;
+import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.dto.response.topic.TopicAndRecommendDto;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,4 +39,6 @@ public interface CustomTopicRepository extends JpaRepository<CustomTopicEntity, 
     + "GROUP BY c "
     + "ORDER BY c.createdAt DESC ")
   Page<TopicAndRecommendDto> findTopicByUserId(@Param("userId") Long userId, Pageable pageable);
+
+  void deleteAllByUsers(UsersEntity user);
 }

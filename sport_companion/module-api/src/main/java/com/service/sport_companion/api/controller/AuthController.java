@@ -1,6 +1,7 @@
 package com.service.sport_companion.api.controller;
 
 import com.service.sport_companion.api.service.AuthService;
+import com.service.sport_companion.domain.model.annotation.CallUser;
 import com.service.sport_companion.domain.model.auth.KakaoCodeDto;
 import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
@@ -94,5 +95,13 @@ public class AuthController {
 
     log.info("토큰 재발급 요청 완료 - 상태: {}", resultResponse.getStatus());
     return new ResponseEntity<>(resultResponse, resultResponse.getStatus());
+  }
+
+  // 회원 탈퇴
+  @DeleteMapping
+  public ResponseEntity<ResultResponse<Void>> deleteUser(@CallUser Long userId) {
+
+    ResultResponse<Void> result = authService.deleteUser(userId);
+    return new ResponseEntity<>(result, result.getStatus());
   }
 }
