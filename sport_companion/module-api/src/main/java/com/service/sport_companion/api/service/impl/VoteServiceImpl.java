@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class VoteServiceImpl implements VoteService {
 
   private final VoteHandler voteHandler;
@@ -64,6 +66,7 @@ public class VoteServiceImpl implements VoteService {
           .sequence(i)
           .build());
     }
+    log.info("[user:{}] 투표 생성 : [vote:{}]", userId, voteEntity.getVoteId());
 
     return ResultResponse.of(SuccessResultType.SUCCESS_CREATE_VOTE);
   }
@@ -91,6 +94,7 @@ public class VoteServiceImpl implements VoteService {
     for (int i = 0; i < examples.length; i++) {
       candidateEntityList.get(i).updateExample(examples[i]);
     }
+    log.info("[user:{}] 투표 수정 : [vote:{}]", userId, voteEntity.getVoteId());
 
     return ResultResponse.of(SuccessResultType.SUCCESS_MODIFY_VOTE);
   }
@@ -102,6 +106,8 @@ public class VoteServiceImpl implements VoteService {
   public ResultResponse<Void> deleteVote(Long userId, Long voteId) {
     candidateHandler.deleteVoteByVoteId(voteId);
     voteHandler.deleteVoteById(voteId);
+
+    log.info("[user:{}] 투표 삭제 : [vote:{}]", userId, voteId);
 
     return ResultResponse.of(SuccessResultType.SUCCESS_DELETE_VOTE);
   }
@@ -204,6 +210,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     userVoteHandler.vote(userId, candidateId);
+    log.info("[user:{}] 투표 : [candidate:{}]", userId, candidateId);
 
     return new ResultResponse<>(
       SuccessResultType.SUCCESS_VOTING,
