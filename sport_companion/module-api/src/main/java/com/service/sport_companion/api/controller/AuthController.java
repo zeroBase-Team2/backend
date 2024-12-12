@@ -1,6 +1,8 @@
 package com.service.sport_companion.api.controller;
 
+import com.amazonaws.services.ec2.model.VolumeDetail;
 import com.service.sport_companion.api.service.AuthService;
+import com.service.sport_companion.domain.model.annotation.CallUser;
 import com.service.sport_companion.domain.model.auth.KakaoCodeDto;
 import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
@@ -11,6 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,5 +61,13 @@ public class AuthController {
 
     ResultResponse<Void> resultResponse = authService.reissueToken(request, response);
     return new ResponseEntity<>(resultResponse, resultResponse.getStatus());
+  }
+
+  // 회원 탈퇴
+  @DeleteMapping
+  public ResponseEntity<ResultResponse<Void>> deleteUser(@CallUser Long userId) {
+
+    ResultResponse<Void> result = authService.deleteUser(userId);
+    return new ResponseEntity<>(result, result.getStatus());
   }
 }

@@ -157,4 +157,16 @@ public class AuthServiceImpl implements AuthService {
 
     return ResultResponse.of(SuccessResultType.SUCCESS_REISSUE_TOKEN);
   }
+
+  @Override
+  public ResultResponse<Void> deleteUser(Long userId) {
+    UsersEntity user = userHandler.findByUserId(userId);
+
+    kakaoAuthHandler.unlinkUser(user.getProviderId());
+    userHandler.deleteAllUserData(user);
+
+    return ResultResponse.of(SuccessResultType.SUCCESS_DELETE_USERINFO);
+  }
+
+
 }
