@@ -77,6 +77,7 @@ public class CustomTopicServiceImpl implements CustomTopicService {
           .map(topic -> CustomTopicResponse.of(
             topic.getCustomTopicEntity(),
             isAuthor(userId, topic.getCustomTopicEntity().getUsers().getUserId()),
+            isRecommended(userId, topic.getCustomTopicEntity().getCustomTopicId()),
             topic.getRecommendCount())
           )
           .toList()));
@@ -93,6 +94,7 @@ public class CustomTopicServiceImpl implements CustomTopicService {
       .map(topic -> CustomTopicResponse.of(
         topic.getCustomTopicEntity(),
         isAuthor(userId, topic.getCustomTopicEntity().getUsers().getUserId()),
+        isRecommended(userId, topic.getCustomTopicEntity().getCustomTopicId()),
         topic.getRecommendCount())
       )
       .toList());
@@ -114,5 +116,9 @@ public class CustomTopicServiceImpl implements CustomTopicService {
 
   private boolean isAuthor(Long userId, Long authorId) {
     return authorId.equals(userId);
+  }
+
+  private boolean isRecommended(Long userId, Long customTopicId) {
+    return customTopicRecommendHandler.existsTopicRecommend(userId, customTopicId);
   }
 }

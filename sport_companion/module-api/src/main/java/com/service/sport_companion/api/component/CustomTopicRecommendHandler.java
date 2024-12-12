@@ -14,6 +14,9 @@ public class CustomTopicRecommendHandler {
 
   // topicId의 주제에 userId 사용자가 추천한 적 있는지 조회
   public boolean existsTopicRecommend(Long userId, Long topicId) {
+    if (userId == null) {
+      return false;
+    }
     return customTopicRecommendRepository
       .existsByCustomTopic_CustomTopicIdAndUsersEntity_UserId(topicId, userId);
   }
