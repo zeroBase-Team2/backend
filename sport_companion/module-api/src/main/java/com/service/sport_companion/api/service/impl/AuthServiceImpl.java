@@ -2,15 +2,12 @@ package com.service.sport_companion.api.service.impl;
 
 import com.service.sport_companion.api.auth.jwt.JwtUtil;
 import com.service.sport_companion.api.auth.oauth.KakaoAuthHandler;
-import com.service.sport_companion.api.component.club.ClubsHandler;
 import com.service.sport_companion.api.component.RedisHandler;
-import com.service.sport_companion.api.component.club.SupportedClubsHandler;
 import com.service.sport_companion.api.component.UserHandler;
+import com.service.sport_companion.api.component.club.ClubsFacade;
 import com.service.sport_companion.api.service.AuthService;
 import com.service.sport_companion.core.exception.GlobalException;
-import com.service.sport_companion.domain.entity.ClubsEntity;
 import com.service.sport_companion.domain.entity.SignUpDataEntity;
-import com.service.sport_companion.domain.entity.SupportedClubsEntity;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
 import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
@@ -19,15 +16,17 @@ import com.service.sport_companion.domain.model.dto.response.auth.SignUpData;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SuccessResultType;
 import com.service.sport_companion.domain.model.type.TokenType;
-import com.service.sport_companion.domain.model.type.UserRole;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
-import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 
 @Slf4j
 @Service
@@ -37,24 +36,31 @@ public class AuthServiceImpl implements AuthService {
   private final KakaoAuthHandler kakaoAuthHandler;
   private final UserHandler userHandler;
   private final RedisHandler redisHandler;
-  private final ClubsHandler clubsHandler;
-  private final SupportedClubsHandler supportedClubsHandler;
+  private final ClubsFacade clubsFacade;
   private final JwtUtil jwtUtil;
 
 
+
+  /**
+   * 카카오 OAuth 로그인 및 회원가입 처리
+   *
+   * @param code 인가 코드
+   * @param response HTTP 응답 객체
+   */
   @Override
   public ResultResponse<?> oAuthForKakao(String code, HttpServletResponse response) {
-    // "인가 코드"로 "액세스 토큰" 요청
-    String accessToken = kakaoAuthHandler.getAccessToken(code);
+    log.info("카카오 OAuth 처리 시작");
 
-    // 토큰으로 사용자 정보 요청
+    String accessToken = kakaoAuthHandler.getAccessToken(code);
     KakaoUserDetailsDTO userInfo = kakaoAuthHandler.getUserDetails(accessToken);
 
-    // 회원 가입 여부 확인
+    // 기존 회원 조회
     UsersEntity user = userHandler.findUserByUserInfo(userInfo);
 
-    // 가입 이력이 없는 경우 추가 데이터 입력을 위해 회원정보 전달
-    if(user == null) {
+    // 신규 사용자 회원가입 필요
+    if (user == null) {
+      log.info("회원가입 필요 - providerId: {}", userInfo.getProviderId());
+
       String nickname = userHandler.getRandomNickname(1);
       SignUpData signUpData = new SignUpData(userInfo.getProviderId(), nickname);
 
@@ -63,7 +69,9 @@ public class AuthServiceImpl implements AuthService {
       return new ResultResponse<>(SuccessResultType.SUCCESS_SIGNUP_REQUIRED, signUpData);
     }
 
-    // 로그인 성공 : Access, Refresh 토큰 헤더로 전달
+    // 기존 회원 - 로그인 성공
+    log.info("로그인 성공 - userId: {}", user.getUserId());
+
     String access = jwtUtil.createJwt("access", user.getUserId(), user.getRole());
     String refresh = jwtUtil.createJwt("refresh", user.getUserId(), user.getRole());
 
@@ -74,78 +82,58 @@ public class AuthServiceImpl implements AuthService {
   }
 
 
-  // 닉네임 중복 검증
-  @Override
-  public ResultResponse<Boolean> checkNickname(String nickname) {
-    boolean isValidNickname = !userHandler.existsByNickname(nickname);
-
-    SuccessResultType resultType = (isValidNickname) ?
-      SuccessResultType.AVAILABLE_NICKNAME : SuccessResultType.UNAVAILABLE_NICKNAME;
-
-    return new ResultResponse<>(resultType, isValidNickname);
-  }
-
-  // 회원가입
+  /**
+   * 회원가입 처리
+   *
+   * @param signUpDto 회원가입 요청 데이터
+   */
   @Override
   public ResultResponse<Void> signup(SignUpDto signUpDto) {
-    // 1. Redis에서 사용자 데이터 가져오기
+    log.info("회원가입 처리 시작 - providerId: {}", signUpDto.getProviderId());
+
     SignUpDataEntity signUpData = redisHandler.getSignUpDataByProviderId(signUpDto.getProviderId());
+    UsersEntity user = SignUpDto.of(signUpData, signUpDto.getNickname());
 
-    // 2. 사용자 생성 및 저장
-    UsersEntity user = createUser(signUpData, signUpDto.getNickname());
     userHandler.saveUser(user);
+    clubsFacade.saveSupportedClub(user, signUpDto.getClubName());
 
-    // 3. 선호 구단 처리
-    saveSupportedClub(user, signUpDto.getClubName());
-
+    log.info("회원가입 성공 - userId: {}", user.getUserId());
     return ResultResponse.of(SuccessResultType.SUCCESS_SIGNUP);
   }
 
-  // 사용자 생성 및 저장
-  private UsersEntity createUser(SignUpDataEntity signUpData, String nickname) {
-    return UsersEntity.builder()
-        .email(signUpData.getEmail())
-        .nickname(nickname)
-        .provider(signUpData.getProvider())
-        .providerId(signUpData.getProviderId())
-        .role(UserRole.USER)
-        .createdAt(LocalDateTime.now())
-        .build();
+  /**
+   * 닉네임 중복 확인
+   *
+   * @param nickname 닉네임
+   */
+  @Override
+  public ResultResponse<Boolean> checkNickname(String nickname) {
+    log.info("닉네임 중복 확인 - nickname: {}", nickname);
+
+    boolean isValidNickname = !userHandler.existsByNickname(nickname);
+    SuccessResultType resultType = isValidNickname ?
+        SuccessResultType.AVAILABLE_NICKNAME : SuccessResultType.UNAVAILABLE_NICKNAME;
+
+    log.info("닉네임 '{}' 사용 가능 여부: {}", nickname, isValidNickname);
+    return new ResultResponse<>(resultType, isValidNickname);
   }
 
-  // 선호 구단 처리
-  private void saveSupportedClub(UsersEntity user, String clubName) {
-    ClubsEntity club = clubsHandler.findByClubName(clubName);
 
-    SupportedClubsEntity supportedClub = SupportedClubsEntity.builder()
-        .user(user)
-        .club(club)
-        .build();
-
-    supportedClubsHandler.saveSupportedClub(supportedClub);
-  }
-
+  /**
+   * 토큰 재발급
+   *
+   * @param request HTTP 요청 객체
+   * @param response HTTP 응답 객체
+   */
   @Override
   public ResultResponse<Void> reissueToken(HttpServletRequest request, HttpServletResponse response) {
-    Cookie[] cookies = request.getCookies();
+    log.info("토큰 재발급 처리 시작");
 
     // 쿠키 검증
-    if (cookies == null || cookies.length == 0) {
-      log.info("cookie is empty");
-      throw new GlobalException(FailedResultType.COOKIE_IS_NULL);
-    }
+    String refreshToken = extractTokenFromCookies(request.getCookies());
 
-    log.info("cookies.length -> {}", cookies.length);
-
-    // refresh-token 추출
-    String refreshToken =  Arrays.stream(request.getCookies())
-        .filter(cookie -> TokenType.REFRESH.getValue().equals(cookie.getName()))
-        .map(Cookie::getValue)
-        .findFirst()
-        .orElse(null);
-
-    // refresh-token 검증
     if (refreshToken == null || jwtUtil.isExpired(refreshToken)) {
+      log.warn("유효하지 않거나 만료된 Refresh Token");
       throw new GlobalException(FailedResultType.REFRESH_TOKEN_IS_EXPIRED);
     }
 
@@ -155,7 +143,27 @@ public class AuthServiceImpl implements AuthService {
     String access = jwtUtil.createJwt("access", user.getUserId(), user.getRole());
     response.addHeader(TokenType.ACCESS.getValue(), access);
 
+    log.info("토큰 재발급 성공 - userId: {}", user.getUserId());
     return ResultResponse.of(SuccessResultType.SUCCESS_REISSUE_TOKEN);
+  }
+
+
+  /**
+   * 쿠키에서 토큰 추출
+   *
+   * @param cookies 쿠키 배열
+   */
+  private String extractTokenFromCookies(Cookie[] cookies) {
+    if (cookies == null || cookies.length == 0) {
+      log.warn("쿠키가 비어 있습니다.");
+      throw new GlobalException(FailedResultType.COOKIE_IS_NULL);
+    }
+
+    return Arrays.stream(cookies)
+        .filter(cookie -> TokenType.REFRESH.getValue().equals(cookie.getName()))
+        .map(Cookie::getValue)
+        .findFirst()
+        .orElse(null);
   }
 
   @Override
@@ -167,6 +175,4 @@ public class AuthServiceImpl implements AuthService {
 
     return ResultResponse.of(SuccessResultType.SUCCESS_DELETE_USERINFO);
   }
-
-
 }

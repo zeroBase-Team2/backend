@@ -1,8 +1,8 @@
 package com.service.sport_companion.api.service.impl;
 
-import com.service.sport_companion.api.component.CandidateHandler;
-import com.service.sport_companion.api.component.UserVoteHandler;
-import com.service.sport_companion.api.component.VoteHandler;
+import com.service.sport_companion.api.component.vote.CandidateHandler;
+import com.service.sport_companion.api.component.vote.UserVoteHandler;
+import com.service.sport_companion.api.component.vote.VoteHandler;
 import com.service.sport_companion.api.service.VoteService;
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.CandidateEntity;
@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,12 +30,16 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class VoteServiceImpl implements VoteService {
 
   private final VoteHandler voteHandler;
   private final CandidateHandler candidateHandler;
   private final UserVoteHandler userVoteHandler;
 
+  /**
+   * 투표 생성 (관리자 기능)
+   */
   @Override
   public ResultResponse<Void> createVote(Long userId, CreateVoteDto voteDto) {
     // 동일한 날짜에 이미 등록돼있으면 추가로 등록할 수 없음
@@ -61,10 +66,14 @@ public class VoteServiceImpl implements VoteService {
           .sequence(i)
           .build());
     }
+    log.info("[user:{}] 투표 생성 : [vote:{}]", userId, voteEntity.getVoteId());
 
     return ResultResponse.of(SuccessResultType.SUCCESS_CREATE_VOTE);
   }
 
+  /**
+   * 투표 수정 (관리자 기능)
+   */
   @Override
   public ResultResponse<Void> updateVote(Long userId, Long voteId, CreateVoteDto voteDto) {
     // 투표 주제 업데이트
@@ -85,18 +94,27 @@ public class VoteServiceImpl implements VoteService {
     for (int i = 0; i < examples.length; i++) {
       candidateEntityList.get(i).updateExample(examples[i]);
     }
+    log.info("[user:{}] 투표 수정 : [vote:{}]", userId, voteEntity.getVoteId());
 
     return ResultResponse.of(SuccessResultType.SUCCESS_MODIFY_VOTE);
   }
 
+  /**
+   * 투표 삭제 (관리자 기능)
+   */
   @Override
   public ResultResponse<Void> deleteVote(Long userId, Long voteId) {
     candidateHandler.deleteVoteByVoteId(voteId);
     voteHandler.deleteVoteById(voteId);
 
+    log.info("[user:{}] 투표 삭제 : [vote:{}]", userId, voteId);
+
     return ResultResponse.of(SuccessResultType.SUCCESS_DELETE_VOTE);
   }
 
+  /**
+   * 이번주 투표 조회
+   */
   @Override
   public ResultResponse<VoteResponse> getThisWeekVote() {
     // 이번주 투표 시작일인 월요일의 날짜 찾기
@@ -110,6 +128,9 @@ public class VoteServiceImpl implements VoteService {
     );
   }
 
+  /**
+   * 이번주 투표 결과 조회
+   */
   @Override
   public ResultResponse<VoteResponse> getThisWeekVoteResult(Long userId) {
     // 이번주 투표와 결과 조회
@@ -125,6 +146,9 @@ public class VoteServiceImpl implements VoteService {
     );
   }
 
+  /**
+   * 이전 투표 및 결과 조회 - 최신순, 인기순
+   */
   @Override
   public ResultResponse<PageResponse<VoteResponse>> getPrevVoteResult(
     Long userId, SortType sortType, Pageable pageable
@@ -152,6 +176,9 @@ public class VoteServiceImpl implements VoteService {
       ));
   }
 
+  /**
+   * 사용자 당일 투표 여부 조회
+   */
   @Override
   public ResultResponse<CheckVotedResponse> checkUserVoted(Long userId) {
     return new ResultResponse<>(
@@ -160,6 +187,9 @@ public class VoteServiceImpl implements VoteService {
     );
   }
 
+  /**
+   * 사용자가 이번주 투표의 후보에 투표
+   */
   @Override
   public ResultResponse<VoteResponse> vote(Long userId, Long voteId, Long candidateId) {
     // 오늘 투표한 적 있는지 확인
@@ -180,6 +210,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     userVoteHandler.vote(userId, candidateId);
+    log.info("[user:{}] 투표 : [candidate:{}]", userId, candidateId);
 
     return new ResultResponse<>(
       SuccessResultType.SUCCESS_VOTING,
@@ -188,13 +219,17 @@ public class VoteServiceImpl implements VoteService {
     );
   }
 
-  // 투표 시작 날짜 구하기
+  /**
+   * 투표 시작 날짜 구하기
+   */
   private LocalDate getVoteStartDate(DayOfWeek dayOfWeek) {
     return LocalDate.now()
       .with(TemporalAdjusters.previousOrSame(dayOfWeek));
   }
 
-  // 사용자가 후보 List 중에서 투표한 곳을 조회
+  /**
+   * 사용자가 후보 List 중에서 투표한 곳을 조회
+   */
   private Long getUserVotedCandidateId(Long userId, List<CandidateAndCountDto> candidateList) {
     if (userId == null) {
       return null;
@@ -209,7 +244,9 @@ public class VoteServiceImpl implements VoteService {
     );
   }
 
-  // 지난 투표를 원하는 정렬 조건에 맞는 순서로 pageable 크기만큼 조회
+  /**
+   * 지난 투표를 원하는 정렬 조건에 맞는 순서로 pageable 크기만큼 조회
+   */
   private Page<VoteEntity> getPrevVoteListBySortType(SortType sortType, Pageable pageable) {
     if (sortType.equals(SortType.PARTICIPANT)) {
       return voteHandler.findPrevVoteOrderByParticipant(getVoteStartDate(DayOfWeek.MONDAY), pageable);
