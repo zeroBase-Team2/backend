@@ -7,6 +7,7 @@ import com.service.sport_companion.api.component.UserHandler;
 import com.service.sport_companion.api.component.club.ClubsFacade;
 import com.service.sport_companion.api.service.AuthService;
 import com.service.sport_companion.core.exception.GlobalException;
+import com.service.sport_companion.domain.entity.SignUpDataEntity;
 import com.service.sport_companion.domain.entity.UsersEntity;
 import com.service.sport_companion.domain.model.auth.KakaoUserDetailsDTO;
 import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
@@ -90,8 +91,8 @@ public class AuthServiceImpl implements AuthService {
   public ResultResponse<Void> signup(SignUpDto signUpDto) {
     log.info("회원가입 처리 시작 - providerId: {}", signUpDto.getProviderId());
 
-    var signUpData = redisHandler.getSignUpDataByProviderId(signUpDto.getProviderId());
-    var user = SignUpDto.of(signUpData, signUpDto.getNickname());
+    SignUpDataEntity signUpData = redisHandler.getSignUpDataByProviderId(signUpDto.getProviderId());
+    UsersEntity user = SignUpDto.of(signUpData, signUpDto.getNickname());
 
     userHandler.saveUser(user);
     clubsFacade.saveSupportedClub(user, signUpDto.getClubName());

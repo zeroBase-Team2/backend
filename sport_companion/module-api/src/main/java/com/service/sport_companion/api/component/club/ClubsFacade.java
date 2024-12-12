@@ -18,6 +18,7 @@ import com.service.sport_companion.domain.repository.SupportedClubsRepository;
 import com.service.sport_companion.domain.repository.TipsRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -80,6 +81,7 @@ public class ClubsFacade {
     log.info("{} 구단 저장 성공", club.getClubName());
   }
 
+
   // 선호 구단 관련 메서드
   // -----------------------------------
 
@@ -138,18 +140,22 @@ public class ClubsFacade {
    */
   public List<Fixtures> getFixtureList(LocalDate fixtureDate, Long userId) {
     log.info("날짜 '{}'와 사용자 ID '{}'에 해당하는 경기 일정을 조회합니다.", fixtureDate, userId);
-    ClubsEntity clubs = getSupportClubsByUserId(userId);
 
+    // 사용자 ID가 null이면 모든 경기 일정 조회, 아니면 선호 구단 조회
+    ClubsEntity clubs = (userId != null) ? getSupportClubsByUserId(userId) : null;
+
+    // 조건에 따라 경기 일정 조회
+    List<Fixtures> fixtures = (clubs == null) ?
+        Fixtures.of(fixturesRepository.findAllByFixtureDate(fixtureDate)) :
+        Fixtures.of(fixturesRepository.findSupportFixtures(fixtureDate, clubs));
+
+    // 로그 출력
     if (clubs == null) {
-      log.info("모든 경기 일정 조회.");
-      List<Fixtures> fixtures = Fixtures.of(fixturesRepository.findAllByFixtureDate(fixtureDate));
-      log.info("날짜 '{}'에 총 {}개의 경기 조회 성공", fixtureDate, fixtures.size());
-      return fixtures;
+      log.info("모든 경기 일정 조회. 날짜 '{}'에 총 {}개의 경기 조회 성공", fixtureDate, fixtures.size());
+    } else {
+      log.info("날짜 '{}'에 선호 구단 '{}'의 경기 {}개 조회 성공", fixtureDate, clubs.getClubName(), fixtures.size());
     }
 
-    List<Fixtures> fixtures = Fixtures.of(fixturesRepository.findSupportFixtures(fixtureDate, clubs));
-
-    log.info("날짜 : '{}', 선호 구단 : '{}' 경기 {}개 조회 성공", fixtureDate, clubs.getClubName(), fixtures.size());
     return fixtures;
   }
 
