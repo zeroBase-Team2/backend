@@ -40,7 +40,7 @@ public class WebDriverHandler {
   }
 
   // 배포 환경에서 WebDriver 생성해서 리턴
-  public WebDriver webDriverChrome() {
+  private WebDriver webDriverChrome() {
     WebDriver driver;
     try {
       driver = new RemoteWebDriver(new URL(SELENIUM_SERVER_URL), chromeOptions());
@@ -52,7 +52,7 @@ public class WebDriverHandler {
   }
 
   // 개발 환경에서 WebDriver 생성해서 리턴
-  public WebDriver webDriverSafari() {
+  private WebDriver webDriverSafari() {
     return new SafariDriver();
   }
 }
