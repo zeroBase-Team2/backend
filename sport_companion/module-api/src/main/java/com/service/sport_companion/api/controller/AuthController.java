@@ -1,6 +1,7 @@
 package com.service.sport_companion.api.controller;
 
 import com.service.sport_companion.api.service.AuthService;
+import com.service.sport_companion.domain.model.annotation.CallUser;
 import com.service.sport_companion.domain.model.auth.KakaoCodeDto;
 import com.service.sport_companion.domain.model.dto.request.auth.SignUpDto;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
