@@ -147,7 +147,7 @@ public class ClubsFacade {
     // 조건에 따라 경기 일정 조회
     List<Fixtures> fixtures = (clubs == null) ?
         Fixtures.of(fixturesRepository.findAllByFixtureDate(fixtureDate)) :
-        Fixtures.of(fixturesRepository.findSupportFixtures(fixtureDate, clubs));
+        Fixtures.of(fixturesRepository.findClubFixtures(fixtureDate, clubs));
 
     // 로그 출력
     if (clubs == null) {
@@ -157,6 +157,17 @@ public class ClubsFacade {
     }
 
     return fixtures;
+  }
+
+  /**
+   * 구단 별 경기 일정 조회
+   */
+  public List<Fixtures> getClubFixtureList(String clubName, LocalDate fixtureDate) {
+    log.info("날짜 '{}'와 구단 '{}'에 해당하는 경기 일정을 조회합니다.", fixtureDate, clubName);
+
+    ClubsEntity clubs = findByClubName(clubName);
+
+    return Fixtures.of(fixturesRepository.findClubFixtures(fixtureDate, clubs));
   }
 
   /**
@@ -207,4 +218,5 @@ public class ClubsFacade {
         ? fixtures.getHomeClub().getReservationSite()
         : null;
   }
+
 }

@@ -17,10 +17,9 @@ public interface FixturesRepository extends JpaRepository<FixturesEntity, Long> 
   @Query("SELECT f FROM Fixtures f "
       + "WHERE f.fixtureDate = :fixtureDate "
       + "AND (f.homeClub = :clubs OR f.awayClub = :clubs)")
-  List<FixturesEntity> findSupportFixtures(
+  List<FixturesEntity> findClubFixtures(
       @Param("fixtureDate") LocalDate fixtureDate,
       @Param("clubs") ClubsEntity clubs
   );
-
 
 }

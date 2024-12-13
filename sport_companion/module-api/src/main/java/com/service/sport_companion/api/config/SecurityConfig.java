@@ -51,14 +51,13 @@ public class SecurityConfig {
                 "/api/v1/auth/**",
                 "/api/v1/news/**",
                 "/api/v1/clubs/**",
-                "/api/v1/fixture/crawl",
                 "/favicon.ico").permitAll()
             .requestMatchers(HttpMethod.GET,
                 "/api/v1/topic/top5",
                 "/api/v1/topic",
                 "/api/v1/vote/result/prev",
                 "/api/v1/vote",
-                "/api/v1/fixture").permitAll()
+                "/api/v1/fixture/**").permitAll()
             .requestMatchers(
               "api/v1/vote/**").hasRole(UserRole.ADMIN.name())
             .anyRequest().authenticated());

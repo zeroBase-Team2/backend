@@ -58,6 +58,24 @@ public class FixturesServiceImpl implements FixturesService {
   }
 
   /**
+   * 특정 구단의 경기 정보를 조회
+   *
+   * @param clubName 구단 명
+   * @param date   조회 날짜 (yyyy-MM-dd 형식)
+   */
+  @Override
+  public ResultResponse<List<Fixtures>> getClubFixtureList(String clubName, String date) {
+    log.info("조회할 구단 : {}, 경기 날짜: {}",clubName, date);
+
+    LocalDate fixtureDate = LocalDate.parse(date);
+
+    List<Fixtures> fixturesList = clubsFacade.getClubFixtureList(clubName, fixtureDate);
+
+    log.info("{} 년도 {} 경기 일정 조회 성공",clubName, date);
+    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_CLUB_FIXTURES, fixturesList);
+  }
+
+  /**
    * 특정 경기의 상세 정보를 조회
    *
    * @param fixtureId 경기 ID

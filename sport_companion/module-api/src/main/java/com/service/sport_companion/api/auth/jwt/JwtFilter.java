@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     // Bearer 시작 여부 및 null 값 검증
     if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
-      log.info("Token is not valid");
+      log.info("유효하지 않은 토큰 값");
       setResponse(response);
       return;
     }
@@ -67,7 +67,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
   // Access-Token 만료시 403 반환
   private void setResponse(HttpServletResponse response) throws IOException {
-    log.info("setResponse");
+    log.info("Response status : {}", HttpServletResponse.SC_FORBIDDEN);
     ObjectMapper objectMapper = new ObjectMapper();
     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     response.setContentType("application/json");
@@ -119,6 +119,7 @@ public class JwtFilter extends OncePerRequestFilter {
   private boolean isExcludedPath(AntPathMatcher pathMatcher, String requestURI) {
 
     return pathMatcher.match("/", requestURI)
+        || pathMatcher.match("/favicon.ico", requestURI)
         || pathMatcher.match("/api/v1/auth/**", requestURI)
         || pathMatcher.match("/api/v1/clubs/**", requestURI)
         || pathMatcher.match("/api/v1/news/**", requestURI)
@@ -131,7 +132,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
   public boolean isMatchingGetRequest(AntPathMatcher pathMatcher, String requestURI) {
 
-    return pathMatcher.match("/api/v1/fixture", requestURI)
+    return pathMatcher.match("/api/v1/fixture/**", requestURI)
         || pathMatcher.match("/api/v1/vote", requestURI)
         || pathMatcher.match("/api/v1/vote/result/prev", requestURI)
         || pathMatcher.match("/api/v1/topic", requestURI)
