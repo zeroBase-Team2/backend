@@ -39,6 +39,14 @@ public class FixturesController {
     return new ResponseEntity<>(response, response.getStatus());
   }
 
+  @GetMapping("/club")
+  public ResponseEntity<ResultResponse<List<Fixtures>>> getFixtureList(
+      @RequestParam("clubName") String clubName, @RequestParam("date") String date) {
+
+    ResultResponse<List<Fixtures>> response = fixturesService.getClubFixtureList(clubName, date);
+    return new ResponseEntity<>(response, response.getStatus());
+  }
+
   @GetMapping("/{fixtureId}")
   public ResponseEntity<ResultResponse<FixtureDetails>> getFixtureDetails(
       @PathVariable("fixtureId") Long fixtureId) {
