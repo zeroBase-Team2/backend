@@ -2,6 +2,7 @@ package com.service.sport_companion.domain.model.dto.response.vote;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.service.sport_companion.domain.entity.VoteEntity;
+import com.service.sport_companion.domain.model.type.VoteResultType;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VoteResponse {
+
+  private String resultType;
 
   private Long voteId;
 
@@ -53,6 +56,7 @@ public class VoteResponse {
     ).toList();
 
     return VoteResponse.builder()
+      .resultType(VoteResultType.VOTE.name())
       .voteId(voteEntity.getVoteId())
       .startDate(voteEntity.getStartDate())
       .endDate(voteEntity.getEndDate())
@@ -67,6 +71,7 @@ public class VoteResponse {
     Long myVote
   ) {
     VoteResponse voteResponse = VoteResponse.builder()
+      .resultType(VoteResultType.RESULT.name())
       .voteId(voteEntity.getVoteId())
       .startDate(voteEntity.getStartDate())
       .endDate(voteEntity.getEndDate())
