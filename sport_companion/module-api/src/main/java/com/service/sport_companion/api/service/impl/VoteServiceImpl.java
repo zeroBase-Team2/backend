@@ -11,7 +11,6 @@ import com.service.sport_companion.domain.model.dto.request.vote.CreateVoteDto;
 import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
 import com.service.sport_companion.domain.model.dto.response.vote.CandidateAndCountDto;
-import com.service.sport_companion.domain.model.dto.response.vote.CheckVotedResponse;
 import com.service.sport_companion.domain.model.dto.response.vote.VoteResponse;
 import com.service.sport_companion.domain.model.type.FailedResultType;
 import com.service.sport_companion.domain.model.type.SortType;
@@ -113,37 +112,24 @@ public class VoteServiceImpl implements VoteService {
   }
 
   /**
-   * 이번주 투표 조회
+   * 이번주 투표 조회 : 당일 투표 완료 시 결과를 리턴하고, 그렇지 않을 경우 투표만 리턴
    */
   @Override
-  public ResultResponse<VoteResponse> getThisWeekVote() {
+  public ResultResponse<VoteResponse> getThisWeekVote(Long userId) {
     // 이번주 투표 시작일인 월요일의 날짜 찾기
     LocalDate voteStartDate = getVoteStartDate(DayOfWeek.MONDAY);
 
     VoteEntity voteEntity = voteHandler.findByDate(voteStartDate);
 
-    return new ResultResponse<>(
-      SuccessResultType.SUCCESS_GET_VOTE,
-      VoteResponse.fromEntity(voteEntity)
-    );
-  }
-
-  /**
-   * 이번주 투표 결과 조회
-   */
-  @Override
-  public ResultResponse<VoteResponse> getThisWeekVoteResult(Long userId) {
-    // 이번주 투표와 결과 조회
-    VoteEntity voteEntity = voteHandler.findByDate(getVoteStartDate(DayOfWeek.MONDAY));
-    List<CandidateAndCountDto> candidateList =
-      candidateHandler.getCandidateByVoteId(voteEntity.getVoteId());
-
-    Long userVotedCandidateId = getUserVotedCandidateId(userId, candidateList);
-
-    return new ResultResponse<>(
-      SuccessResultType.SUCCESS_GET_VOTE,
-      VoteResponse.fromEntityWithResult(voteEntity, candidateList, userVotedCandidateId)
-    );
+    if (userVoteHandler.isVotedToday(userId)) {
+      return new ResultResponse<>(
+        SuccessResultType.SUCCESS_GET_VOTE_RESULT,
+        getVoteResult(voteEntity, userId));
+    } else {
+      return new ResultResponse<>(
+        SuccessResultType.SUCCESS_GET_VOTE,
+        VoteResponse.fromEntity(voteEntity));
+    }
   }
 
   /**
@@ -157,34 +143,16 @@ public class VoteServiceImpl implements VoteService {
 
     // 조회한 투표 별로 투표의 결과와 내가 투표한 후보 id 조회
     List<VoteResponse> response = voteEntityList.stream()
-      .map(voteEntity -> {
-        List<CandidateAndCountDto> candidateList =
-          candidateHandler.getCandidateByVoteId(voteEntity.getVoteId());
-
-        Long votedCandidateId = getUserVotedCandidateId(userId, candidateList);
-
-        return VoteResponse.fromEntityWithResult(voteEntity, candidateList, votedCandidateId);
-      })
+      .map(voteEntity -> getVoteResult(voteEntity, userId))
       .toList();
 
-    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_VOTE,
+    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_VOTE_RESULT,
       new PageResponse<>(
         voteEntityList.getNumber(),
         voteEntityList.getTotalPages(),
         voteEntityList.getTotalElements(),
         response
       ));
-  }
-
-  /**
-   * 사용자 당일 투표 여부 조회
-   */
-  @Override
-  public ResultResponse<CheckVotedResponse> checkUserVoted(Long userId) {
-    return new ResultResponse<>(
-      SuccessResultType.SUCCESS_CHECK_VOTED,
-      new CheckVotedResponse(userVoteHandler.isVotedToday(userId))
-    );
   }
 
   /**
@@ -225,6 +193,18 @@ public class VoteServiceImpl implements VoteService {
   private LocalDate getVoteStartDate(DayOfWeek dayOfWeek) {
     return LocalDate.now()
       .with(TemporalAdjusters.previousOrSame(dayOfWeek));
+  }
+
+  /**
+   * voteEntity와 userId를 통해 각 후보에 대한 투표수와 사용자 투표 여부를 조회하여 반환할 결과를 생성
+   */
+  private VoteResponse getVoteResult(VoteEntity voteEntity, Long userId) {
+    List<CandidateAndCountDto> candidateList =
+      candidateHandler.getCandidateByVoteId(voteEntity.getVoteId());
+
+    Long userVotedCandidateId = getUserVotedCandidateId(userId, candidateList);
+
+    return VoteResponse.fromEntityWithResult(voteEntity, candidateList, userVotedCandidateId);
   }
 
   /**

@@ -5,7 +5,6 @@ import com.service.sport_companion.domain.model.annotation.CallUser;
 import com.service.sport_companion.domain.model.dto.request.vote.CreateVoteDto;
 import com.service.sport_companion.domain.model.dto.response.PageResponse;
 import com.service.sport_companion.domain.model.dto.response.ResultResponse;
-import com.service.sport_companion.domain.model.dto.response.vote.CheckVotedResponse;
 import com.service.sport_companion.domain.model.dto.response.vote.VoteResponse;
 import com.service.sport_companion.domain.model.type.SortType;
 import lombok.RequiredArgsConstructor;
@@ -56,15 +55,8 @@ public class VoteController {
   }
 
   @GetMapping
-  public ResponseEntity<ResultResponse<VoteResponse>> getThisWeekVote() {
-    ResultResponse<VoteResponse> response = voteService.getThisWeekVote();
-
-    return new ResponseEntity<>(response, response.getStatus());
-  }
-
-  @GetMapping("/result")
-  public ResponseEntity<ResultResponse<VoteResponse>> getThisWeekVoteResult(@CallUser Long userId) {
-    ResultResponse<VoteResponse> response = voteService.getThisWeekVoteResult(userId);
+  public ResponseEntity<ResultResponse<VoteResponse>> getThisWeekVote(@CallUser Long userId) {
+    ResultResponse<VoteResponse> response = voteService.getThisWeekVote(userId);
 
     return new ResponseEntity<>(response, response.getStatus());
   }
@@ -76,13 +68,6 @@ public class VoteController {
     Pageable pageable
   ) {
     ResultResponse<PageResponse<VoteResponse>> response = voteService.getPrevVoteResult(userId, sortType, pageable);
-
-    return new ResponseEntity<>(response, response.getStatus());
-  }
-
-  @GetMapping("/user")
-  public ResponseEntity<ResultResponse<CheckVotedResponse>> checkUserVoted(@CallUser Long userId) {
-    ResultResponse<CheckVotedResponse> response = voteService.checkUserVoted(userId);
 
     return new ResponseEntity<>(response, response.getStatus());
   }
