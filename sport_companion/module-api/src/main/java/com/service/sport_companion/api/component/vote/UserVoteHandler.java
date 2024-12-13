@@ -13,6 +13,9 @@ public class UserVoteHandler {
   private final UserVoteRepository userVoteRepository;
 
   public boolean isVotedToday(Long userId) {
+    if (userId == null) {
+      return false;
+    }
     return userVoteRepository.findTodayVote(userId, LocalDate.now()).isPresent();
   }
 
