@@ -72,8 +72,8 @@ public class AuthServiceImpl implements AuthService {
     // 기존 회원 - 로그인 성공
     log.info("로그인 성공 - userId: {}", user.getUserId());
 
-    String access = jwtUtil.createJwt("access", user.getUserId(), user.getRole());
-    String refresh = jwtUtil.createJwt("refresh", user.getUserId(), user.getRole());
+    String access = jwtUtil.createJwt("access", user.getUserId(), user.getNickname(), user.getRole());
+    String refresh = jwtUtil.createJwt("refresh", user.getUserId(), user.getNickname(),user.getRole());
 
     response.addHeader(TokenType.ACCESS.getValue(), access);
     response.addHeader(TokenType.REFRESH.getValue(), refresh);
@@ -140,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
     Long userId = jwtUtil.getUserId(refreshToken);
     UsersEntity user = userHandler.findByUserId(userId);
 
-    String access = jwtUtil.createJwt("access", user.getUserId(), user.getRole());
+    String access = jwtUtil.createJwt("access", user.getUserId(), user.getNickname(), user.getRole());
     response.addHeader(TokenType.ACCESS.getValue(), access);
 
     log.info("토큰 재발급 성공 - userId: {}", user.getUserId());

@@ -64,7 +64,7 @@ public class JwtUtil {
   }
 
   // 토큰 생성
-  public String createJwt(String type, Long userId, UserRole role) {
+  public String createJwt(String type, Long userId, String nickname, UserRole role) {
     long expirationTime = "access".equals(type)
         ? ACCESS_TOKEN_EXPIRE_TIME
         : REFRESH_TOKEN_EXPIRE_TIME;
@@ -72,6 +72,7 @@ public class JwtUtil {
     return Jwts.builder()
         .claim("type", type)
         .claim("userId", userId)
+        .claim("nickname", nickname)
         .claim("role", role.name())
         .notBefore(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + expirationTime))
