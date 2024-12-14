@@ -10,13 +10,15 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class WebDriverHandler {
+
+  private final Environment environment;
 
   @Value("${selenium.server.url:default-for-dev}")
   private String SELENIUM_SERVER_URL;
@@ -29,11 +31,17 @@ public class WebDriverHandler {
     return options;
   }
 
+  public WebDriver getDriver() {
+    if (environment.acceptsProfiles(Profiles.of("prod"))) {
+      return webDriverChrome();
+    } else {
+      return webDriverSafari();
+    }
+  }
+
   // 배포 환경에서 WebDriver 생성해서 리턴
-  @Bean
-  @Profile("prod")
-  public RemoteWebDriver webDriverChrome() {
-    RemoteWebDriver driver;
+  private WebDriver webDriverChrome() {
+    WebDriver driver;
     try {
       driver = new RemoteWebDriver(new URL(SELENIUM_SERVER_URL), chromeOptions());
     } catch (MalformedURLException e) {
@@ -44,9 +52,7 @@ public class WebDriverHandler {
   }
 
   // 개발 환경에서 WebDriver 생성해서 리턴
-  @Bean
-  @Profile("dev")
-  public WebDriver webDriverSafari() {
+  private WebDriver webDriverSafari() {
     return new SafariDriver();
   }
 }

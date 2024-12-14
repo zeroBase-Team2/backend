@@ -1,5 +1,6 @@
 package com.service.sport_companion.batch.news;
 
+import com.service.sport_companion.core.component.WebDriverHandler;
 import com.service.sport_companion.core.exception.GlobalException;
 import com.service.sport_companion.domain.entity.NewsEntity;
 import com.service.sport_companion.domain.model.type.FailedResultType;
@@ -34,7 +35,7 @@ import org.springframework.stereotype.Component;
 public class MbcNewsCrawling {
 
   private final String baseUrl = UrlType.MBC_NEWS_URL.getUrl();
-  private final WebDriver driver;
+  private final WebDriverHandler webDriverHandler;
 
   // 배치로 실행시킬 MBC News 크롤링 메인 작업
   @Transactional
@@ -42,6 +43,7 @@ public class MbcNewsCrawling {
     String url = baseUrl + "/more/search/?mainSearch=%EC%95%BC%EA%B5%AC";
     int pageSize = 5;
 
+    WebDriver driver = webDriverHandler.getDriver();
     driver.get(url);
 
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
