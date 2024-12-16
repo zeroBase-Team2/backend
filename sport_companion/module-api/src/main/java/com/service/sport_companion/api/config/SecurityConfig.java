@@ -59,7 +59,8 @@ public class SecurityConfig {
                 "/api/v1/vote",
                 "/api/v1/fixture/**").permitAll()
             .requestMatchers(
-              "api/v1/vote/**").hasRole(UserRole.ADMIN.name())
+              "api/v1/vote/*",
+              "api/v1/vote").hasRole(UserRole.ADMIN.name())
             .anyRequest().authenticated());
 
     http
