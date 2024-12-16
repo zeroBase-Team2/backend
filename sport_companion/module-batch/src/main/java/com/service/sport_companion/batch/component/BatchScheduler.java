@@ -16,7 +16,7 @@ public class BatchScheduler {
   private final Job mbcCrawlingJob;
 
   // 매일 11:50, 23:50 mbcCrawlingJob 수행
-  @Scheduled(cron = "0 50 11,23 * * *")
+  @Scheduled(cron = "0 50 11,23 * * *", zone = "Asia/Seoul")
   public void scheduleMbcCrawlingJob() throws Exception {
     JobParameters jobParameters = new JobParametersBuilder()
       .addString("timestamp", String.valueOf(System.currentTimeMillis()))
