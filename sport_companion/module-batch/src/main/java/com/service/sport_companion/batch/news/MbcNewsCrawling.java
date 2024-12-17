@@ -9,6 +9,7 @@ import com.service.sport_companion.domain.model.type.UrlType;
 import jakarta.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -104,7 +105,7 @@ public class MbcNewsCrawling {
     List<NewsEntity> newsItemList = new ArrayList<>();
     for (Element item : items) {
       String newsDate = item.select("a > .txt_w > .sub > .date").text().trim();
-      String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+      String today = LocalDate.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
       if (!newsDate.equals(today)) break;
 
       String newsLink = item.select("a").attr("href");
