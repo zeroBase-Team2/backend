@@ -15,9 +15,6 @@ public interface ClubsService {
   // 구단 등록
   ResultResponse<Void> addClub(ClubDto clubDto) throws IOException;
 
-  // 선호 구단 조회
-  ResultResponse<SupportClub> getSupportClub(Long userId);
-
   // 선호 구단 등록
   ResultResponse<Void> addSupportClub(Long userId, String clubName);
 

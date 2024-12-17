@@ -10,4 +10,7 @@ public class UserInfo {
   private String email;
   private String nickname;
 
+  private String clubName;
+  private String emblemImg;
+
 }

@@ -52,14 +52,6 @@ public class ClubsController {
     return new ResponseEntity<>(response, response.getStatus());
   }
 
-  // 선호 구단 조회
-  @GetMapping("/support")
-  public ResponseEntity<ResultResponse<SupportClub>> getSupportClub(@CallUser Long userId) {
-
-    ResultResponse<SupportClub> response = clubsService.getSupportClub(userId);
-    return new ResponseEntity<>(response, response.getStatus());
-  }
-
   // 선호구단 등록
   @PostMapping("support/{clubName}")
   public ResponseEntity<ResultResponse<Void>> addSupportClub(@CallUser Long userId,

@@ -61,23 +61,6 @@ public class ClubsServiceImpl implements ClubsService {
   }
 
   /**
-   * 사용자 선호 구단 조회
-   *
-   * @param userId 사용자 ID
-   * @return 선호 구단 정보
-   */
-  @Override
-  public ResultResponse<SupportClub> getSupportClub(Long userId) {
-    log.info("선호 구단 조회를 위한 사용자 ID: {}", userId);
-
-    ClubsEntity club = clubsFacade.getSupportClubsByUserId(userId);
-    SupportClub supportClub = new SupportClub(club.getClubName(), club.getEmblemImg());
-
-    log.info("선호 구단 조회 성공 : {}", club.getClubName());
-    return new ResultResponse<>(SuccessResultType.SUCCESS_GET_SUPPORT_CLUB, supportClub);
-  }
-
-  /**
    * 사용자 선호 구단 등록
    *
    * @param userId   사용자 ID
