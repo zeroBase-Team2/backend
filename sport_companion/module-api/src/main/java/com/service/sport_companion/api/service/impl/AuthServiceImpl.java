@@ -95,7 +95,10 @@ public class AuthServiceImpl implements AuthService {
     UsersEntity user = SignUpDto.of(signUpData, signUpDto.getNickname());
 
     userHandler.saveUser(user);
-    clubsFacade.saveSupportedClub(user, signUpDto.getClubName());
+
+    if (signUpDto.getClubName() != null) {
+      clubsFacade.saveSupportedClub(user, signUpDto.getClubName());
+    }
 
     log.info("회원가입 성공 - userId: {}", user.getUserId());
     return ResultResponse.of(SuccessResultType.SUCCESS_SIGNUP);
