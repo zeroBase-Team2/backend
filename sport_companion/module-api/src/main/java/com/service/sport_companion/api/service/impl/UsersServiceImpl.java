@@ -26,10 +26,12 @@ public class UsersServiceImpl implements UsersService {
     ClubsEntity club = clubsFacade.getSupportClubsByUserId(userId);
 
     UserInfo userInfo = new UserInfo(
-        user.getEmail(), user.getNickname(),
-        club.getClubName(),
-        club.getEmblemImg()
+        user.getEmail(),
+        user.getNickname(),
+        club != null ? club.getClubName() : null,
+        club != null ? club.getEmblemImg() : null
     );
+
     return new ResultResponse<>(SuccessResultType.SUCCESS_GET_USERINFO, userInfo);
   }
 

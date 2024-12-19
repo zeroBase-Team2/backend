@@ -12,6 +12,7 @@ import com.service.sport_companion.domain.repository.SignUpDataRepository;
 import com.service.sport_companion.domain.repository.SupportedClubsRepository;
 import com.service.sport_companion.domain.repository.UserVoteRepository;
 import com.service.sport_companion.domain.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -98,6 +99,7 @@ public class UserHandler {
   /**
    * 사용자 모든 데이터 삭제
    */
+  @Transactional
   public void deleteAllUserData(UsersEntity user) {
     customTopicRecommendRepository.deleteAllByUsersEntity(user);
     customTopicRepository.deleteAllByUsers(user);
