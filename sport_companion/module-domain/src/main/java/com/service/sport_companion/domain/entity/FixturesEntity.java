@@ -40,7 +40,7 @@ public class FixturesEntity {
 
   private LocalDate fixtureDate;
 
-  private LocalTime fixtureTime;
+  private String fixtureTime;
 
   private String notes;
 }
