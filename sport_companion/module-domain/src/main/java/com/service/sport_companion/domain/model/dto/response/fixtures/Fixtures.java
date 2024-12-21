@@ -17,7 +17,7 @@ public class Fixtures {
 
   private LocalDate fixtureDate;
 
-  private LocalTime fixtureTime;
+  private String fixtureTime;
 
   private String homeClubName;
 

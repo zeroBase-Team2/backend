@@ -118,7 +118,7 @@ public class CrawlFixtures {
 
     // 시간 파싱
     Element fixtureTimeElement = schedule.selectFirst("td.time > b");
-    LocalTime fixtureTime = (fixtureTimeElement != null) ? LocalTime.parse(fixtureTimeElement.text()) : null;
+    String fixtureTime = (fixtureTimeElement != null) ? fixtureTimeElement.text() : null;
 
     // 팀 이름 파싱 및 DB 조회
     Element homeClubElement = schedule.selectFirst("td.play > span:nth-child(3)");

@@ -194,7 +194,7 @@ public class ClubsFacade {
 
     fixturesRepository.saveAll(fixturesList);
 
-    log.info("경기 일정이 저장 성공");
+    log.info("경기 일정 저장 성공");
   }
 
   /**
