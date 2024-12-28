@@ -8,6 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class FixtureDetails {
 
+  private Fixtures fixtures;
+
   private List<Restaurant> restaurants;
 
   private List<Tips> tips;

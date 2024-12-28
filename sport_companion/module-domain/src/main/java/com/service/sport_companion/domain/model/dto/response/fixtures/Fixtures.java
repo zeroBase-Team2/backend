@@ -49,4 +49,19 @@ public class Fixtures {
             fixture.getNotes()
         )).toList();
   }
+
+  public static Fixtures of(FixturesEntity fixture) {
+    return new Fixtures(
+        fixture.getFixtureId(),
+        fixture.getSeason(),
+        fixture.getFixtureDate(),
+        fixture.getFixtureTime(),
+        fixture.getHomeClub().getClubName(),
+        fixture.getHomeScore(),
+        fixture.getAwayClub().getClubName(),
+        fixture.getAwayScore(),
+        fixture.getHomeClub().getClubStadium(),
+        fixture.getHomeClub().getStadiumAddress(),
+        fixture.getNotes());
+  }
 }
