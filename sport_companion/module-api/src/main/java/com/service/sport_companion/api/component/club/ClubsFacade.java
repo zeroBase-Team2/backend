@@ -183,7 +183,8 @@ public class ClubsFacade {
     String siteUrl = resolveSiteUrl(fixtures);
 
     log.info("경기 ID '{}'의 상세 정보 조회 성공.", fixtureId);
-    return new FixtureDetails(restaurants, tips, siteUrl);
+    Fixtures fixture = Fixtures.of(fixtures);
+    return new FixtureDetails(fixture, restaurants, tips, siteUrl);
   }
 
   /**
